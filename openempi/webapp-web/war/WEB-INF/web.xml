@@ -1,0 +1,150 @@
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<web-app version="2.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    id="WebApp_ID">
+  <display-name>SOEMPI Manager Web Application</display-name>
+
+  <servlet>
+    <servlet-name>initializationService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.InitializationServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>blockingDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.BlockingDataServiceImpl</servlet-class>
+    <load-on-startup>6</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>configurationDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.ConfigurationDataServiceImpl</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>fileLoaderDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.FileLoaderDataServiceImpl</servlet-class>
+    <load-on-startup>6</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>referenceDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.ReferenceDataServiceImpl</servlet-class>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>personDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.PersonDataServiceImpl</servlet-class>
+    <load-on-startup>7</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>keyDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.KeyDataServiceImpl</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>saltDataService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.SaltDataServiceImpl</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>logging</servlet-name>
+    <servlet-class>com.google.gwt.libideas.logging.server.RemoteLoggingServiceImpl</servlet-class>
+    <load-on-startup>11</load-on-startup>
+  </servlet>
+<!--   
+  <servlet>
+    <servlet-name>jUnitHostImpl</servlet-name>
+    <servlet-class>com.google.gwt.junit.server.JUnitHostImpl</servlet-class>
+    <load-on-startup>13</load-on-startup>
+  </servlet>
+ -->
+  <servlet>
+  	<servlet-name>fileUploadService</servlet-name>
+  	<servlet-class>org.openempi.webapp.server.FileUploadServlet</servlet-class>
+  	<init-param>
+  		<param-name>uploadDirectory</param-name>
+  		<param-value>fileRepository</param-value>
+  	</init-param>
+    <load-on-startup>15</load-on-startup>
+  </servlet>
+    
+  <servlet-mapping>
+    <servlet-name>blockingDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/blockingDataService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>configurationDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/configurationDataService</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>fileLoaderDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/fileLoaderDataService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>referenceDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/referenceDataService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>personDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/personDataService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>keyDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/keyDataService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>saltDataService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/saltDataService</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>logging</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/logging</url-pattern>
+  </servlet-mapping>	
+<!-- 
+  <servlet-mapping>
+    <servlet-name>jUnitHostImpl</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/junithost</url-pattern>
+  </servlet-mapping>
+   -->
+  <servlet-mapping>
+    <servlet-name>fileUploadService</servlet-name>
+    <url-pattern>/org.openempi.webapp.Application/upload</url-pattern>
+  </servlet-mapping>
+  
+  <welcome-file-list>
+	<welcome-file>Application.html</welcome-file>
+  </welcome-file-list>
+</web-app>

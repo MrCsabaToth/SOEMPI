@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+Copyright (C) 2013 Vanderbilt University <csaba.toth, b.malin @vanderbilt.edu>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+ -->
+<mpi-component-definition xmlns="http://configuration.openempi.openhie.org/mpicomponent"
+	xmlns:mpic="http://configuration.openempi.openhie.org/mpicomponent"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://configuration.openempi.openhie.org/mpicomponent mpi-component.xsd">
+
+	<mpi-component component-type="rlprotocol">
+		<name>rlprotocol</name>
+		<description>Generic Record Linkage Protocol</description>
+		<extensions>
+			<extension interface="configuration-loader">
+				<name>recordLinkageProtocolConfigurationLoader</name>
+				<implementation>recordLinkageProtocolConfigurationLoader</implementation>
+			</extension>
+			<extension interface="configuration-gui">
+				<name>recordLinkageProtocolConfigurationGui</name>
+				<implementation>recordLinkageProtocolConfigurationGui</implementation>
+			</extension>
+			<extension interface="implementation">
+				<name>recordLinkageProtocolConfigurationServiceImplementation</name>
+				<implementation>recordLinkageProtocolConfigurationService</implementation>
+			</extension>
+		</extensions>
+	</mpi-component>
+</mpi-component-definition>

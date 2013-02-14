@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:bb="http://configuration.openempi.openhie.org/basic-blocking"
+	xmlns:mpi="http://configuration.openempi.openhie.org/mpiconfig"
+	targetNamespace="http://configuration.openempi.openhie.org/basic-blocking"
+	elementFormDefault="qualified">
+	
+	<xs:import namespace="http://configuration.openempi.openhie.org/mpiconfig" schemaLocation="mpi-config.xsd"/>
+	
+	<xs:element name="basic-blocking" type="bb:basic-blocking-type" substitutionGroup="mpi:blocking-configuration"/>
+	<xs:complexType name="basic-blocking-type">
+		<xs:complexContent>
+			<xs:extension base="mpi:blocking-configuration-type">
+				<xs:sequence>
+					<xs:element name="number-of-records-to-sample" type="xs:int" minOccurs="1"/>
+					<xs:element name="blocking-rounds" type="bb:blocking-rounds"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="blocking-rounds">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="blocking-round" type="bb:blocking-round"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="blocking-round">
+		<xs:sequence>
+			<xs:element name="blocking-fields" type="bb:blocking-fields"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="blocking-fields">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="blocking-field" type="bb:blocking-field"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="blocking-field">
+		<xs:sequence>
+			<xs:element name="left-field-name" type="xs:string"/>
+			<xs:element name="right-field-name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+       default-lazy-init="true">
+
+    <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=${hibernate.dialect}
+                hibernate.query.substitutions=true 'Y', false 'N'
+                hibernate.cache.use_second_level_cache=true
+                hibernate.show_sql=true
+                hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+            </value>
+            <!-- Turn batching off for better error messages under PostgreSQL -->
+            <!-- hibernate.jdbc.batch_size=0 -->
+        </property>
+    </bean>
+
+    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- UniversalDao - can be used when doing standard CRUD - made available 
+        for those who don't mind casting.  If you don't want to cast, look at 
+        'fooDao' below. -->
+    <bean id="universalDao" class="org.openhie.openempi.dao.hibernate.UniversalDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="lookupDao" class="org.openhie.openempi.dao.hibernate.LookupDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="userDao" class="org.openhie.openempi.dao.hibernate.UserDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="roleDao" class="org.openhie.openempi.dao.hibernate.RoleDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="personDao" class="org.openhie.openempi.dao.hibernate.PersonDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="fieldDao" class="org.openhie.openempi.dao.hibernate.FieldDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="personLinkDao" class="org.openhie.openempi.dao.hibernate.PersonLinkDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="personMatchDao" class="org.openhie.openempi.dao.hibernate.PersonMatchDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="personMatchRequestDao" class="org.openhie.openempi.dao.hibernate.PersonMatchRequestDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="datasetDao" class="org.openhie.openempi.dao.hibernate.DatasetDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="matchPairStatDao" class="org.openhie.openempi.dao.hibernate.MatchPairStatDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="matchPairStatHalfDao" class="org.openhie.openempi.dao.hibernate.MatchPairStatHalfDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="keyDao" class="org.openhie.openempi.dao.hibernate.KeyDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="saltDao" class="org.openhie.openempi.dao.hibernate.SaltDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="userSessionDao" class="org.openhie.openempi.dao.hibernate.UserSessionDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="auditEventDao" class="org.openhie.openempi.dao.hibernate.AuditEventDaoHibernate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <!-- If you want to be able to do simple CRUD for new domain objects without 
+        having to cast, you don't have create a Dao interface and implementation 
+        for that domain object, you simply have to do the following.  
+        
+        eg... 'fooDao'
+    
+    <bean id="fooDao" class="org.openhie.openempi.dao.hibernate.GenericDaoHibernate">
+        <constructor-arg value="org.openhie.openempi.model.Foo"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    You will need to create a Dao interface and implementation for that 
+        domain object if you need more than simple CRUD to occur.  
+        (finders, bulk update/delete, etc.)
+    -->
+
+    <!-- Add new DAOs here -->
+
+</beans>

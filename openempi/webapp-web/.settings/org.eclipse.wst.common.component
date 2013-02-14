@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+  <wb-module deploy-name="openempi-webapp-web-2.1.3-SNAPSHOT">
+        <dependent-module archiveName="openempi-webapp-server-2.1.3-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/openempi-webapp-server/openempi-webapp-server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="openempi-core-2.1.3-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/openempi-core/openempi-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    <property name="context-root" value="openempi-webapp-web"/>
+        <property name="java-output-path" value="/openempi-webapp-web/war/WEB-INF/classes"/>
+    <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/war" tag="defaultRootSource"/>
+  </wb-module>
+</project-modules>

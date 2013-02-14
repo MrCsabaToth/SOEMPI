@@ -1,0 +1,27 @@
+<xb:config xmlns:pol="http://configuration.openempi.openhie.org/mpiconfig" 
+    xmlns:xb="http://www.bea.com/2002/09/xbean/config">
+
+    <!-- Use the "namespace" element to map a namespace to the Java package
+        name that should be generated. -->
+    <xb:namespace uri="http://configuration.openempi.openhie.org/mpiconfig">
+        <xb:package>org.openhie.openempi.configuration.xml</xb:package>
+    </xb:namespace>
+    <xb:namespace uri="http://configuration.openempi.openhie.org/mpicomponent">
+            <xb:package>org.openhie.openempi.configuration.xml.mpicomponent</xb:package>
+    </xb:namespace>
+    <xb:namespace uri="http://configuration.openempi.openhie.org/basic-blocking">
+            <xb:package>org.openhie.openempi.configuration.xml.basicblocking</xb:package>
+    </xb:namespace>    
+    <xb:namespace uri="http://configuration.openempi.openhie.org/data-loader">
+        <xb:package>org.openhie.openempi.configuration.xml.dataloader</xb:package>
+    </xb:namespace>
+    <xb:namespace uri="http://configuration.openempi.openhie.org/exact-matching">
+        <xb:package>org.openhie.openempi.configuration.xml.exactmatching</xb:package>
+    </xb:namespace>
+    <xb:namespace uri="http://configuration.openempi.openhie.org/probabilistic-matching">
+        <xb:package>org.openhie.openempi.configuration.xml.probabilisticmatching</xb:package>
+    </xb:namespace>
+    <xb:namespace uri="http://configuration.openempi.openhie.org/record-linkage-protocol">
+        <xb:package>org.openhie.openempi.configuration.xml.recordlinkageprotocol</xb:package>
+    </xb:namespace>
+</xb:config>

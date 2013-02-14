@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com> 
+	Licensed under the Apache License, Version 2.0 (the "License"); you may not 
+	use this file except in compliance with the License. You may obtain a copy 
+	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License.-->
+<mpi-config
+	xsi:schemaLocation="http://configuration.openempi.openhie.org/mpiconfig mpi-config.xsd
+	http://configuration.openempi.openhie.org/file-loader file-loader.xsd
+	http://configuration.openempi.openhie.org/basic-blocking basic-blocking.xsd
+	http://configuration.openempi.openhie.org/probabilistic-matching probabilistic-matching.xsd"
+	xmlns="http://configuration.openempi.openhie.org/mpiconfig"
+	xmlns:mpi="http://configuration.openempi.openhie.org/mpiconfig"
+	xmlns:fl="http://configuration.openempi.openhie.org/file-loader"
+	xmlns:bb="http://configuration.openempi.openhie.org/basic-blocking"
+	xmlns:pm="http://configuration.openempi.openhie.org/probabilistic-matching"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <global-identifier>
+        <assign-global-identifier>false</assign-global-identifier>
+        <namespace-identifier>2.16.840.1.113883.4.357</namespace-identifier>
+        <universal-identifier>2.16.840.1.113883.4.357</universal-identifier>
+        <universal-identifier-type>hl7</universal-identifier-type>
+    </global-identifier>
+    <fl:file-loader>
+        <fl:file-loader-config>
+            <fl:header-line-present>false</fl:header-line-present>
+            <fl:data-fields>
+                <fl:data-field>
+                    <fl:target-field-name>givenName</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>familyName</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>middleName</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>birthPlace</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>city</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>state</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>address1</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>address2</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>phoneExt</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>phoneAreaCode</fl:target-field-name>
+                </fl:data-field>
+                <fl:data-field>
+                    <fl:target-field-name>phoneCountryCode</fl:target-field-name>
+                </fl:data-field>
+            </fl:data-fields>
+        </fl:file-loader-config>
+    </fl:file-loader>
+    <custom-fields>
+        <custom-field>
+            <field-name>custom1</field-name>
+            <source-field-name>familyName</source-field-name>
+            <transformation-function-name>DoubleMetaphone</transformation-function-name>
+        </custom-field>
+        <custom-field>
+            <field-name>custom2</field-name>
+            <source-field-name>givenName</source-field-name>
+            <transformation-function-name>DoubleMetaphone</transformation-function-name>
+        </custom-field>
+    </custom-fields>
+    <bb:basic-blocking>
+        <bb:blocking-rounds>
+            <bb:blocking-round>
+                <bb:blocking-fields>
+                    <bb:blocking-field>
+                        <bb:field-name>givenName</bb:field-name>
+                    </bb:blocking-field>
+                    <bb:blocking-field>
+                        <bb:field-name>familyName</bb:field-name>
+                    </bb:blocking-field>
+                    <bb:blocking-field>
+                        <bb:field-name>dateOfBirth</bb:field-name>
+                    </bb:blocking-field>
+                </bb:blocking-fields>
+            </bb:blocking-round>
+            <bb:blocking-round>
+                <bb:blocking-fields>
+                    <bb:blocking-field>
+                        <bb:field-name>familyName</bb:field-name>
+                    </bb:blocking-field>
+                    <bb:blocking-field>
+                        <bb:field-name>dateOfBirth</bb:field-name>
+                    </bb:blocking-field>
+                </bb:blocking-fields>
+            </bb:blocking-round>
+        </bb:blocking-rounds>
+    </bb:basic-blocking>
+    <pm:probabilistic-matching>
+	<pm:false-negative-probability>0.2</pm:false-negative-probability>
+	<pm:false-positive-probability>0.2</pm:false-positive-probability>
+        <pm:match-fields>
+            <pm:match-field>
+                <pm:field-name>givenName</pm:field-name>
+		<pm:agreement-probability>0.9</pm:agreement-probability>
+		<pm:disagreement-probability>0.1</pm:disagreement-probability>
+		<pm:comparator-function>
+			<function-name>JaroWinkler</function-name>
+		</pm:comparator-function>
+		<pm:match-threshold>0.85</pm:match-threshold>
+            </pm:match-field>
+            <pm:match-field>
+                <pm:field-name>familyName</pm:field-name>
+		<pm:agreement-probability>0.9</pm:agreement-probability>
+		<pm:disagreement-probability>0.1</pm:disagreement-probability>
+                <pm:comparator-function>
+			<function-name>Exact</function-name>
+			<parameters>
+				<parameter>
+					<name>truncation-length</name>
+					<value>4</value>
+				</parameter>
+			</parameters>
+		</pm:comparator-function>
+		<pm:match-threshold>0.85</pm:match-threshold>
+            </pm:match-field>
+        </pm:match-fields>
+	<pm:config-file-directory>/home/odysseas/projects/openempi-development-2.1.2/openempi/conf</pm:config-file-directory>
+    </pm:probabilistic-matching>
+    <admin-configuration>
+        <file-repository-directory>fileRepository</file-repository-directory>
+    </admin-configuration>
+</mpi-config>

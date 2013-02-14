@@ -1,0 +1,113 @@
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+	version="3.0">
+	<description>OpenEMPI</description>
+	<display-name>OpenEMPI EJB Layer</display-name>
+	<enterprise-beans>
+		<session>
+			<ejb-name>SecurityService</ejb-name>
+			<business-remote>org.openhie.openempi.ejb.security.SecurityService</business-remote>
+			<ejb-class>org.openhie.openempi.ejb.security.SecurityServiceBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Container</transaction-type>
+			<env-entry>
+				<env-entry-name>ejb/BeanFactoryPath</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>
+					/applicationContext-service.xml /applicationContext-dao.xml /applicationContext-resources.xml /applicationContext-module-basic-blocking.xml /applicationContext-module-data-loader.xml /applicationContext-module-probabilistic-matching.xml
+				</env-entry-value>
+			</env-entry>
+		</session>
+		<session>
+			<ejb-name>PersonManagerService</ejb-name>
+			<business-remote>org.openhie.openempi.ejb.person.PersonManagerService</business-remote>
+			<ejb-class>org.openhie.openempi.ejb.person.PersonManagerServiceBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Container</transaction-type>
+			<env-entry>
+				<env-entry-name>ejb/BeanFactoryPath</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>
+					/applicationContext-service.xml /applicationContext-dao.xml /applicationContext-resources.xml /applicationContext-module-basic-blocking.xml /applicationContext-module-data-loader.xml /applicationContext-module-probabilistic-matching.xml
+				</env-entry-value>
+			</env-entry>
+		</session>
+		<session>
+			<ejb-name>PersonQueryService</ejb-name>
+			<business-remote>org.openhie.openempi.ejb.person.PersonQueryService</business-remote>
+			<ejb-class>org.openhie.openempi.ejb.person.PersonQueryServiceBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Container</transaction-type>
+			<env-entry>
+				<env-entry-name>ejb/BeanFactoryPath</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>
+					/applicationContext-service.xml /applicationContext-dao.xml /applicationContext-resources.xml /applicationContext-module-basic-blocking.xml /applicationContext-module-data-loader.xml /applicationContext-module-probabilistic-matching.xml
+				</env-entry-value>
+			</env-entry>
+		</session>
+		<session>
+			<ejb-name>RecordLinkageProtocol</ejb-name>
+			<business-remote>org.openhie.openempi.ejb.person.RecordLinkageProtocol</business-remote>
+			<ejb-class>org.openhie.openempi.ejb.person.RecordLinkageProtocolBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Container</transaction-type>
+			<env-entry>
+				<env-entry-name>ejb/BeanFactoryPath</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>
+					/applicationContext-service.xml /applicationContext-dao.xml /applicationContext-resources.xml /applicationContext-module-basic-blocking.xml /applicationContext-module-data-loader.xml /applicationContext-module-probabilistic-matching.xml
+				</env-entry-value>
+			</env-entry>
+		</session>
+		<session>
+			<ejb-name>KeyManagerService</ejb-name>
+			<business-remote>org.openhie.openempi.ejb.service.KeyManagerService</business-remote>
+			<ejb-class>org.openhie.openempi.ejb.service.KeyManagerServiceBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Container</transaction-type>
+			<env-entry>
+				<env-entry-name>ejb/BeanFactoryPath</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>
+					/applicationContext-service.xml /applicationContext-dao.xml /applicationContext-resources.xml /applicationContext-module-basic-blocking.xml /applicationContext-module-data-loader.xml /applicationContext-module-probabilistic-matching.xml
+				</env-entry-value>
+			</env-entry>
+		</session>
+		<session>
+			<ejb-name>SaltManagerService</ejb-name>
+			<business-remote>org.openhie.openempi.ejb.service.SaltManagerService</business-remote>
+			<ejb-class>org.openhie.openempi.ejb.service.SaltManagerServiceBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Container</transaction-type>
+			<env-entry>
+				<env-entry-name>ejb/BeanFactoryPath</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>
+					/applicationContext-service.xml /applicationContext-dao.xml /applicationContext-resources.xml /applicationContext-module-basic-blocking.xml /applicationContext-module-data-loader.xml /applicationContext-module-probabilistic-matching.xml
+				</env-entry-value>
+			</env-entry>
+		</session>
+	</enterprise-beans>
+</ejb-jar>

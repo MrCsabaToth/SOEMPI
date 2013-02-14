@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<!DOCTYPE jboss PUBLIC "-//JBoss//DTD JBOSS 4.2//EN"
+	"http://www.jboss.org/j2ee/dtd/jboss_4_2.dtd">
+
+<jboss>
+  <enterprise-beans>
+    <session>
+      <ejb-name>SecurityService</ejb-name>
+      <jndi-name>openempi/SecurityService</jndi-name>
+    </session>
+    <session>
+      <ejb-name>PersonManagerService</ejb-name>
+      <jndi-name>openempi/PersonManagerService</jndi-name>
+    </session>
+    <session>
+      <ejb-name>PersonQueryService</ejb-name>
+      <jndi-name>openempi/PersonQueryService</jndi-name>
+    </session>
+    <session>
+      <ejb-name>RecordLinkageProtocol</ejb-name>
+      <jndi-name>openempi/RecordLinkageProtocol</jndi-name>
+      <method-attributes>
+        <method>
+          <method-name>acquireMatchRequests</method-name>
+          <transaction-timeout>7200</transaction-timeout>
+        </method>
+      </method-attributes>
+    </session>
+    <session>
+      <ejb-name>KeyManagerService</ejb-name>
+      <jndi-name>openempi/KeyManagerService</jndi-name>
+    </session>
+    <session>
+      <ejb-name>SaltManagerService</ejb-name>
+      <jndi-name>openempi/SaltManagerService</jndi-name>
+    </session>
+  </enterprise-beans>
+</jboss>
+

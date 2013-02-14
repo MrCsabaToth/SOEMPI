@@ -1,0 +1,86 @@
+/** Add css rules here for your application. */
+
+.text {
+	font-size: 12px;
+}
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+.identifierBlock {
+	border: 1px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 8px;
+}
+	
+table.identifierTable {
+	font-weight: normal;
+	font-size: 11px;
+	width: 90%;
+}
+
+table.identifierTable th {
+	font-weight: bold;
+	font-size: 11px;
+}
+
+table.identifierTable td {
+	font-weight: normal;
+	font-size: 11px;
+}
+
+.identifierColumn {
+	width: 30%;
+}
+
+.namespaceColumn {
+	width: 30%;
+}
+
+.universalIdentifierColumn {
+	width: 25%;
+}
+
+.universalIdentifierTypeColumn {
+	width: 15%;
+}
+
+.userFileGrid {
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 600px;
+    height: 300px;
+    margin-top: -75px;     /* half of the height */
+    margin-left: -300px;   /* half of the width */
+}

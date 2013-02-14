@@ -1,0 +1,45 @@
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<module>
+	<inherits name='com.google.gwt.user.User' />
+	
+	<!-- our services -->
+	<servlet path="/referenceDataService" class="org.openempi.webapp.server.ReferenceDataServiceImpl"/>
+	
+	<servlet path="/blockingDataService" class="org.openempi.webapp.server.BlockingDataServiceImpl"/>
+	
+	<servlet path="/fileLoaderDataService" class="org.openempi.webapp.server.FileLoaderDataServiceImpl"/>
+
+	<servlet path="/configurationDataService" class="org.openempi.webapp.server.ConfigurationDataServiceImpl"/>
+
+	<servlet path="/personDataService" class="org.openempi.webapp.server.PersonDataServiceImpl"/>
+
+	<servlet path="/keyDataService" class="org.hiplab.simgap.webapp.server.KeyDataServiceImpl"/>
+	
+	<servlet path="/saltDataService" class="org.hiplab.simgap.webapp.server.SaltDataServiceImpl"/>
+
+      <!-- 
+	<servlet path="/testService" class="com.company.server.TestServiceImpl" />
+	  
+	<servlet path='/sampleRemoteService' class='com.company.server.SampleRemoteServiceImpl' />
+	
+	<servlet path='/securityService' class='com.company.server.security.SecurityServiceInMemoryImpl' />
+	 -->
+</module>

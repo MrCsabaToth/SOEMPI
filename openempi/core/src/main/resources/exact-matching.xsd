@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com> 
+	Licensed under the Apache License, Version 2.0 (the "License"); you may not 
+	use this file except in compliance with the License. You may obtain a copy 
+	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:em="http://configuration.openempi.openhie.org/exact-matching"
+	xmlns:mpi="http://configuration.openempi.openhie.org/mpiconfig"
+	targetNamespace="http://configuration.openempi.openhie.org/exact-matching"
+	elementFormDefault="qualified">
+
+	<xs:import namespace="http://configuration.openempi.openhie.org/mpiconfig"
+		schemaLocation="mpi-config.xsd" />
+
+	<xs:element name="exact-matching" type="em:exact-matching-type"
+		substitutionGroup="mpi:matching-configuration" />
+	<xs:complexType name="exact-matching-type">
+		<xs:complexContent>
+			<xs:extension base="mpi:matching-configuration-type">
+				<xs:sequence>
+					<xs:element name="match-fields" type="em:match-fields" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="match-fields">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="match-field" type="em:match-field" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="match-field">
+		<xs:sequence>
+			<xs:element name="left-field-name" type="xs:string" />
+			<xs:element name="right-field-name" type="xs:string" />
+			<xs:element name="comparator-function" type="mpi:function-field" minOccurs="0" />
+			<xs:element name="match-threshold" type="xs:double" minOccurs="0"/>			
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

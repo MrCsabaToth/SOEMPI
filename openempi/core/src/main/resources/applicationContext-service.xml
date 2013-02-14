@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd 
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+	default-lazy-init="true">
+
+	<!--
+		===================================================================
+	-->
+	<!--
+		AOP: Configuration and Aspects
+	-->
+	<!--
+		===================================================================
+	-->
+	<aop:config>
+		<aop:advisor id="userManagerTx" advice-ref="userManagerTxAdvice"
+			pointcut="execution(* *..service.UserManager.*(..))" order="0" />
+		<aop:advisor id="userManagerSecurity" advice-ref="userSecurityAdvice"
+			pointcut="execution(* *..service.UserManager.saveUser(..))" order="1" />
+		<aop:advisor id="managerTx" advice-ref="txAdvice"
+			pointcut="execution(* *..service.*Manager.*(..))" order="2" />
+	</aop:config>
+
+	<!-- Enable @Transactional support -->
+	<tx:annotation-driven />
+
+	<!-- Enable @AspectJ support -->
+	<aop:aspectj-autoproxy />
+
+	<!-- Enable @Configured support -->
+	<aop:spring-configured />
+
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<!-- Read-only commented out to make things easier for end-users -->
+			<!-- http://issues.appfuse.org/browse/APF-556 -->
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="acquireMatchRequests" timeout="7200" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<tx:advice id="userManagerTxAdvice">
+		<tx:attributes>
+			<tx:method name="save*" rollback-for="UserExistsException" />
+		</tx:attributes>
+	</tx:advice>
+
+	<bean id="userSecurityAdvice" class="org.openhie.openempi.service.UserSecurityAdvice" />
+
+	<!--
+		===================================================================
+	-->
+	<!--
+		Mail: Sender and Velocity configuration
+	-->
+	<!--
+		===================================================================
+	-->
+	<bean id="mailEngine" class="org.openhie.openempi.service.MailEngine">
+		<property name="mailSender" ref="mailSender" />
+		<property name="velocityEngine" ref="velocityEngine" />
+		<property name="from" value="${mail.default.from}" />
+	</bean>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- Uncomment if you need to authenticate with your SMTP Server -->
+		<!--
+			property name="username" value="${mail.username}"/> <property
+			name="password" value="${mail.password}"/> <property
+			name="javaMailProperties"> <value> mail.smtp.auth=true </value>
+			</property
+		-->
+	</bean>
+
+	<!-- Configure Velocity for sending e-mail -->
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<props>
+				<prop key="resource.loader">class</prop>
+				<prop key="class.resource.loader.class">
+					org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+				</prop>
+				<prop key="velocimacro.library"></prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage"
+		scope="prototype">
+		<property name="from" value="${mail.default.from}" />
+	</bean>
+
+	<!--
+		===================================================================
+	-->
+	<!--
+		Security class from Spring Security - used to configure Password
+	-->
+	<!--
+		Encryption in UserManagerImpl. Can override in security.xml.
+	-->
+	<!--
+		===================================================================
+	-->
+	<bean id="passwordEncoder"
+		class="org.springframework.security.providers.encoding.ShaPasswordEncoder" />
+
+	<!--
+		===================================================================
+	-->
+	<!--
+		Managers: For accessing DAOs
+	-->
+	<!--
+		===================================================================
+	-->
+	<bean id="manager" class="org.openhie.openempi.service.impl.UniversalManagerImpl">
+		<property name="dao" ref="universalDao" />
+	</bean>
+
+	<bean id="lookupManager" class="org.openhie.openempi.service.impl.LookupManagerImpl">
+		<property name="lookupDao" ref="lookupDao" />
+	</bean>
+
+	<bean id="userManager" class="org.openhie.openempi.service.impl.UserManagerImpl">
+		<property name="userDao" ref="userDao" />
+		<property name="userSessionDao" ref="userSessionDao" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+
+	<bean id="roleManager" class="org.openhie.openempi.service.impl.RoleManagerImpl">
+		<property name="roleDao" ref="roleDao" />
+	</bean>
+
+	<bean id="configuration" class="org.openhie.openempi.configuration.Configuration"
+		init-method="init" depends-on="transformationService">
+		<property name="configFile" value="/mpi-config.xml" />
+	</bean>
+
+	<bean id="context" class="org.openhie.openempi.context.Context">
+		<property name="userManager" ref="userManager" />
+		<property name="personManagerService" ref="personManagerService" />
+		<property name="personQueryService" ref="personQueryService" />
+		<property name="configuration" ref="configuration" />
+		<property name="validationService" ref="validationService" />
+		<property name="matchingServiceSelector" ref="matchingServiceSelector" />
+		<property name="blockingServiceSelector" ref="blockingServiceSelector" />
+		<property name="recordLinkageProtocolSelector" ref="recordLinkageProtocolSelector" />
+		<property name="stringComparisonService" ref="stringComparisonService" />
+		<property name="transformationService" ref="transformationService" />
+		<property name="auditEventService" ref="auditEventService" />
+		<property name="keyServiceLocator" ref="keyServiceLocator" />
+		<property name="keyServerService" ref="keyServerService" />
+		<property name="remotePersonServiceLocator" ref="remotePersonServiceLocator" />
+		<property name="remotePersonService" ref="remotePersonService" />
+		<property name="dataLoaderServiceSelector" ref="dataLoaderServiceSelector" />
+		<property name="keyManagerService" ref="keyManagerService" />
+		<property name="saltManagerService" ref="saltManagerService" />
+		<property name="fieldService" ref="fieldService" />
+	</bean>
+
+	<bean id="personManagerService"
+		class="org.openhie.openempi.service.impl.PersonManagerServiceImpl">
+		<property name="personDao" ref="personDao" />
+		<property name="datasetDao" ref="datasetDao" />
+		<property name="personMatchDao" ref="personMatchDao" />
+		<property name="personLinkDao" ref="personLinkDao" />
+	</bean>
+
+	<bean id="personQueryService"
+		class="org.openhie.openempi.service.impl.PersonQueryServiceImpl">
+		<property name="personDao" ref="personDao" />
+		<property name="datasetDao" ref="datasetDao" />
+		<property name="personMatchDao" ref="personMatchDao" />
+		<property name="personLinkDao" ref="personLinkDao" />
+	</bean>
+
+	<!--  Blocking Services -->
+	<bean id="BasicBlockingDistinctBins"
+		class="org.openhie.openempi.blocking.basicblocking.BlockingServiceImpl"
+		init-method="init">
+		<property name="name" value="BasicBlockingDistinctBins"/>
+		<property name="inputType" value="String"/>
+		<property name="distinctBinsMode" value="true"/>
+	</bean>
+	<bean id="BasicBlockingOverlappingBins"
+		class="org.openhie.openempi.blocking.basicblocking.BlockingServiceImpl"
+		init-method="init">
+		<property name="name" value="BasicBlockingOverlappingBins"/>
+		<property name="inputType" value="String"/>
+		<property name="distinctBinsMode" value="false"/>
+	</bean>
+	<bean id="BlockingBypass"
+		class="org.openhie.openempi.blocking.bypass.BlockingBypassServiceImpl"
+		init-method="init">
+		<property name="name" value="BlockingBypass"/>
+		<property name="inputType" value="String"/>
+	</bean>
+	<bean id="RandomSampledBlockingBypass"
+		class="org.openhie.openempi.blocking.bypass.RandomSampledBlockingBypassServiceImpl"
+		init-method="init">
+		<property name="name" value="RandomSampledBlockingBypass"/>
+		<property name="inputType" value="String"/>
+	</bean>
+	<bean id="PrivacyPreservingBlockingWithGivenBits"
+		class="org.openhie.openempi.blocking.privacypreserving.BlockingWithGivenBitsServiceImpl">
+		<property name="name" value="PrivacyPreservingBlockingWithGivenBits"/>
+		<property name="inputType" value="Blob"/>
+	</bean>
+	<bean id="PrivacyPreservingBlockingWithPseudoRandomBits"
+		class="org.openhie.openempi.blocking.privacypreserving.BlockingWithPseudoRandomBitsServiceImpl">
+		<property name="name" value="PrivacyPreservingBlockingWithPseudoRandomBits"/>
+		<property name="inputType" value="Blob"/>
+	</bean>
+	<bean id="PrivacyPreservingBlockingWithCryptoRandomBits"
+		class="org.openhie.openempi.blocking.privacypreserving.BlockingWithCryptoRandomBitsServiceImpl">
+		<property name="name" value="PrivacyPreservingBlockingWithCryptoRandomBits"/>
+		<property name="inputType" value="Blob"/>
+	</bean>
+	<bean id="LocalitySensitiveHashingWithCompositeBloomFilters"
+		class="org.openhie.openempi.blocking.privacypreserving.LocalitySensitiveHashingWithCompositeBloomFiltersServiceImpl"
+		init-method="init">
+		<property name="name" value="LocalitySensitiveHashingWithCompositeBloomFilters"/>
+		<property name="inputType" value="Blob"/>
+	</bean>
+	<bean id="LSHWithCBFMultiParty"
+		class="org.openhie.openempi.blocking.privacypreserving.LSHWithCBFMultiPartyServiceImpl"
+		init-method="init">
+		<property name="name" value="LSHWithCBFMultiParty"/>
+		<property name="inputType" value="Blob"/>
+	</bean>
+
+	<bean id="blockingServiceSelector"
+		class="org.openhie.openempi.blocking.BlockingServiceSelectorImpl">
+		<property name="blockingServiceTypeMap">
+			<map>
+				<entry key="BasicBlockingDistinctBins" value-ref="BasicBlockingDistinctBins"/>
+				<entry key="BasicBlockingOverlappingBins" value-ref="BasicBlockingOverlappingBins"/>
+				<entry key="BlockingBypass" value-ref="BlockingBypass"/>
+				<entry key="RandomSampledBlockingBypass" value-ref="RandomSampledBlockingBypass"/>
+				<entry key="PrivacyPreservingBlockingWithGivenBits" value-ref="PrivacyPreservingBlockingWithGivenBits"/>
+				<entry key="PrivacyPreservingBlockingWithPseudoRandomBits" value-ref="PrivacyPreservingBlockingWithPseudoRandomBits"/>
+				<entry key="PrivacyPreservingBlockingWithCryptoRandomBits" value-ref="PrivacyPreservingBlockingWithCryptoRandomBits"/>
+				<entry key="LocalitySensitiveHashingWithCompositeBloomFilters" value-ref="LocalitySensitiveHashingWithCompositeBloomFilters"/>
+				<entry key="LSHWithCBFMultiParty" value-ref="LSHWithCBFMultiParty"/>
+			</map>
+		</property>
+	</bean>
+
+	<!--  Matching Services -->
+	<bean id="BasicExactMatching"
+		class="org.openhie.openempi.matching.exactmatching.DeterministicExactMatchingService"
+		init-method="init" depends-on="configuration">
+	</bean>
+	<bean id="ProbabilisticMatchingWithBinaryScores"
+		class="org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingWithBinaryScoresService"
+		init-method="init">
+	</bean>
+	<bean id="ProbabilisticMatchingWithScaledScores"
+		class="org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingWithScaledScoresService"
+		init-method="init">
+	</bean>
+	<bean id="CBFScoringService"
+		class="org.openhie.openempi.matching.fellegisunter.CBFScoringService"
+		init-method="init">
+	</bean>
+
+	<bean id="matchingServiceSelector"
+		class="org.openhie.openempi.matching.MatchingServiceSelectorImpl">
+		<property name="matchingServiceTypeMap">
+			<map>
+<!--				<entry key="BasicExactMatching" value-ref="BasicExactMatching"/>-->
+				<entry key="ProbabilisticMatchingWithBinaryScores" value-ref="ProbabilisticMatchingWithBinaryScores"/>
+				<entry key="ProbabilisticMatchingWithScaledScores" value-ref="ProbabilisticMatchingWithScaledScores"/>
+				<entry key="CBFScoringService" value-ref="CBFScoringService"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="TwoThirdPartyFBFProtocol"
+		class="org.openhie.openempi.recordlinkage.protocols.TwoThirdPartyFBFProtocol">
+		<property name="name" value="TwoThirdPartyFBFProtocol"/>
+		<property name="matchPairStatDao" ref="matchPairStatDao" />
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
+		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+	</bean>
+	<bean id="TwoThirdPartyCBFProtocol"
+		class="org.openhie.openempi.recordlinkage.protocols.TwoThirdPartyCBFProtocol">
+		<property name="name" value="TwoThirdPartyCBFProtocol"/>
+		<property name="matchPairStatDao" ref="matchPairStatDao" />
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
+		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+	</bean>
+	<bean id="ThreeThirdPartyFBFProtocol"
+		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyFBFProtocol">
+		<property name="name" value="ThreeThirdPartyFBFProtocol"/>
+		<property name="matchPairStatDao" ref="matchPairStatDao" />
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
+		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+	</bean>
+	<bean id="ThreeThirdPartyCBFProtocol"
+		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyCBFProtocol">
+		<property name="name" value="ThreeThirdPartyCBFProtocol"/>
+		<property name="matchPairStatDao" ref="matchPairStatDao" />
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
+		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+	</bean>
+
+	<bean id="recordLinkageProtocolSelector"
+		class="org.openhie.openempi.recordlinkage.impl.RecordLinkageProtocolSelectorImpl">
+		<property name="recordLinkageProtocolTypeMap">
+			<map>
+				<entry key="TwoThirdPartyFBFProtocol" value-ref="TwoThirdPartyFBFProtocol"/>
+				<entry key="TwoThirdPartyCBFProtocol" value-ref="TwoThirdPartyCBFProtocol"/>
+				<entry key="ThreeThirdPartyFBFProtocol" value-ref="ThreeThirdPartyFBFProtocol"/>
+				<entry key="ThreeThirdPartyCBFProtocol" value-ref="ThreeThirdPartyCBFProtocol"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="auditEventService" class="org.openhie.openempi.service.impl.AuditEventServiceImpl"
+		init-method="init">
+		<property name="auditEventDao" ref="auditEventDao" />
+	</bean>
+	
+	<bean id="validationService" class="org.openhie.openempi.service.impl.ValidationServiceImpl">
+	</bean>
+
+	<bean id="keyServiceLocator" class="org.openhie.openempi.service.impl.KeyServiceLocatorImpl">
+	</bean>
+
+	<bean id="keyServerService" class="org.openhie.openempi.service.impl.KeyServerServiceImpl">
+	</bean>
+
+	<bean id="remotePersonServiceLocator" class="org.openhie.openempi.service.impl.RemotePersonServiceLocatorImpl">
+	</bean>
+
+	<bean id="remotePersonService" class="org.openhie.openempi.service.impl.RemotePersonServiceImpl">
+	</bean>
+
+	<!--  Distance Metrics  -->
+	<bean id="Exact"
+		class="org.openhie.openempi.stringcomparison.metrics.ExactMatchDistanceMetric">
+		<property name="name" value="Exact"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="ExactBinary"
+		class="org.openhie.openempi.stringcomparison.metrics.ExactMatchDistanceMetricBinaryVersion">
+		<property name="name" value="ExactBinary"/>
+		<property name="inputType" value="Blob"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="Jaro"
+		class="org.openhie.openempi.stringcomparison.metrics.JaroDistanceMetric">
+		<property name="name" value="Jaro"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="JaroWinkler"
+		class="org.openhie.openempi.stringcomparison.metrics.JaroWinklerAliasiDistanceMetric">
+		<property name="name" value="JaroWinkler"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="JaroWinklerV2"
+		class="org.openhie.openempi.stringcomparison.metrics.JaroWinklerSimmetricsDistanceMetric">
+		<property name="name" value="JaroWinklerV2"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="Levenshtein"
+		class="org.openhie.openempi.stringcomparison.metrics.LevenshteinDistanceMetric">
+		<property name="name" value="Levenshtein"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="NeedlemanWunsch"
+		class="org.openhie.openempi.stringcomparison.metrics.NeedlemanWunschDistanceMetric">
+		<property name="name" value="NeedlemanWunsch"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="SmithWaterman"
+		class="org.openhie.openempi.stringcomparison.metrics.SmithWatermanDistanceMetric">
+		<property name="name" value="SmithWaterman"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="MongeElkan"
+		class="org.openhie.openempi.stringcomparison.metrics.MongeElkanDistanceMetric">
+		<property name="name" value="MongeElkan"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="Gotoh"
+		class="org.openhie.openempi.stringcomparison.metrics.GotohDistanceMetric">
+		<property name="name" value="Gotoh"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="GotohWindowedAffine"
+		class="org.openhie.openempi.stringcomparison.metrics.GotohWindowedAffineDistanceMetric">
+		<property name="name" value="GotohWindowedAffine"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="Block"
+		class="org.openhie.openempi.stringcomparison.metrics.BlockDistanceMetric">
+		<property name="name" value="Block"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="Soundex"
+		class="org.openhie.openempi.stringcomparison.metrics.SoundexDistanceMetric">
+		<property name="name" value="Soundex"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="Euclidean"
+		class="org.openhie.openempi.stringcomparison.metrics.EuclideanDistanceMetric">
+		<property name="name" value="Euclidean"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="QGrams"
+		class="org.openhie.openempi.stringcomparison.metrics.QGramsDistanceMetric">
+		<property name="name" value="QGrams"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="JaccardString"
+		class="org.openhie.openempi.stringcomparison.metrics.JaccardSimilarityMetricStringVersion">
+		<property name="name" value="JaccardString"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="JaccardBinary"
+		class="org.openhie.openempi.stringcomparison.metrics.JaccardSimilarityMetricBinaryVersion">
+		<property name="name" value="JaccardBinary"/>
+		<property name="inputType" value="Blob"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="Cosine"
+		class="org.openhie.openempi.stringcomparison.metrics.CosineSimilarityMetric">
+		<property name="name" value="Cosine"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="DiceString"
+		class="org.openhie.openempi.stringcomparison.metrics.DiceSimilarityMetricStringVersion">
+		<property name="name" value="DiceString"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="DiceBinary"
+		class="org.openhie.openempi.stringcomparison.metrics.DiceSimilarityMetricBinaryVersion">
+		<property name="name" value="DiceBinary"/>
+		<property name="inputType" value="Blob"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="Matching"
+		class="org.openhie.openempi.stringcomparison.metrics.MatchingCoefficientMetric">
+		<property name="name" value="Matching"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="Overlap"
+		class="org.openhie.openempi.stringcomparison.metrics.OverlapCoefficientMetric">
+		<property name="name" value="Overlap"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Similarity"/>
+	</bean>
+	<bean id="ScalarDouble"
+		class="org.openhie.openempi.stringcomparison.metrics.ScalarDoubleDistanceMetric">
+		<property name="name" value="ScalarDouble"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="ScalarFloat"
+		class="org.openhie.openempi.stringcomparison.metrics.ScalarFloatDistanceMetric">
+		<property name="name" value="ScalarFloat"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="ScalarInteger"
+		class="org.openhie.openempi.stringcomparison.metrics.ScalarIntegerDistanceMetric">
+		<property name="name" value="ScalarInteger"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="ScalarLong"
+		class="org.openhie.openempi.stringcomparison.metrics.ScalarLongDistanceMetric">
+		<property name="name" value="ScalarLong"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="DateToLong"
+		class="org.openhie.openempi.stringcomparison.metrics.DateToLongDistanceMetric">
+		<property name="name" value="DateToLong"/>
+		<property name="inputType" value="Date"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+	<bean id="DateToJaroWinkler"
+		class="org.openhie.openempi.stringcomparison.metrics.DateToJaroWinklerDistanceMetric">
+		<property name="name" value="DateToJaroWinkler"/>
+		<property name="inputType" value="Date"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
+
+	<bean id="stringComparisonService"
+		class="org.openhie.openempi.stringcomparison.impl.StringComparisonServiceImpl">
+		<property name="distanceMetricTypeMap">
+			<map>
+				<entry key="Exact" value-ref="Exact"/>
+				<entry key="ExactBinary" value-ref="ExactBinary"/>
+				<entry key="Jaro" value-ref="Jaro"/>
+				<entry key="JaroWinkler" value-ref="JaroWinkler"/>
+				<entry key="JaroWinklerV2" value-ref="JaroWinklerV2"/>
+				<entry key="Levenshtein" value-ref="Levenshtein"/>				
+				<entry key="NeedlemanWunsch" value-ref="NeedlemanWunsch"/>
+				<entry key="SmithWaterman" value-ref="SmithWaterman"/>
+				<entry key="MongeElkan" value-ref="MongeElkan"/>
+				<entry key="Gotoh" value-ref="Gotoh"/>
+				<entry key="GotohWindowedAffine" value-ref="GotohWindowedAffine"/>
+				<entry key="Block" value-ref="Block"/>
+				<entry key="Soundex" value-ref="Soundex"/>
+				<entry key="Euclidean" value-ref="Euclidean"/>
+				<entry key="QGrams" value-ref="QGrams"/>
+				<entry key="JaccardString" value-ref="JaccardString"/>
+				<entry key="JaccardBinary" value-ref="JaccardBinary"/>
+				<entry key="Cosine" value-ref="Cosine"/>
+				<entry key="DiceString" value-ref="DiceString"/>
+				<entry key="DiceBinary" value-ref="DiceBinary"/>
+				<entry key="Matching" value-ref="Matching"/>
+				<entry key="Overlap" value-ref="Overlap"/>
+				<entry key="ScalarDouble" value-ref="ScalarDouble"/>
+				<entry key="ScalarFloat" value-ref="ScalarFloat"/>
+				<entry key="ScalarInteger" value-ref="ScalarInteger"/>
+				<entry key="ScalarLong" value-ref="ScalarLong"/>
+				<entry key="DateToLong" value-ref="DateToLong"/>
+				<entry key="DateToJaroWinkler" value-ref="DateToJaroWinkler"/>
+			</map>
+		</property>
+	</bean>
+
+	<!--  Field Transformation Functions  -->
+	<bean id="Metaphone"
+		class="org.openhie.openempi.transformation.function.MetaphoneFunction">
+		<property name="name" value="Metaphone"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="String"/>
+	</bean>
+	<bean id="DoubleMetaphone"
+		class="org.openhie.openempi.transformation.function.DoubleMetaphoneFunction">
+		<property name="name" value="DoubleMetaphone"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="String"/>
+	</bean>
+	<bean id="SoundexFunction"
+		class="org.openhie.openempi.transformation.function.SoundexFunction">
+		<property name="name" value="SoundexFunction"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="String"/>
+	</bean>
+	<bean id="RefinedSoundex"
+		class="org.openhie.openempi.transformation.function.RefinedSoundexFunction">
+		<property name="name" value="RefinedSoundex"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="String"/>
+	</bean>
+	<bean id="BloomFilterHybridHMACUnpaddedNgrams"
+		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilterHybridHMACFunction">
+		<property name="name" value="BloomFilterHybridHMACUnpaddedNgrams"/>
+		<property name="hmacFunctionName" value="HmacMD5"/>
+		<property name="hmacFunctionName2" value="HmacSHA1"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+		<property name="ngramPadding" value="false"/>
+	</bean>
+	<bean id="BloomFilterHybridHMACPaddedNgrams"
+		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilterHybridHMACFunction">
+		<property name="name" value="BloomFilterHybridHMACPaddedNgrams"/>
+		<property name="hmacFunctionName" value="HmacMD5"/>
+		<property name="hmacFunctionName2" value="HmacSHA1"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+		<property name="ngramPadding" value="true"/>
+	</bean>
+	<bean id="BloomFilter64ByteSaltUnpaddedNgrams"
+		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter64ByteSaltFunction">
+		<property name="name" value="BloomFilter64ByteSaltUnpaddedNgrams"/>
+		<property name="hmacFunctionName" value="HmacSHA256"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+		<property name="ngramPadding" value="false"/>
+	</bean>
+	<bean id="BloomFilter64ByteSaltPaddedNgrams"
+		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter64ByteSaltFunction">
+		<property name="name" value="BloomFilter64ByteSaltPaddedNgrams"/>
+		<property name="hmacFunctionName" value="HmacSHA256"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+		<property name="ngramPadding" value="true"/>
+	</bean>
+	<bean id="BloomFilter4ByteSaltUnpaddedNgrams"
+		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter4ByteSaltFunction">
+		<property name="name" value="BloomFilter4ByteSaltUnpaddedNgrams"/>
+		<property name="hmacFunctionName" value="HmacSHA256"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+		<property name="ngramPadding" value="false"/>
+	</bean>
+	<bean id="BloomFilter4ByteSaltPaddedNgrams"
+		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter4ByteSaltFunction">
+		<property name="name" value="BloomFilter4ByteSaltPaddedNgrams"/>
+		<property name="hmacFunctionName" value="HmacSHA256"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+		<property name="ngramPadding" value="true"/>
+	</bean>
+	<bean id="HMACMD5Function"
+		class="org.openhie.openempi.transformation.function.HMACFunction"
+		init-method="init">
+		<property name="name" value="HMACMD5Function"/>
+		<property name="hmacFunctionName" value="HmacMD5"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="HMACSHA1Function"
+		class="org.openhie.openempi.transformation.function.HMACFunction"
+		init-method="init">
+		<property name="name" value="HMACSHA1Function"/>
+		<property name="hmacFunctionName" value="HmacSHA1"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="HMACSHA256Function"
+		class="org.openhie.openempi.transformation.function.HMACFunction"
+		init-method="init">
+		<property name="name" value="HMACSHA256Function"/>
+		<property name="hmacFunctionName" value="HmacSHA256"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="MD5Function"
+		class="org.openhie.openempi.transformation.function.MessageDigestFunction"
+		init-method="init">
+		<property name="name" value="MD5Function"/>
+		<property name="mdFunctionName" value="MD5"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="SHA1Function"
+		class="org.openhie.openempi.transformation.function.MessageDigestFunction"
+		init-method="init">
+		<property name="name" value="SHA1Function"/>
+		<property name="mdFunctionName" value="SHA-1"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="SHA256Function"
+		class="org.openhie.openempi.transformation.function.MessageDigestFunction"
+		init-method="init">
+		<property name="name" value="SHA256Function"/>
+		<property name="mdFunctionName" value="SHA-256"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="SHA384Function"
+		class="org.openhie.openempi.transformation.function.MessageDigestFunction"
+		init-method="init">
+		<property name="name" value="SHA384Function"/>
+		<property name="mdFunctionName" value="SHA-384"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+	<bean id="SHA512Function"
+		class="org.openhie.openempi.transformation.function.MessageDigestFunction"
+		init-method="init">
+		<property name="name" value="SHA512Function"/>
+		<property name="mdFunctionName" value="SHA-512"/>
+		<property name="inputType" value="String"/>
+		<property name="outputType" value="Blob"/>
+	</bean>
+
+	<bean id="transformationService"
+		class="org.openhie.openempi.transformation.impl.TransformationServiceImpl"
+		depends-on="keyServiceLocator">
+		<property name="transformationFunctionTypeMap">
+			<map>
+				<entry key="Metaphone" value-ref="Metaphone"/>
+				<entry key="DoubleMetaphone" value-ref="DoubleMetaphone"/>
+				<entry key="SoundexFunction" value-ref="SoundexFunction"/>
+				<entry key="RefinedSoundex" value-ref="RefinedSoundex"/>
+				<entry key="BloomFilterHybridHMACUnpaddedNgrams" value-ref="BloomFilterHybridHMACUnpaddedNgrams"/>
+				<entry key="BloomFilterHybridHMACPaddedNgrams" value-ref="BloomFilterHybridHMACPaddedNgrams"/>
+				<entry key="BloomFilter4ByteSaltUnpaddedNgrams" value-ref="BloomFilter4ByteSaltUnpaddedNgrams"/>
+				<entry key="BloomFilter4ByteSaltPaddedNgrams" value-ref="BloomFilter4ByteSaltPaddedNgrams"/>
+				<entry key="BloomFilter64ByteSaltUnpaddedNgrams" value-ref="BloomFilter64ByteSaltUnpaddedNgrams"/>
+				<entry key="BloomFilter64ByteSaltPaddedNgrams" value-ref="BloomFilter64ByteSaltPaddedNgrams"/>
+				<entry key="HMACMD5Function" value-ref="HMACMD5Function"/>
+				<entry key="HMACSHA1Function" value-ref="HMACSHA1Function"/>
+				<entry key="HMACSHA256Function" value-ref="HMACSHA256Function"/>
+				<entry key="MD5Function" value-ref="MD5Function"/>
+				<entry key="SHA1Function" value-ref="SHA1Function"/>
+				<entry key="SHA256Function" value-ref="SHA256Function"/>
+				<entry key="SHA384Function" value-ref="SHA384Function"/>
+				<entry key="SHA512Function" value-ref="SHA512Function"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="configurableFileLoader" class="org.openhie.openempi.loader.file.ConfigurableFileLoader">
+		<property name="personManagerService" ref="personManagerService" />
+	</bean>
+	<bean id="configurableTableLoader" class="org.openhie.openempi.loader.table.ConfigurableTableLoader">
+		<property name="personManagerService" ref="personManagerService" />
+	</bean>
+
+	<bean id="dataLoaderServiceSelector"
+		class="org.openhie.openempi.loader.DataLoaderServiceSelectorImpl">
+		<property name="dataLoaderServiceTypeMap">
+			<map>
+				<entry key="configurableFileLoader" value-ref="configurableFileLoader"/>
+				<entry key="configurableTableLoader" value-ref="configurableTableLoader"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="keyManagerService"
+		class="org.openhie.openempi.service.impl.KeyManagerServiceImpl">
+		<property name="keyDao" ref="keyDao" />
+	</bean>
+
+	<bean id="saltManagerService"
+		class="org.openhie.openempi.service.impl.SaltManagerServiceImpl">
+		<property name="saltDao" ref="saltDao" />
+	</bean>
+
+	<bean id="fieldService"
+		class="org.openhie.openempi.service.impl.FieldServiceImpl"
+		init-method="init">
+		<property name="fieldDao" ref="fieldDao" />
+	</bean>
+
+</beans>

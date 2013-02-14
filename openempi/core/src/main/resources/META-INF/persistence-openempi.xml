@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+
+    <persistence-unit name="ApplicationEntityManager"
+    	transaction-type="RESOURCE_LOCAL">
+    	<provider>org.hibernate.ejb.HibernatePersistence</provider>
+    	<class>org.openhie.openempi.model.User</class>
+    	<class>org.openhie.openempi.model.Role</class>
+
+    	<!-- 
+    		Adding more <class>f.q.c.Name</class> elements here is not required.  
+    		The annotated classes will still be detected, as can be observed in the 
+    		following log output:
+    		
+    		INFO [main] Ejb3Configuration.scanForClasses(652) | found EJB3 Entity bean: com.mycompany.model.Person
+    		
+    		That being said, it will still work if you do add your <class> 
+    		declarations here for clarity, simply as a way to explicitly see all the 
+    		classes that are mapped as persistent entities.  Do whatever blows your 
+    		skirt up.
+    	-->
+
+    	<class>org.openhie.openempi.model.Person</class>
+    	<class>org.openhie.openempi.model.PersonMatch</class>
+    	<class>org.openhie.openempi.model.PersonMatchRequest</class>
+    	<class>org.openhie.openempi.model.ColumnMatchInformation</class>
+    	<class>org.openhie.openempi.model.PersonLink</class>
+    	<class>org.openhie.openempi.model.MatchPairStat</class>
+    	<class>org.openhie.openempi.model.MatchPairStatHalf</class>
+    	<class>org.openhie.openempi.model.Key</class>
+    	<class>org.openhie.openempi.model.Salt</class>
+    	<class>org.openhie.openempi.model.FieldType</class>
+    	<class>org.openhie.openempi.model.FieldMeaning</class>
+    	<class>org.openhie.openempi.model.Dataset</class>
+    	<class>org.openhie.openempi.model.ColumnInformation</class>
+    	<class>org.openhie.openempi.model.UserSession</class>
+        <class>org.openhie.openempi.model.AuditEventType</class>
+        <class>org.openhie.openempi.model.AuditEvent</class>
+    </persistence-unit>
+
+</persistence>

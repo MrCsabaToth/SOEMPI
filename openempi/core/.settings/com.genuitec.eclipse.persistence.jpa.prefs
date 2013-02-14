@@ -1,0 +1,10 @@
+#Fri Mar 13 13:55:13 EDT 2009
+connectionInfoProperty=org.postgresql.Driver
+detect.m2m=false
+eclipse.preferences.version=1
+enableAnalysisProperty=false
+generate.version=false
+newSchemaProperty=public
+re.settings=
+re.strategy=
+schemaProperty=public

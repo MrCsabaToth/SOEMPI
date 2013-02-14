@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mpi="http://configuration.openempi.openhie.org/mpiconfig"
+	targetNamespace="http://configuration.openempi.openhie.org/mpiconfig"
+	elementFormDefault="qualified">
+	
+	<xs:element name="mpi-config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="mpi:record-linkage-protocol-configuration" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="mpi:data-loader-configuration" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="mpi:blocking-configuration" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="privacy-preserving-blocking" type="mpi:privacy-preserving-blocking" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="mpi:matching-configuration" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="admin-configuration" type="mpi:admin-configuration" minOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="record-linkage-protocol-configuration-type" abstract="true">
+	</xs:complexType>
+	<xs:element name="record-linkage-protocol-configuration" abstract="true" type="mpi:record-linkage-protocol-configuration-type"/>
+	
+	<xs:complexType name="data-loader-configuration-type" abstract="true">
+	</xs:complexType>
+	<xs:element name="data-loader-configuration" abstract="true" type="mpi:data-loader-configuration-type"/>
+	
+	<xs:complexType name="blocking-configuration-type" abstract="true">
+	</xs:complexType>
+	<xs:element name="blocking-configuration" abstract="true" type="mpi:blocking-configuration-type"/>
+	
+	<xs:complexType name="matching-configuration-type" abstract="true">
+	</xs:complexType>
+	<xs:element name="matching-configuration" abstract="true" type="mpi:matching-configuration-type"/>	
+
+	<xs:complexType name="privacy-preserving-blocking">
+		<xs:sequence>
+			<xs:element name="number-of-blocking-bits" type="xs:int" minOccurs="1"/>
+			<xs:element name="number-of-runs" type="xs:int" minOccurs="1"/>
+			<xs:element name="privacy-preserving-blocking-source-fields" type="mpi:privacy-preserving-blocking-source-fields"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="privacy-preserving-blocking-source-fields">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="privacy-preserving-blocking-source-field" type="mpi:privacy-preserving-blocking-source-field"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="privacy-preserving-blocking-source-field">
+		<xs:sequence>
+			<xs:element name="left-field-name" type="xs:string"/>
+			<xs:element name="right-field-name" type="xs:string"/>
+			<xs:element name="bits" type="mpi:bits"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="bits">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="bit" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="function-field">
+		<xs:sequence>
+			<xs:element name="function-name" type="xs:string" minOccurs="1"/>
+			<xs:element name="parameters" type="mpi:parameters" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="parameters">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="parameter" type="mpi:parameter"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="parameter">
+		<xs:sequence>
+			<xs:element name="parameter-name" type="xs:string"/>
+			<xs:element name="parameter-value" type="xs:string"/>
+			<xs:element name="parameter-type" type="mpi:parameter-type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="parameter-type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="string"/>
+			<xs:enumeration value="integer"/>
+			<xs:enumeration value="double"/>
+			<xs:enumeration value="float"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="admin-configuration">
+		<xs:sequence>
+			<xs:element name="file-repository-directory" type="xs:string"/>
+			<xs:element name="component-mode" type="mpi:component-type"/>
+			<xs:element name="experimental-mode" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="component-type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="data-provider"/>
+			<xs:enumeration value="data-integrator"/>
+			<xs:enumeration value="parameter-manager"/>
+			<xs:enumeration value="key-server"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

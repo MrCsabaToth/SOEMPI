@@ -1,0 +1,47 @@
+/** Add css rules here for your application. */
+button {
+  display: block;
+  font-size: 16pt
+}
+
+.widePanel {
+  width: 100%
+}
+
+img {
+  margin-top: 20px;
+}
+
+.gwt-ProgressBar-shell {
+  border: 2px solid #faf9f7;
+  border-right: 2px solid #848280;
+  border-bottom: 2px solid #848280;
+  background-color: #AAAAAA;
+  height: 14pt;
+  width: 50%;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+  background-color: #67A7E3;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+  padding: 0px;
+  margin: 0px;
+  color: white;
+}
+
+table.identifierTable {
+	font-weight: normal;
+	font-size: 11px;
+}
+
+table.identifierTable th {
+	font-weight: bold;
+	font-size: 11px;
+	width: 20%;
+}
+
+table.identifierTable td {
+	font-weight: normal;
+	font-size: 11px;
+	width: 20%;
+}

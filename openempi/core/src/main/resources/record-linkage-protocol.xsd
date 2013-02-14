@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Copyright (C) 2013 Vanderbilt University <csaba.toth, b.malin @vanderbilt.edu>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:rl="http://configuration.openempi.openhie.org/record-linkage-protocol"
+	xmlns:mpi="http://configuration.openempi.openhie.org/mpiconfig"
+	targetNamespace="http://configuration.openempi.openhie.org/record-linkage-protocol"
+	elementFormDefault="qualified">
+	
+	<xs:import namespace="http://configuration.openempi.openhie.org/mpiconfig" schemaLocation="mpi-config.xsd"/>
+
+	<xs:complexType name="record-linkage-protocol-type">
+		<xs:complexContent>
+			<xs:extension base="mpi:record-linkage-protocol-configuration-type">
+				<xs:sequence>
+					<xs:element name="record-linkage-protocol-config" type="rl:record-linkage-protocol-config"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="record-linkage-protocol" type="rl:record-linkage-protocol-type" substitutionGroup="mpi:record-linkage-protocol-configuration"/>
+	<xs:complexType name="record-linkage-protocol-config">
+		<xs:sequence>
+			<xs:element name="privacy-settings" type="rl:privacy-settings"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="privacy-settings">
+		<xs:sequence>
+			<xs:element name="component-settings" type="rl:component-settings" minOccurs="1"/>
+			<xs:element name="bloomfilter-settings" type="rl:bloomfilter-settings" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="component-settings">
+		<xs:sequence>
+			<xs:element name="keyserver-settings" type="rl:keyserver-settings" minOccurs="1"/>
+			<xs:element name="parameter-manager-settings" type="rl:parameter-manager-settings" minOccurs="1"/>
+			<xs:element name="data-integrator-settings" type="rl:data-integrator-settings" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="keyserver-settings">
+		<xs:complexContent>
+			<xs:extension base="rl:component-settings-base">
+				<xs:sequence>
+					<xs:element name="number-of-salts" type="xs:int"/>
+					<xs:element name="salt-id-start" type="xs:int"/>
+					<xs:element name="salt-id-stride" type="xs:int"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="data-integrator-settings">
+		<xs:complexContent>
+			<xs:extension base="rl:component-settings-base">
+				<xs:sequence>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="parameter-manager-settings">
+		<xs:complexContent>
+			<xs:extension base="rl:component-settings-base">
+				<xs:sequence>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="component-settings-base">
+		<xs:sequence>
+			<xs:element name="server-address" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="bloomfilter-settings">
+		<xs:sequence>
+			<xs:element name="n-gram-size" type="xs:int"/>
+			<xs:element name="default-m" type="xs:int"/>
+			<xs:element name="default-k" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

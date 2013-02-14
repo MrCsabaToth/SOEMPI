@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:dl="http://configuration.openempi.openhie.org/data-loader"
+	xmlns:mpi="http://configuration.openempi.openhie.org/mpiconfig"
+	targetNamespace="http://configuration.openempi.openhie.org/data-loader"
+	elementFormDefault="qualified">
+	
+	<xs:import namespace="http://configuration.openempi.openhie.org/mpiconfig" schemaLocation="mpi-config.xsd"/>
+	
+	<xs:complexType name="data-loader-type">
+		<xs:complexContent>
+			<xs:extension base="mpi:data-loader-configuration-type">
+				<xs:sequence>
+					<xs:element name="data-loader-config" type="dl:data-loader-config"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="data-loader" type="dl:data-loader-type" substitutionGroup="mpi:data-loader-configuration"/>
+	<xs:complexType name="data-loader-config">
+		<xs:sequence>
+			<xs:element name="delimiter-regex" type="xs:string"/>
+			<xs:element name="header-line-present" type="xs:boolean"/>
+			<xs:element name="data-fields" type="dl:data-fields"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="data-fields">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="data-field" type="dl:data-field"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="data-field">
+		<xs:sequence>
+			<xs:element name="source-column-index" type="xs:int"/>
+			<xs:element name="source-field-name" type="xs:string"/>
+			<xs:element name="target-field" type="dl:target-field"/>
+			<xs:element name="composition" type="dl:composition" minOccurs="0"/>
+			<xs:element name="substrings" type="dl:substrings" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="target-field">
+		<xs:sequence>
+			<xs:element name="field-name" type="xs:string"/>
+			<xs:element name="field-type" type="dl:field-type"/>
+			<xs:element name="field-type-modifier" type="xs:string" minOccurs="0"/>
+			<xs:element name="field-meaning" type="dl:field-meaning"/>
+			<xs:element name="field-transformation" type="mpi:function-field" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="field-type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="string"/>
+			<xs:enumeration value="integer"/>
+			<xs:enumeration value="bigint"/>
+			<xs:enumeration value="double"/>
+			<xs:enumeration value="float"/>
+			<xs:enumeration value="date"/>
+			<xs:enumeration value="blob"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="field-meaning">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="original-id"/>
+
+			<xs:enumeration value="given-name"/>
+			<xs:enumeration value="family-name"/>
+			<xs:enumeration value="middle-name"/>
+			<xs:enumeration value="name-prefix"/>
+			<xs:enumeration value="name-suffix"/>
+
+			<xs:enumeration value="date-of-birth"/>
+			<xs:enumeration value="birth-weight"/>
+			<xs:enumeration value="birth-city"/>
+			<xs:enumeration value="birth-state"/>
+			<xs:enumeration value="birth-country"/>
+			<xs:enumeration value="mothers-maiden-name"/>
+			<xs:enumeration value="mothers-weight"/>
+
+			<xs:enumeration value="ssn"/>
+			<xs:enumeration value="gender"/>
+			<xs:enumeration value="ethnic-group"/>
+			<xs:enumeration value="race"/>
+			<xs:enumeration value="nationality"/>
+			<xs:enumeration value="language"/>
+			<xs:enumeration value="religion"/>
+			<xs:enumeration value="marital-status"/>
+			<xs:enumeration value="degree"/>
+
+			<xs:enumeration value="email"/>
+			<xs:enumeration value="address-line1"/>
+			<xs:enumeration value="address-line2"/>
+			<xs:enumeration value="city"/>
+			<xs:enumeration value="county"/>
+			<xs:enumeration value="state"/>
+			<xs:enumeration value="country"/>
+			<xs:enumeration value="postal-code"/>
+			<xs:enumeration value="address-number"/>
+			<xs:enumeration value="address-fraction"/>
+			<xs:enumeration value="address-direction"/>
+			<xs:enumeration value="address-street-name"/>
+			<xs:enumeration value="address-type"/>
+			<xs:enumeration value="address-post-direction"/>
+			<xs:enumeration value="address-other"/>
+			<xs:enumeration value="address"/>
+
+			<xs:enumeration value="phone-country-code"/>
+			<xs:enumeration value="phone-area-code"/>
+			<xs:enumeration value="phone-number"/>
+			<xs:enumeration value="phone-extension"/>
+
+			<xs:enumeration value="date-created"/>
+			<xs:enumeration value="creator-id"/>
+			<xs:enumeration value="date-changed"/>
+			<xs:enumeration value="changed-by-id"/>
+			<xs:enumeration value="date-voided"/>
+			<xs:enumeration value="voided-by-id"/>
+
+			<xs:enumeration value="diagnosis-codes"/>
+
+			<xs:enumeration value="death-indication"/>
+			<xs:enumeration value="death-time"/>
+
+			<xs:enumeration value="custom1"/>
+			<xs:enumeration value="custom2"/>
+			<xs:enumeration value="custom3"/>
+			<xs:enumeration value="custom4"/>
+			<xs:enumeration value="custom5"/>
+			<xs:enumeration value="custom6"/>
+			<xs:enumeration value="custom7"/>
+			<xs:enumeration value="custom8"/>
+			<xs:enumeration value="custom9"/>
+			<xs:enumeration value="custom10"/>
+			<xs:enumeration value="custom11"/>
+			<xs:enumeration value="custom12"/>
+			<xs:enumeration value="custom13"/>
+			<xs:enumeration value="custom14"/>
+			<xs:enumeration value="custom15"/>
+			<xs:enumeration value="custom16"/>
+			<xs:enumeration value="custom17"/>
+			<xs:enumeration value="custom18"/>
+			<xs:enumeration value="custom19"/>
+			<xs:enumeration value="custom20"/>
+			<xs:enumeration value="custom21"/>
+			<xs:enumeration value="custom22"/>
+			<xs:enumeration value="custom23"/>
+			<xs:enumeration value="custom24"/>
+			<xs:enumeration value="custom25"/>
+			<xs:enumeration value="custom26"/>
+			<xs:enumeration value="custom27"/>
+			<xs:enumeration value="custom28"/>
+			<xs:enumeration value="custom29"/>
+			<xs:enumeration value="custom30"/>
+
+			<xs:enumeration value="cbf"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="composition">
+		<xs:sequence>
+			<xs:element name="index" type="xs:int"/>
+			<xs:element name="separator" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="substrings">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="substring" type="dl:substring"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="substring">
+		<xs:sequence>
+			<xs:element name="target-field" type="dl:target-field"/>
+			<xs:element name="begin-index" type="xs:int"/>
+			<xs:element name="end-index" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

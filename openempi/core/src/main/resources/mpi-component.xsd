@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright (C) 2010 SYSNET International, Inc. <support@sysnetint.com>
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mpic="http://configuration.openempi.openhie.org/mpicomponent"
+	targetNamespace="http://configuration.openempi.openhie.org/mpicomponent"
+	attributeFormDefault="unqualified"
+	elementFormDefault="qualified">
+	<xs:element name="mpi-component-definition">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="mpi-component" type="mpic:mpi-component-type"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="mpi-component-type">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="extensions" type="mpic:extensions-type"/>
+		</xs:sequence>
+		<xs:attribute name="component-type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="blocking"/>
+					<xs:enumeration value="matching"/>
+					<xs:enumeration value="dataloader"/>
+					<xs:enumeration value="rlprotocol"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="extensions-type">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="extension" type="mpic:extension-type"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="extension-type">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="implementation" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="interface" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="configuration-loader"/>
+					<xs:enumeration value="configuration-gui"/>
+					<xs:enumeration value="implementation"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

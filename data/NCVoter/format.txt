@@ -1,0 +1,15 @@
+The format of each file is:
+•	one record per line
+•	fields are separated by commas
+•	field 0: ID variable -- this is never corrupted and can be used to determine true match status
+•	field 1: last name
+•	field 2: first name
+•	field 3: middle name
+•	field 4: birth state
+•	field 5: city
+•	field 6: state
+•	field 7: street name
+•	field 8: street type
+•	field 9: street direction
+•	field 10: race
+•	field 11: gender
