@@ -84,9 +84,18 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 			// remaining list of persons
 			if (persons.size() > 0)
 				loadPersons(tableName, persons, populateCustomFields);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			log.error("Failed while loading the input file. Error: " + e);
 			throw new RuntimeException("Failed while loading the input file.");
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				log.error("Failed to close input file. Error: " + e);
+				throw new RuntimeException("Failed to close input file.");
+			}
 		}
 		for (ColumnInformation ci : columnInformation) {
 			Double averageLen = 0.0;
