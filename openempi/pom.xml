@@ -197,7 +197,7 @@
 				<artifactId>maven-license-plugin</artifactId>
 				<version>1.4.0</version>
 				<configuration>
-					<header>${basedir}/src/main/resources/header.txt</header>
+					<header>${basedir}/core/src/main/resources/header.txt</header>
 					<excludes>
 						<exclude>**/header.txt</exclude>
 						<exclude>**/*.log</exclude>
