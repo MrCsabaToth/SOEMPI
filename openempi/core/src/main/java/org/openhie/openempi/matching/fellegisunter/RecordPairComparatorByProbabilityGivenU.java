@@ -24,7 +24,7 @@ import org.openhie.openempi.model.LeanRecordPair;
 public class RecordPairComparatorByProbabilityGivenU implements Comparator<LeanRecordPair>
 {
 	public int compare(LeanRecordPair pair1, LeanRecordPair pair2) {
-		return ((Double)pair1.getComparisonVector().getVectorProbGivenU()).compareTo(pair2.getComparisonVector().getVectorProbGivenU());
+		return Double.compare(pair1.getComparisonVector().getVectorProbGivenU(), pair2.getComparisonVector().getVectorProbGivenU());
 	}
 
 }

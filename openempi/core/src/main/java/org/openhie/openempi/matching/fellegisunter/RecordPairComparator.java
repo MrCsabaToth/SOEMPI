@@ -24,7 +24,7 @@ import org.openhie.openempi.model.RecordPair;
 public class RecordPairComparator implements Comparator<RecordPair>
 {
 	public int compare(RecordPair pair1, RecordPair pair2) {
-		return ((Double)pair1.getWeight()).compareTo(pair2.getWeight());
+		return Double.compare(pair1.getWeight(), pair2.getWeight());
 	}
 
 }

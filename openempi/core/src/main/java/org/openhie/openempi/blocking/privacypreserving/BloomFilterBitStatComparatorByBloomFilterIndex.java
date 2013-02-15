@@ -24,7 +24,7 @@ public class BloomFilterBitStatComparatorByBloomFilterIndex implements Comparato
 {
 	public int compare(BloomFilterBitStat pair1, BloomFilterBitStat pair2) {
 		if (pair1.getCompositeFieldIndex() == pair2.getCompositeFieldIndex())
-			return ((Integer)pair1.getBloomFilterBitIndex()).compareTo(pair2.getBloomFilterBitIndex());
-		return ((Integer)pair1.getCompositeFieldIndex()).compareTo(pair2.getCompositeFieldIndex());
+			return Integer.compare(pair1.getBloomFilterBitIndex(), pair2.getBloomFilterBitIndex());
+		return Integer.compare(pair1.getCompositeFieldIndex(), pair2.getCompositeFieldIndex());
 	}
 }
