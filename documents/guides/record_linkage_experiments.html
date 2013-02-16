@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Record Linkage Experiments on the local SOEMPI</title>
+</head>
+<body>
+<h1>Record Linkage Experiments on the local SOEMPI</h1>
+You supposedly imported at least two datasets to play with (in case of a PRL a Key Server component is needed,
+but that can be configured as the local machine itself).
+A wizard is accessible at the Data Providers which guide through the configuration steps:
+<a href="file_import.html">import guide</a>.
+<ol>
+<li>First please <a href="soempi_user_login.html">log in</a> to the data provider if you haven't done so.<br/>
+	<img src="img/DataProviderLogin.jpg" />
+</li>
+<li>Click on the Perform Match toolbar icon to get to the Match View.<br/>
+	<img src="img/MatchesViewIcon.jpg" />
+</li>
+<li>You will be presented the Match View page. You can perform record linkage (match) between two imported datasets here
+using the controls in the headerline of the view, and you can see all of the performed record linkages in the listview below that.
+In this guid we will perform a record linkage and see what results can we display about finished matches.<br/>
+	<img src="img/MatchesView.jpg" />
+</li>
+<li>Let us first specify the dataset which considered to be on the left side of the linkage.
+Selecting the dataset all of the drop-down controls which offer selection of fields of the left dataset.
+This includes the left "original id field" selector on this MatchView, field selectors in various dialogs of
+blocking and matching configuration related user interfaces.<br/>
+	<img src="img/MatchSelectLeftDataset.jpg" />
+</li>
+<li>Let us then specify the dataset which considered to be on the right side of the linkage.
+Selecting the dataset all of the drop-down controls which offer selection of fields of the right dataset.
+This includes the right "original id field" selector on this MatchView, field selectors in various dialogs of
+blocking and matching configuration related user interfaces.<br/>
+	<img src="img/MatchSelectRightDataset.jpg" />
+</li>
+<li>Specify a unique table name for the record pair links for database persistence.
+This will be stored in a field of the PersonMatch entity related to the match and there
+will be an actual table created (prefixed by "tbl_lnk_")<br/>
+	<img src="img/MatchLinkTableName.jpg" />
+</li>
+<li>Select the Blocking algorithm you want to use during the record linkage procedure from the drop-down list.
+	<img src="img/MatchBlockingServiceSelection.jpg" />
+</li>
+<li>Select the Matching algorithm you want to use during the record linkage procedure from the drop-down list.
+	<img src="img/MatchMatchingServiceSelection.jpg" />
+</li>
+<li>Check the "Check True Matches checkbox if your datasets have their own inherited Id fields and you want to specify
+these "original id fields" in the drop-down boxes below.
+	<img src="img/MatchCheckTrueMatches.jpg" />
+</li>
+<li>If your datasets have their own inherited Id fields, you can select
+the left "original id field" in the drop-down box if you want do so.
+	<img src="img/MatchLeftOriginalIdFieldSelection.jpg" />
+</li>
+<li>If your datasets have their own inherited Id fields, you can select
+the right "original id field" in the drop-down box if you want do so.
+	<img src="img/MatchRightOriginalIdFieldSelection.jpg" />
+</li>
+<li>If you don't want to persist the record pairs and you are only interested in the end result of the EM algorithm
+please check this box. This is highly advised if you are doing a non-blocking type record linkage on large datasets.
+Indication that no persistence needed can dramatically decrease runtime and memory usage.
+	<img src="img/MatchEMOnly.jpg" />
+</li>
+<li>Click on the Match button to finally start the procedure.<br/>
+	<img src="img/MatchProcessStart.jpg" />
+</li>
+<li>An AJAX wait icon will indicate that the computation is under progress.<br/>
+	<img src="img/MatchProcessWait.jpg" />
+</li>
+<li>At the end the AJAX wait icon will disappear and a new row will appear in the listview.<br/>
+	<img src="img/MatchProcessEnd.jpg" />
+</li>
+</ol>
+
+You can examine several properties of the performed record linkages using the icons at the end of the rows of the list view.
+<ul>
+
+<li>
+Match Column Informations: information about the left and right side properties participated in the record linkage
+<ol>
+<li>Click on the "View Match Column Informations" Icon<br/>
+	<img src="img/MatchColumnInformationIcon.jpg" />
+</li>
+<li>Examine the upcoming modal dialog which presents the available information:<br/>
+	<img src="img/MatchColumnInformationDialog.jpg" />
+</li>
+</ol>
+</li>
+
+<li>
+EM information chart: m and u output values of the EM run
+<ol>
+<li>Click on the "View EM Results of this match" Icon<br/>
+	<img src="img/MatchEMResultViewIcon.jpg" />
+</li>
+<li>Examine the upcoming modal dialog which presents the available information. The red line marks the m, while the green line marks u values.<br/>
+	<img src="img/MatchEMResultDialog.jpg" />
+</li>
+</ol>
+</li>
+
+<li>
+Match Record Pair Score chart: evenly samples the record pairs (ordered by weight) and shows the rough shape of the scores
+<ol>
+<li>Click on the "View score chart of the match" Icon<br/>
+	<img src="img/MatchScoreViewIcon.jpg" />
+</li>
+<li>Examine the upcoming modal dialog which presents the available information. The two green bars mark the lower/upper bounds.<br/>
+	<img src="img/MatchScoreDialog.jpg" />
+</li>
+</ol>
+</li>
+
+<li>
+Match Record Pair list: enumerates pages of record pairs in score order. It is possible to view the values of the left or right record in a pair.
+<ol>
+<li>Click on the "View List of Record Pairs" Icon<br/>
+	<img src="img/MatchRecordPairListViewIcon.jpg" />
+</li>
+<li>Examine the upcoming modal dialog which presents the first page of the record pairs.<br/>
+	<img src="img/MatchRecordPairListDialogBeginning.jpg" />
+</li>
+<li>Click on the pager button which brings the view to the last page (highest scores).<br/>
+	<img src="img/MatchRecordPairListDialogEnd.jpg" />
+</li>
+<li>By clicking on the buttons in the en of the rows you can view the attributes of the left or the right records of the particular pair.<br/>
+	<img src="img/MatchRecordPairShowPersonDialog.jpg" />
+</li>
+</ol>
+</li>
+
+</ol>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Importing SOEMPI source into Eclipse</title>
+</head>
+<body>
+<h1>Importing SOEMPI source into Eclipse</h1>
+After installing m2e plugin into Eclipse let's import SOEMPI Maven project!
+<ol>
+<li>Right click on the "<tt>Project Explorer</tt>" view,
+<tt>"Import"</tt> > <tt>"Import..."</tt>, select <tt>"Maven"</tt>, <tt>"Existing Maven Projects"</tt>.<br/>
+	<img src="img/Eclipse11.jpg" /><br/>
+	<img src="img/Eclipse12.jpg" />
+</li>
+<li><tt>Next</tt>, "<tt>Browse...</tt>", go to <tt>SOEMPI/openempi</tt> folder, "<tt>OK</tt>", the plugin will analyze poms and a
+check treeview will appear with one root pom.xml and 6 child pom.xmls. Click Next and wait.<br/>
+	<img src="img/Eclipse13.jpg" /><br/>
+	<img src="img/Eclipse14.jpg" />
+</li>
+<li>Click on Finish, when it is enabled. On MacOS X the button's order is different, the Finish is the rightmost.<br/>
+	<img src="img/Eclipse15.jpg" />
+</li>
+<li>You'll be prompted with installation of two more m2e/Maven plugins:
+m2e connector for mavenarchiver and Maven Integration for WTP.
+Select "Next" in this new dialog, "Next", check "I accept the terms..", "Finish".<br/>
+	<img src="img/Eclipse16.jpg" /><br/>
+	<img src="img/Eclipse17.jpg" /><br/>
+	<img src="img/Eclipse18.jpg" />
+</li>
+<li>Click "OK" to the warning of installing unsigned content when it pops up.<br/>
+	<img src="img/Eclipse19.jpg" />
+</li>
+<li>Wait until the compilation stops (look at the bottom right section of the notificaton area).<br/>
+	<img src="img/Eclipse20.jpg" />
+</li>
+<li>Restart Eclipse when prompted. Wait until the compilation settles.<br/>
+	<img src="img/Eclipse21.jpg" /><br/>
+	<img src="img/Eclipse22.jpg" />
+</li>
+</ol>
+</body>
+</html>

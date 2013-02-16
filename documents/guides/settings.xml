@@ -1,0 +1,23 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository>C:/Users/ctoth/.m2/repository</localRepository>
+  <interactiveMode>true</interactiveMode>
+  <usePluginRegistry>false</usePluginRegistry>
+  <offline>false</offline>
+  <servers>
+    <server>
+      <id>openxds</id>
+      <username>username_on_the_portal</username>
+      <password>password_on_the_portal</password>
+    </server>
+  </servers>
+<!--  <profiles>
+    <profile>
+      <properties>
+        <release.version>2.0.4</release.version>
+      </properties>
+    </profile>
+  </profiles> -->
+</settings>

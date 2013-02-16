@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Data Import into Data Providers</title>
+</head>
+<body>
+<h1>Data Import into Data Providers</h1>
+The following steps will describe how to import a dataset from a file into SOEMPI.
+<ol>
+<li>First please <a href="soempi_user_login.html">log in</a>.<br/>
+	<img src="img/DataProviderLogin.jpg" />
+</li>
+<li>Start the File Import Wizard either from the toolbar or from the menu:<br/>
+	<img src="img/ImportWizardInvoke.jpg" />
+</li>
+<li>If you haven't done so, specify the various component settings, otherwise double check them.
+In case if file import the Key Server related settings are the most relevant.<br/>
+	<img src="img/ImportWizardComponentConfigStep.jpg" />
+</li>
+<li>The Bloom Filter Settings are important if you want to BF encode/transform some input fields.
+Make sure that the default values are the same for the
+Data Providers, otherwise matches may won't make any sense.<br/>
+	<img src="img/ImportWizardBFStep.jpg" />
+</li>
+<li>You can import more variants of a given field from the file. For example we import the given
+name and the family name attributes in their original form, their DoubleMetaphone transformation,
+their BloomFilter encodings, and their SHA1 encodings too. For each entry you have to specify:
+<ul>
+<li>which is the source column of the file (the separator value can be specified too, see above the datagrid)</li>
+<li>what transformations you may want to perform on the value before it is fed into the database column</li>
+<li>what is the meaning of the field</li>
+<li>what is the type of the field</li>
+<li>what should be the database column name</li>
+</ul>
+Besides that there are advanced possibilities to form one database column from more file input fields or
+fed certain parts of one file filed into separate database columns, specify date formats, etc.<br/>
+	<img src="img/ImportWizardFileFormatStep.jpg" />
+</li>
+<li>At the next step you have to specify the actual file you wnat to import/upload (with the "Browse..." button).
+You also have to give a unique name to the dataset. Let's import <tt>nc_0_clean.records</tt> into one Data Provider with
+the dataset name <tt>clean</tt>, and <tt>nc_0_corrupt.records</tt> into the other Data Provider with
+the dataset name <tt>dirty</tt>.<br/>
+	<img src="img/ImportWizardFileStep.jpg" /><br/>
+When you are done, press the Import Button!
+</li>
+<li>In case you perform Bloom Filter transformation during the import, a dialog will pop-up where you can specify
+credentials for the Key Server. If no transformation requires external connection the import procedure will start right
+away. Let's leave the default values in the Login dialog for the sake of the argument of this guide.<br/>
+	<img src="img/ImportWizardCredentialsStep.jpg" />
+</li>
+<li>The procedure starts, it takes a while depending on the size of the file, number of the records and transformations:<br/>
+	<img src="img/ImportWizardWaitStep.jpg" /><br/>
+Currently the AJAX wait icon is a little covered.
+</li>
+<li>When the import finishes the "Imported" status of the file will switch to
+"Y" from "N", and you'll see an Info pop-up for a short time (TODO: newer screenshot):<br/>
+	<img src="img/ImportWizardCompletedStep.jpg" />
+</li>
+</ol>
+The following things happened in the background:
+<ol>
+<li>The file was uploaded into the <tt>fileRepository</tt> directory.</li>
+<li>The <tt>mpi-config.xml</tt> should be updated in case you changed some settings.</li>
+<li>A new sequence and table was created in the database. The unique name is prefixed with the "tbl_ds_" string.<br/>
+	<img src="img/ImportDBChange1.jpg" />
+</li>
+<li>There's an entry for the new dataset in the dataset table too:<br/>
+	<img src="img/ImportDBChange3.jpg" />
+</li>
+<li>All of the column's information are stored for the newly imported dataset too. In this case we specified
+different type of transformations for the 11 input fileds, so we ended up importing 24 columns:<br/>
+	<img src="img/ImportDBChange2.jpg" />
+</li>
+<li>The column's information can be viewed from the user interface too.
+Click on the View Columns icon at the row of the dataset you want to examine<br/>
+	<img src="img/SOEMPIColumnInformationIcon.jpg" /><br/>
+	<img src="img/SOEMPIColumnInformationDialog.jpg" />
+</li>
+<li>And finally the table itself:<br/>
+	<img src="img/ImportDBChange4.jpg" />
+</li>
+</ol>
+</body>
+</html>

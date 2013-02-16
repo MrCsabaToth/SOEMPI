@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Installation of PostgreSQL</title>
+</head>
+<body>
+<h1>Installation of PostgreSQL</h1>
+
+<h2>Windows</h2>
+<p>Download and install PostgreSQL form it's website. Follow the instructions.
+The installer includes PgAdmin management utility too.</p>
+<h2>Linux</h2>
+<p>Use <tt>Ubuntu Software Center</tt> (Ubuntu 11.10+ Oneiric Ocelot) or <tt>Synaptics Package Manager</tt>
+in case of pre 11.10 Ubuntu (in case of Fedora, SUSE or other distribution
+use the package manager of the distribution) to install the following packages:</p>
+<ul>
+	<li><tt>postgresql-8.4</tt> or <tt>postgresql-9.1</tt> or whichever is the newest
+		supported version on your distribution</li>
+	<li><tt>pgadmin3</tt></li>
+</ul>
+<h2>Mac OS X</h2>
+<p>The followings are only our recommendations. If you are an expert with PostgreSQL on
+Mac OS X, and you have a working system please continue with the schema setup steps.</p>
+<ul>
+<li>Forget about Fink or MacPorts repositories. Also do not use installer available on
+PostgreSQL site. Uninstall these if you have them.</li>
+<li>Create a user "<tt>postgres</tt>" (any password should do)</li>
+<li>Download and run
+<a href="http://www.postgresqlformac.com/lists/downloads/unified_installer_disk_imag/">
+<tt>PostgreSQL unified installer</tt></a></li>
+<li>Create symbolic links to elements in the Library (TODO: further explanation and steps)</li>
+</ul>
+
+</body>
+</html>

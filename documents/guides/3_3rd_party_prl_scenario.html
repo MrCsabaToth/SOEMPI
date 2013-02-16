@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Example scenario: multi party setup, 3 3rd parties</title>
+</head>
+<body>
+<h1>Example scenario: multi party setup, 3 3rd parties</h1>
+
+<h2>Participants:</h2>
+<ul>
+<li>Key Server (KS): provides salts for the Bloom Filter generation.</li>
+<li>Parameter Manager (PM): recommends Bloom Filter parameters to the Data Providers.</li>
+<li>Data Providers (DP): want to match data with other Data Providers.</li>
+<li>Data Integrator (DI): performs matching on the encoded data coming from DPs.</li>
+</ul>
+<h2>Steps of the multi-party PRL setup</h2>
+<ol>
+	<li>Install an instance of SOEMPI to the Key Server / Parameter Manager machine by following the <a href="user_setup.html">setup guide</a>.</li>
+	<li>Install an instance of SOEMPI to the Data Integrator machine by following the <a href="user_setup.html">setup guide</a>.</li>
+	<li>Install an instance of SOEMPI to the Data Provider 1 machine by following the <a href="user_setup.html">setup guide</a>.</li>
+	<li>Install an instance of SOEMPI to the Data Provider 2 machine by following the <a href="user_setup.html">setup guide</a>.</li>
+	<li><a href="generate_salts.html">Generate salts on the Key Server</a></li>
+	<li>Initial configuration of Parameter Manager: please perform <a href="configure_keyserver_settings.html">Key Server settings</a>.
+		If your Key Server and Parameter Manager entity is provided by the same SOEMPI instance, please make sure to
+		<a href="configure_component_type.html">change the component type</a> to Parameter Manager from Key Server. (<i>Note:
+		this will be point when a user needs to be created for Data Provider 1 and Data Provider 2 on Key Server and
+		Parameter Manager.</i>)</li>
+	<li>Initial configure Data Integrator: please perform <a href="configure_keyserver_settings.html">Key Server settings</a>. (<i>Note:
+		this will be point when a user needs to be created for Data Provider 1 and Data Provider 2 on Key Server and
+		Parameter Manager.</i>)</li>
+	<li>Configure Data Provider 1: please perform <a href="configure_keyserver_settings.html">Key Server settings</a>, additionally
+		set the IP addresses of the Parameter Manager and the Data Integrator too.</li>
+	<li>Configure Data Provider 2: same as with the Data Provider 1.</li>
+	<li>Import the example clean dataset into Data Provider 1 machine by following the <a href="file_import.html">import guide</a>.</li>
+	<li>Import the example corrupt dataset into Data Provider 2 machine by following the <a href="file_import.html">import guide</a>.</li>
+	<li>Initiate the multi-step PRL link procedure from Data Provider 1 machine by following the <a href="3_3rd_party_prl_start.html">guide</a>.</li>
+	<li>Initiate the multi-step PRL link procedure from Data Provider 2 machine by following the <a href="3_3rd_party_prl_start.html">guide</a>.</li>
+</ol>
+</body>
+</html>

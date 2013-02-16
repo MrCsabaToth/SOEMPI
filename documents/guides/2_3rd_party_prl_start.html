@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Multi-party privacy preserving record linkage, 2 3rd parties</title>
+</head>
+<body>
+<h1>Multi-party privacy preserving record linkage, 2 3rd parties</h1>
+You supposedly setup and configured every participant and imported the two datasets to the two data providers.
+A wizard is accessible at the Data Providers which guide through the configuration steps.
+<ol>
+<li>First please <a href="soempi_user_login.html">log in</a> to the data provider if you haven't done so.<br/>
+	<img src="img/DataProviderLogin.jpg" />
+</li>
+<li>Click on the Record Linkage Wizard toolbar button or activate it from the menu.<br/>
+	<img src="img/PRLWizardStart.jpg" />
+</li>
+<li>You will be presented the Blocking Configuration page, which is only relevant for 3 3rd party setups.
+Click on the Next button.<br/>
+	<img src="img/PRL2WizardBlockingConfig.jpg" />
+</li>
+<li>You'll see the Matching Fields Configuration page.
+Right now SOEMPI deducts the matching fields from that configuration, and these fields will be sent to the data Integrator.
+Right now the Data Provider send all records to the Data Integrator so it'll generate all record pairs
+from the two received samples, there's no blocking.<br/>
+	<img src="img/PRLWizardMatchingFieldsConfig.jpg" />
+</li>
+<li>You'll see the Matching Parameters Configuration page, where you can configure the EM specific settings.
+The Data Integrator doesn't take these detailed values from the Data Providers. So you have to make
+certain settings right there before the process. Click on the Next button.<br/>
+	<img src="img/PRLWizardMatchingParametersConfig.jpg" />
+</li>
+<li>Please input the following:
+<ul>
+<li>Select the desired dataset you want to start with by the leading checkbox of the row</li>
+<li>Unique match name (this is the unique name for the PRL itself, and the other DP should specify the same value,
+that's how requests are paired with each other)</li>
+<li>Unique table name (the table will be created at the Data Integrator with this name)</li>
+<li>Select the desired PRL protocol method (in this case: 2 3rd party)</li>
+</ul>
+Press the Send button to start the procedure:<br/>
+	<img src="img/PRL2Start.jpg" />
+</li>
+<li>Next a dialog will pop-up where you can specify credentials for the Key Server, and the Data Integrator.
+Notice, that the Parameter Manager inputs are disabled because they are not relevant in case of the 2 3rd party scenario.
+Let's leave the default values in the Login dialog for the sake of the argument of this guide.<br/>
+	<img src="img/PRL2Credentials.jpg" />
+</li>
+<li>The procedure starts:<br/>
+	<img src="img/PRL2Wait1.jpg" /><br/>
+	<img src="img/PRL2Wait2.jpg" />
+Currently the AJAX wait icon is a little covered.
+</li>
+<li>When the procedure finishes, the Waiting ribbon and icon disappears.<br/>
+	<img src="img/PRL2Finish.jpg" />
+</li>
+</ol>
+
+The following things happened in the background (TODO screenshot DB changes):
+<ol>
+
+<li>
+Data Provider beginning:
+<ol>
+<li>DP authenticates itself to the DI with the appropriate credentials entered in the PRL Login screen.</li>
+<li>DP sends the whole BF dataset to DI.</li>
+<li>Finally DP sends a <tt>PersonMatchRequest</tt> object, which specifies the unique match codename (so they can be paired), the table name, etc.
+</li>
+</ol>
+</li>
+
+<li>
+Calculations at DI
+<ol>
+<li>DI accepts PersonMatchRequests. Every time it receives one tries to look up a matching one in the database.
+If a matching one found the computation begins.</li>
+<li>DI generates all possible record pairs from the datasets and performs an EM calculation and
+record linkage (using DiceBinary comparisons and scaled weight scoring method).</li>
+<li>DI persist the linkage results.</li>
+</ol>
+</li>
+
+</ol>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Configure Key Server settings</title>
+</head>
+<body>
+<h1>Configure Key Server settings</h1>
+SOEMPI has a section in it's configuration which specifies keys server related settings.
+There are properties associated with obtaining and cacheing salts, besides that there's the IP address
+of the Key Server too:
+<ul>
+<li><tt>ip-address</tt>: Key Server's IP address</li>
+<li><tt>number-of-salts</tt>: how many salt entities will be obtained and cached once SOEMPI connects to the Key Server</li>
+<li><tt>salt-id-start</tt>: What is the id of the forst salt element</li>
+<li><tt>salt-id-stride</tt>: The salt id is incremented by this value in Key Server's database</li>
+</ul>
+Ways to change Key Server settings.
+<ul>
+<li>On the UI: Specific configuration settings.<br/>
+	<img src="img/ConfigComponentSettingsUIOpen.jpg" /><br/>
+	<img src="img/ConfigKeyServerSettingsUI.jpg" />
+</li>
+<li>In the configuration file (<tt>mpi-config.xml</tt>): at the beginning there's a <tt>keyserver-settings</tt> section
+(within the <tt>mpi-config/privacy-settings/component-settings</tt> tags). Edit these manually if you want. JBoss needs to be
+restarted in this case.<br/>
+	<img src="img/ConfigKeyServerSettingsXML.jpg" />
+</ul>
+</body>
+</html>

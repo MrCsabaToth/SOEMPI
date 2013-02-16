@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Checking deployment in JBoss JMX console</title>
+</head>
+<body>
+<h1>Checking deployment in JBoss JMX console</h1>
+Let's check if things are OK in JBoss's JMX console.
+<ol>
+<li>Open up a browser and navigate to the 8080 port of the IP address what you configured as a binding address for JBoss.
+By default it's "<tt>http://localhost:8080</tt>".
+Click on "<tt>JMX Console</tt>" link.<br/>
+	<img src="img/JMXConsole01.jpg" />
+</li>
+<li>Click on the "<tt>service=JNDIView</tt>" link.<br/>
+	<img src="img/JMXConsole02.jpg" />
+</li>
+<li>Invoke the list function by clicking on it's Invoke button.<br/>
+	<img src="img/JMXConsole03.jpg" />
+</li>
+<li>In the upcoming page you should see tracees of SOEMPI on the top of the page...<br/>
+	<img src="img/JMXConsole04.jpg" />
+</li>
+<li>... and services at the "<tt>Global JNDI Namespace</tt>", at bottom of the page:<br/>
+	<img src="img/JMXConsole05.jpg" />
+</li>
+</ol>
+</body>
+</html>

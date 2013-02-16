@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Starting/stopping JBoss from command line</title>
+</head>
+<body>
+<h1>Starting/stopping JBoss from command line</h1>
+Before this step JBoss should be installed and configured properly.
+<ul>
+
+<li>
+<h2>Linux:</h2>
+<ul>
+<li>On server (also on developer machine):
+<ol>
+<li>Open command prompt</li>
+<li>Obtain root privileges: <tt>sudo su</tt></li>
+<li>Starting JBoss: <tt>/etc/init.d/jboss start</tt></li>
+<li>Stopping JBoss: <tt>/etc/init.d/jboss stop</tt></li>
+</ol>
+</li>
+<li>On developer machine:
+<ol>
+<li>Open command prompt</li>
+<li>Go to <tt>$JBOSS_HOME/bin</tt>.</li>
+<li>Starting JBoss: <tt>run.sh</tt> at the command prompt</li>
+<li>Stopping JBoss: hit <tt>Ctrl+C</tt> at the command prompt</li>
+</ol>
+</li>
+</ul>
+</li>
+
+<li><h2>Windows:</h2>
+<ol>
+<li>Open command prompt</li>
+<li>Go to <tt>$JBOSS_HOME\bin</tt>.</li>
+<li>Starting JBoss: <tt>run.bat</tt> at the command prompt</li>
+<li>Stopping JBoss: hit <tt>Ctrl+C</tt> at the command prompt</li>
+</ol>
+</li>
+
+</ul>
+</body>
+</html>

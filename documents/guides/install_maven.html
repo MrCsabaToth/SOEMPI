@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Installation of Maven</title>
+</head>
+<body>
+<h1>Installation of Maven</h1>
+
+<h2>Linux</h2>
+<p>Use <tt>Ubuntu Software Center</tt> (Ubuntu 11.10+ Oneiric Ocelot) or <tt>Synaptics Package Manager</tt>
+in case of pre 11.10 Ubuntu (in case of Fedora, SUSE or other distribution
+use the package manager of the distribution) to install the following packages:</p>
+<ul>
+	<li><tt>maven2</tt></li>
+	<li><tt>libmaven-ear-plugin-java</tt></li>
+	<li><tt>libmaven-ejb-plugin-java</tt></li>
+	<li><tt>libmaven-verifier-java</tt></li>
+	<li><tt>libmaven2-core-java</tt></li>
+	<li><tt>libmaven-war-plugin-java</tt></li>
+</ul>
+<p>The first package will select a lot more. Installation should set up the environment variables too.
+Test maven at the command prompt: "<tt>mvn --version</tt>"</p>
+<h2>Windows and Mac OS X</h2>
+<p>Download Maven source and follow it's instructions how to build it.
+It's important to set up the <tt>MAVEN_HOME</tt> environment variable, instructions
+also cover that. On details of how to set an environment variable
+see the explanation at <a href="set_openempi_home.html"><tt>OPENEMPI_HOME</tt></a>.
+Test maven at the command prompt: "<tt>mvn --version</tt>"</p>
+
+</body>
+</html>

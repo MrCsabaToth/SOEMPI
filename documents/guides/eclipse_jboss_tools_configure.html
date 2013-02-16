@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Configuring JBoss Tools in Eclipse</title>
+</head>
+<body>
+<h1>Configuring JBoss Tools in Eclipse</h1>
+After installing JBoss Tools plugin we can add our JBoss server:
+<ol>
+<li><tt>Window</tt> > <tt>Open Perspective</tt> > <tt>Debug</tt>.<br/>
+	<img src="img/Eclipse23.jpg" />
+</li>
+<li>Switch to the <tt>Server View</tt> (from the <tt>Debug View</tt>) in the Upper left area. Right click,
+	<tt>New</tt> > <tt>Server</tt>.<br/>
+	<img src="img/Eclipse24.jpg" />
+</li>
+<li>Open "<tt>JBoss Community</tt>" on the server selection tree, select "<tt>JBoss v4.2</tt>", click "<tt>Next</tt>".<br/>
+	<img src="img/Eclipse25.jpg" />
+</li>
+<li>Click on "<tt>Browse...</tt>" button and select your JBoss's root folder.
+The <tt>JBOSS_HOME</tt> should be set already (for setting environment variable see: <a href="set_openempi_home.html">this</a>).
+Note, that <tt>JBoss Tools</tt> won't automatically find your JBoss installation, you have to browse and point to it!
+click "<tt>Next</tt>".<br/>
+	<img src="img/Eclipse26.jpg" />
+</li>
+<li>Hit "<tt>Next</tt>".<br/>
+	<img src="img/Eclipse27.jpg" />
+</li>
+<li>I prefer manual deploy, so I won't add the ear to the resources on that dialog, but you can if you wish, hit "<tt>Finish</tt>".<br/>
+	<img src="img/Eclipse28.jpg" />
+</li>
+<li>Double click on the created Server, the configuration view will open up:
+We will perform two configurations: timeout values and we specify the binding address at the launch config too.
+First open the "<tt>Timeouts</tt>" section (to the right under the "<tt>Publishing</tt>") and prepend two 0s after the Start and the Stop timeouts
+Then click on the "<tt>Open launch configuration</tt>" link.<br/>
+	<img src="img/Eclipse29.jpg" />
+Modify Address to <tt>0.0.0.0</tt> or actual IP if you want to perform multi-party experiments
+(if you leave <tt>127.0.0.1</tt> there the server will bind to that address and won't be visible
+from outside. <tt>0.0.0.0</tt> should bind it to anything, but sometimes that doesn't work either and you have
+to stick it to the real IP.).
+</li>
+<li>Switch to the "<tt>Arguments</tt>" tab. Specify "<tt>-b 0.0.0.0</tt>" or the IP address at the "<tt>Program arguments:</tt>"
+edit if needed, after the "<tt>-c default </tt>". Click "<tt>Apply</tt>" and then "<tt>OK</tt>". TODO: what about VM arguments?<br/>
+	<img src="img/Eclipse30.jpg" />
+</li>
+<li>Hit <tt>Ctrl+S</tt> on the view with the configuration so you'll save it (the "<tt>*</tt>" will disappear
+from the tab title).</li>
+</ol>
+</body>
+</html>

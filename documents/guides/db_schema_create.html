@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Creating database schema</title>
+</head>
+<body>
+<h1>Creating database schema</h1>
+
+<p>Series of commands (bold) and server responses (regular) and comments (italic) in case of
+psql prompt. <a href="db_get_psql_prompt.html">Get to the psql prompt</a>.
+At the prompt:
+<ul>
+	<li><i>Connect to the openempi DB with openempi role:</i></li>
+	<li><tt>postgres=# <b>\c openempi openempi localhost</b></tt></li>
+	<li><tt>Password for user openempi:</tt></li>
+	<li><tt>psql (8.4.7)</tt></li>
+	<li><tt>SSL connection (cipher: DHE-RSA-AES256-SHA, bits: 256)</tt></li>
+	<li><tt>You are now connected to database "openempi" on host "localhost" as user "openempi".</tt></li>
+	<li><i>Create the actual schema:</i></li>
+	<li><tt>postgres=> <b>\i /home/${username}/SOEMPI/data/create_database_schema.sql</b></tt>
+		<i>(or wherever your repository is and this script resides in it)</i></li>
+</ul>
+</p>
+<p>To add the newly created database to <a href="pgadmin_addserver.html">pgAdmin III follow this link</a>.
+<p>You can perform the last step of the PostgreSQL prompt work with
+<a href="db_schema_create_pgadmin.html">pgAdmin III</a>.
+
+</body>
+</html>

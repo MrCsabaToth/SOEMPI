@@ -1,0 +1,27 @@
+body {
+    background: black;
+    color: white;
+    font-size:15px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+a{
+	color:#ffd700
+}
+
+.notification{
+	border:1px dotted #ffd700 ;
+	width:47.5%;
+	float:left;
+	padding:5px;
+}
+.source-code{
+ background-color:lightgray; 
+ font-size: 15px; 
+ font-family:courier; color:black; 
+ padding:5px;
+ width:60%;
+}

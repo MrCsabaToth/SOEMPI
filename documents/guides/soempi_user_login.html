@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Logging into SOEMPI</title>
+</head>
+<body>
+<h1>Logging into SOEMPI</h1>
+If the deployment seems to be fine (you can check the JMX console if you want) let's log in!
+<ol>
+<li>You can view the application's web UI in the SOEMPI root folder by
+appending SOEMPI after the port 8080, by default: "<tt>http://localhost:8080/SOEMPI</tt>"<br/>
+	<img src="img/SOEMPIExpertLogin.jpg" />
+If the application could pick up it's configuration file then the component type selection radio buttons
+and the Experimental Mode checkbox should be enabled. If they are disabled it's probably because
+SOEMPI couldn't pick up the configuration file. This can happen because the <tt>OPENEMPI_HOME</tt>
+environment variable is not set. Please set it up: <a href="set_openempi_home.html"><tt>OPENEMPI_HOME</tt></a>.<p/>
+Please select the desired component type and uncheck the Expert mode radio button.
+</li>
+<li>Click on the Login button<br/>
+	<img src="img/SOEMPIExpertScreen01.jpg" />
+</li>
+</ol>
+</body>
+</html>

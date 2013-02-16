@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Generate Salts</title>
+</head>
+<body>
+<h1>Generate Salts</h1>
+<p>All Bloom Filter generation will need salts. Salts are stored by the Key Server
+(in some cases Parameter Manager also acts as the Key Server). All other components
+will use the Key Server's service to obtain the salts, so everyone would use the same set.</p>
+<p>Please consult the specific <a href="configure_keyserver_settings.html">instructions</a>
+on how to change Key Server and salt settings.</p>
+<ol>
+<li>Please log in to the Key Server's SOEMPI instance.
+Make sure you select Key Server component type, and incheck Expert Mode checkbox. Click on the Login button:
+	<img src="img/KeyServerLogin.jpg" />
+For troubleshooting and details <a href="soempi_user_login.html">see</a>.
+</li>
+<li>Click on Salt Management toolbar button:<br/>
+	<img src="img/KeyServerSaltView.jpg" />
+</li>
+<li>Click on the Generate Salts button:<br/>
+	<img src="img/KeyServerGenerateSaltsButton.jpg" />
+</li>
+<li>If everything went ok, you'll see positive feedback:<br/>
+	<img src="img/KeyServerAddSaltSuccess.jpg" />
+</li>
+<li>You may encounter negative feedback:<br/>
+	<img src="img/KeyServerAddSaltFailure.jpg" /><br/>
+This error may occur the first time you try to add a salt.
+SOEMPI is under development and the user management section is not completed yet. For some reason
+sometimes SOEMPI cannot fill in the <tt>userCreatedBy</tt> property of the salt entity.
+That is a non-null column in the database, so this will generate an error. You'll see that the next
+add salt attempts will be successful. One workoaround for the problem could be to try to
+Add a (dummy) Key entity first before you would try to add a Salt entity. If you see a Failure message
+click on the button again.<br/>
+The error's result is that the Key entities
+won't start at the id you configured at the other components. Either you
+have to reconfigure the salt related settings in all SOEMPI components,
+or you would have to resolve the error manually in the database. If you try to curate the
+error in the database by hand, be aware that every generated salt has a corresponding audit
+entry in the database. So if you want to change any salt's id, you have to delete the
+corresponding audit id too.
+</li>
+</ol>
+</body>
+</html>

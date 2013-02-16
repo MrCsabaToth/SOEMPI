@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Deleting database schema</title>
+</head>
+<body>
+<h1>Deleting database schema</h1>
+
+<p>Series of commands (bold) and server responses (regular) and comments (italic) in case of
+psql prompt. <a href="db_get_psql_prompt.html">Get to the psql prompt</a>.
+At the prompt:
+<ul>
+	<li><i>Connect to the openempi DB with openempi role:</i></li>
+	<li><tt>postgres=# <b>\c openempi openempi localhost</b></tt></li>
+	<li><tt>Password for user openempi:</tt></li>
+	<li><tt>psql (8.4.7)</tt></li>
+	<li><tt>SSL connection (cipher: DHE-RSA-AES256-SHA, bits: 256)</tt></li>
+	<li><tt>You are now connected to database "openempi" on host "localhost" as user "openempi".</tt></li>
+	<li><i>Create the actual schema:</i></li>
+	<li><tt>postgres=> <b>\i /home/ctoth/SOEMPI/data/drop_database_schema.sql</b></tt></li>
+</ul>
+</p>
+<a href="db_schema_delete_pgadmin.html">You can perform the schema deletion using the PgAdmin III</a>.
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Building SOEMPI</title>
+</head>
+<body>
+<h1>Building SOEMPI from source</h1>
+<ol>
+<li>The openxds repository requires authentication. For this reason create a user account
+on this <a href="https://www.projects.openhealthtools.org/sf/projects/openxds/">portal</a>.
+Give a password which is unique and not a problem if it is stored in a plain text file.
+Craft/copy a <tt>settings.xml</tt> file like <a href="settings.xml">this</a> in maven's repository folder ("~/.m2"):
+<a href="settings.xml">settings.xml</a>. If you are part of HIPLAB you can use this file
+from HIPLAB server: "<tt>/home/ctoth/EA/settings.xml</tt>". Please do not forget to change the
+<tt>localRepository</tt> tag!!!
+</li>
+<li>Change directory to SOEMPI's openempi folder: "<tt>cd ~/SOEMPI/openempi</tt>"</li>
+<li>Issue the build command: "<tt>mvn -Dmaven.test.skip install</tt>"</li>
+<li>Maven will download lots of jar files into it's repository. The first build will fail due to
+some problems with the gxt-2.1.1.jar (<tt>[ERROR] Line 548: Event.ONPASTE cannot be resolved</tt>).
+To overcome this please download <a href="extjs.tar.gz">extjs.tar.gz</a>
+compressed package (if you are a HIPLAB member you can find this file in <tt>/home/ctoth/EA</tt> folder too).
+Replace the existing <tt>gxt-2.1.1.jar</tt> with it's content.</li>
+<li>Issue the build command again: "<tt>mvn -Dmaven.test.skip install</tt>". Maven will download lots of
+modules again and your build should be successful now.</li>
+</ol>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Updating SOEMPI source</title>
+</head>
+<body>
+<h1>Updating SOEMPI source</h1>
+Your source code should be already checked out if you want to update.
+<ol>
+	<li>Open up a command prompt</li>
+	<li>Go to the SOEMPI source root (Linux (example): "<tt>cd /home/username/SOEMPI/</tt>",
+	Windows (example): "<tt>cd C:\SOEMPI\openempi</tt>")</li>
+	<li>Say "<tt>svn update</tt>"</li>
+</ol>
+Because you had a version of the source, the SVN client could read any necessary meta data
+(like repository URL) and perform the operation without any extra parameters.<p/>
+If you modified something in the source code, please make sure that you don't have any conflicts
+after the update. If you have any conflicts, you have to resolve it manually.<p/>
+After source update, refresh your root project in your Eclipse, which will induce a compilation
+of Eclipse's own compiled version. Also build the soure code from command line and deploy it to JBoss.
+</body>
+</html>

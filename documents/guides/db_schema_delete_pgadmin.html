@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Deleting an existing database schema with pgAdmin III</title>
+</head>
+<body>
+<h1>Deleting an existing database schema with pgAdmin III</h1>
+
+<ol>
+	<li><a href="pgadmin_login.html">Login to openempi database if you haven't done so.</a>
+	</li>
+	<li><a href="db_schema_delete_extra.html">Please delete extra tables which are created by your
+	experiments and not part of the standard openempi schema</a>
+	</li>
+	<li>Open up <tt>Databases/openempi/Schemas/public</tt> node.
+	Click on <tt>Execute arbitrary SQL queries</tt> button on the toolbar.<br/>
+		<img src="img/PgAdminOpenSQLScript1a.jpg" />
+	</li>
+	<li>In the upcoming window's toolbar click on the <tt>Open</tt> button,
+	say 'No' for the question about saving.<br/>
+		<img src="img/PgAdminOpenSQLScript2.jpg" />
+	</li>
+	<li>Browse to the drop database schema script:<br/>
+		<img src="img/PgAdminDropScriptOpen.jpg" />
+	</li>
+	<li>Click on the <tt>Execute query</tt> button on the toolbar:<br/>
+		<img src="img/PgAdminDropScriptRunStart.jpg" />
+	</li>
+	<li>The query should be successful (otherwise take a second look at the first step):<br/>
+		<img src="img/PgAdminDropScriptRunEnd.jpg" />
+	</li>
+</ol>
+
+</body>
+</html>

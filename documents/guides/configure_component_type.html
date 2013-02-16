@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Configure Component type</title>
+</head>
+<body>
+<h1>Configure Component type</h1>
+Ways to select component type.
+<ul>
+<li>On the UI: on the Login screen at login. During the login process your selection will be saved.
+	<img src="img/KeyServerLogin.jpg" />
+</li>
+<li>In the configuration file (<tt>mpi-config.xml</tt>) at the end there's an <tt>admin-configuration</tt> section,
+the <tt>component-mode</tt> tag specifies the component type. It can be "<tt>data-provider</tt>", "<tt>data-integrator</tt>",
+"<tt>key-server</tt>", "<tt>parameter-manager</tt>". If you run SOEMPI in parameter-manager mode, it automatically acts as
+a key-server too, this is the only unified mode right now. You can change these settings through the UI (see the configuration
+sections later) or by manually editing the XML.
+	<img src="img/ConfigComponentSettingsXML.jpg" />
+</ul>
+</body>
+</html>

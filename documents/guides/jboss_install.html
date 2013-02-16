@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Installation and setup of JBoss</title>
+</head>
+<body>
+<h1>Installation and setup of JBoss</h1>
+<ol>
+	<li>Get JBoss 4.2.3.GA-jdk6 version from
+	<a href="http://sourceforge.net/projects/jboss/files/JBoss/JBoss-4.2.3.GA/jboss-4.2.3.GA-jdk6.zip/download">here</a>.
+	Note: it's important to get the jdk6 version since you probably have version 6+ JDK.
+	</li>
+	<li>Unpack the source to the desired location.
+	<ul>
+		<li>Linux: <tt>/opt</tt> can be a good location. Unpack the JBoss to <tt>/opt/jboss-4.2.3-GA</tt> and
+		make <tt>/opt/jboss</tt> symlink which points to that directory. Specify this <tt>/opt/jboss</tt>
+		directory as your <tt>JBOSS_HOME</tt>, this way you can easily upgrade to a new JBoss version:
+		you just have to unpack it to another directory and point the symlink to that new one.<br/>
+		It's very important that JBoss and SOEMPI's configuration files should have sufficient privileges.
+		If you are on your own desktop machine, give your user's ownership and group privileges to JBoss.
+		(<tt>chown username -R $JBOSS_HOME</tt>, <tt>chgrp username -R $JBOSS_HOME</tt>). On a server machine
+		create a jboss user and apply that user's privileges.
+		</li>
+		<li>Windows: unpack JBoss whereever you want. It can be <tt>C:\jboss</tt>, or some
+		<tt>C:\Users\username\Documents</tt>, or something.
+		</li>
+		<li>Mac OS X: TODO.
+		</li>
+	</ul>
+	</li>
+	<li>Set <tt>JBOSS_HOME</tt> environmental variable. On details of how to set an environment variable
+	in general see the explanation at <a href="set_openempi_home.html">OPENEMPI_HOME</a>.
+	</li>
+	<li>In case of memory issues add the <tt>-Xms128m -Xmx3g -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled
+	-XX:+CMSPermGenSweepingEnabled</tt> JVM parameters to the <tt>JAVA_OPTS</tt>:
+	<ul>
+		<li>Linux: add it to <tt>JAVA_OPTS</tt> in the <tt>$JBOSS_HOME/bin/run.conf</tt>.
+		</li>
+		<li>Windows: add it to <tt>JAVA_OPTS</tt> in the <tt>$JBOSS_HOME/bin/run.bat</tt>.
+		</li>
+	</ul>
+	The first two parameters should replace the existing ones in the file. With these parameters
+	we give more memory for the JVM and try to force better GC.
+	<li>If you want to start JBoss using <tt>init.d</tt> script on Linux, use this file:
+	<a href="jboss">JBoss init.d script</a>, and refer it in the rc.d scripts.
+	</li>
+</ol>
+</body>
+</html>

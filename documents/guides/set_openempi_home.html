@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Setting up the OPENEMPI_HOME environment variable</title>
+</head>
+<body>
+<h1>Setting up the OPENEMPI_HOME environment variable</h1>
+
+<p>It should be set to the place where the "conf" directory of your SOEMPI resides.
+If you have the full source code you can use the configurations of that by setting the OPENEMPI_HOME
+to "openempi" subfolder (that subfolder contains the conf directory) within the SOEMPI root folder.</p>
+<h4>Linux</h4>
+<p>On Linux you can set the variable in <tt>/etc/environment</tt> file (OPENEMPI="/home/ctoth/SOEMPI/openempi"),
+but that will require a reboot, so typically a solution for user's own desktop machines. On servers a possibility
+is to pass a variable through the JVM variables using JBoss: add this to the <tt>run.conf</tt>'s where the JVM parameters
+are added (<tt>JAVA_OPTS</tt>): <tt>-Dopenempi.home=/home/username/SOEMPI/openempi</tt> (given that your SOEMPI's source
+checked out to <tt>/home/username/SOEMPI/</tt>).</p> If you are on a server, it a possibility to place the conf files into
+<tt>$JBOSS_HOME/bin</tt>, and then set the JVM parameter respectively.
+<h4>Windows</h4>
+<p>On Windows: System > Advanced System Settings > Environment Variables...</p>
+<img src="img/OpenempiHomeWin.jpg" />
+<h4>Mac OS X</h4>
+<p>TODO</p>
+
+</body>
+</html>

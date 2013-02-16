@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Updating an existing database schema</title>
+</head>
+<body>
+<h1>Updating an existing database schema (maybe involves update of SOEMPI source)</h1>
+
+<h2>Updating the source</h2>
+Note: this step is only needed if the new source code has a specific schema update script.
+<a href="soempi_update.html">For update from the command line please follow this link</a>.
+Alternatively you can use your preferred SVN GUI client.
+<h2>Updating the old schema</h2>
+If the new source has specific update SQL script,
+then first a source update should be done
+and then the execution of the update script.
+If there's no update script then the following steps should
+occur. NOTE: in this case the developer should not refresh the source,
+but first delete the schema with the existing
+schema drop script and just then update the source.
+<h2>Deleting the old schema</h2>
+<p><a href="db_schema_delete_extra.html">Please delete any other tables (dataset tables, link tables)
+and sequences what are remainings of experiments.</a></p>
+
+<p><a href="db_schema_delete.html">Follow this link to delete the old DB schema</a></p>
+<p><a href="soempi_update.html">Update the source code</a>, or obtain the new scheam creation script.</p>
+<p><a href="db_schema_create.html">Follow this link to create the new DB schema</a></p>
+
+</body>
+</html>

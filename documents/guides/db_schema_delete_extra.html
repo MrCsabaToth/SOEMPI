@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Deleting an existing database schema with pgAdmin III</title>
+</head>
+<body>
+<h1>Deleting an existing database schema with pgAdmin III</h1>
+
+<ol>
+	<li><a href="pgadmin_login.html">Login to openempi database if you haven't done so.</a>
+	</li>
+	<li><a href="db_schema_delete_extra.html">Please delete extra tables which are created by your
+	experiments and not part of the standard openempi schema</a>
+	</li>
+	<li>Open up <tt>Databases/openempi/Schemas/public</tt> node.
+	</li>
+	<li>Drop all match pair statistics match pair stat half tables, they are named as
+	<tt>tbl_mps_*</tt> and <tt>tbl_mpsh_*</tt>. Right clicking on them and selecting
+	<tt>Drop Cascaded</tt> option.<br/>
+		<img src="img/PgAdminDropTableCascaded1.jpg" /><br/>
+		<img src="img/PgAdminDropTableCascaded2.jpg" />
+	</li>
+	<li>Drop all sequences of the previously deleted tables by right clicking on them and
+	selecting <tt>Drop Cascaded</tt> option.<br/>
+		<img src="img/PgAdminDropSequenceCascaded1.jpg" /><br/>
+		<img src="img/PgAdminDropSequenceCascaded2.jpg" />
+	</li>
+	<li>Drop all link tables, they are named as <tt>tbl_lnk_*</tt>. Right click on them
+	and select Drop Cascaded option.
+	</li>
+	<li>Drop all sequences of the previously deleted tables by right clicking on them and
+	selecting Drop Cascaded option.
+	</li>
+	<li>Delete all rows from <tt>column_match_information</tt> table.
+	</li>
+	<li>Delete all rows from <tt>person_match</tt>.
+	</li>
+	<li>Delete all rows from <tt>person_match_request</tt>.
+	</li>
+	<li>Drop all datset tables, they are named as <tt>tbl_ds_*</tt>. Right click on them
+	and select <tt>Drop Cascaded</tt> option.
+	</li>
+	<li>Drop all sequences of the previously deleted tables by right clicking on them and
+	selecting <tt>Drop Cascaded</tt> option.
+	</li>
+	<li>Delete all rows from <tt>column_information</tt> table.
+	</li>
+	<li>Delete all rows from <tt>dataset</tt> table.
+	</li>
+</ol>
+
+</body>
+</html>
