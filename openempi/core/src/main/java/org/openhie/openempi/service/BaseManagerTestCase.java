@@ -46,7 +46,7 @@ public abstract class BaseManagerTestCase extends AbstractTransactionalDataSourc
 
     public BaseManagerTestCase() {
 // Csaba -> Odysseas: not sure about that:
-		System.setProperty(Constants.OPENEMPI_EXTENSION_CONTEXTS, "applicationContext-module-basic-blocking.xml,applicationContext-module-file-loader.xml");
+		System.setProperty(Constants.OPENEMPI_EXTENSION_CONTEXTS, "applicationContext-module-basic-blocking.xml,applicationContext-module-data-loader.xml");
         // Since a ResourceBundle is not required for each class, just
         // do a simple check to see if one exists
         String className = this.getClass().getName();
