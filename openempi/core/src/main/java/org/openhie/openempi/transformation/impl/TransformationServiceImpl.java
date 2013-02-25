@@ -95,7 +95,7 @@ public class TransformationServiceImpl extends BaseServiceImpl implements Transf
 	public List<String> getTransformationFunctionNames(FieldTypeEnum fieldTypeEnum) {
 		List<String> transformationFunctionNames = new ArrayList<String>();
 		for (TransformationFunction trafo : transformationFunctionTypeMap.values()) {
-			if (trafo.getOutputType() == fieldTypeEnum)
+			if (trafo.getOutputType() == fieldTypeEnum || trafo.getOutputType() == FieldTypeEnum.Any)
 				transformationFunctionNames.add(trafo.getName());
 		}
 		return transformationFunctionNames;

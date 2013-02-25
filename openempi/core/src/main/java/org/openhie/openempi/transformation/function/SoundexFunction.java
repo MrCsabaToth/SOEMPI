@@ -19,7 +19,7 @@ package org.openhie.openempi.transformation.function;
 
 import org.apache.commons.codec.language.Soundex;
 
-public class SoundexFunction extends AbstractTransformationFunction
+public class SoundexFunction extends AbstractStringTransformationFunction
 {
 	private Soundex soundex;
 	
@@ -28,13 +28,7 @@ public class SoundexFunction extends AbstractTransformationFunction
 		soundex = new Soundex();
 	}
 	
-	public Object transform(Object field, java.util.Map<String, Object> parameters) {
-		log.debug("Applying the soundex transform to field with value: " + field);
-		if (field == null) {
-			return null;
-		}
-		String encodedValue = soundex.encode(field.toString());
-		log.debug("The soundex value for field: '" + field + "' is '" + encodedValue + "'");
-		return encodedValue;
+	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
+		return soundex.encode(field);
 	}
 }

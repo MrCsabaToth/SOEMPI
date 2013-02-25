@@ -145,7 +145,7 @@ public class ConfigurationDataServiceImpl extends RemoteServiceServlet implement
 		try {
 			List<TransformationFunctionWeb> functionList = new ArrayList<TransformationFunctionWeb>();
 			String[] functionNames = 
-				Context.getApplicationContext().getBeanNamesForType(org.openhie.openempi.transformation.function.AbstractTransformationFunction.class);
+				Context.getApplicationContext().getBeanNamesForType(org.openhie.openempi.transformation.function.AbstractTransformationFunctionBase.class);
 			System.out.println("Transormation Function Names:");
 			for (String functionName: functionNames) {
 				TransformationFunctionWeb compFunc = new TransformationFunctionWeb();

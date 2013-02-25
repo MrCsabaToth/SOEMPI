@@ -38,6 +38,8 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 	public void loadFile(String filename, String tableName, LoaderConfig loaderConfiguration,
 			boolean populateCustomFields)
 	{
+		loaderConfiguration.checkFieldTypesCompatibleWithTransformations();
+		
 		File file = new File(filename);
 		log.debug("Loading file " + file.getAbsolutePath());
 		if (!file.isFile() || !file.canRead()) {

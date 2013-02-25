@@ -17,7 +17,8 @@
  */
 package org.openhie.openempi.transformation.function;
 
-import org.openhie.openempi.Constants;
+import java.util.Map;
+
 import org.openhie.openempi.context.Context;
 import org.openhie.openempi.service.KeyServerService;
 import org.openhie.openempi.util.GeneralUtil;
@@ -38,24 +39,12 @@ public class SaltedMessageDigestFunction extends MessageDigestFunction
 		}
 	}
 
-	public Object transform(Object field, java.util.Map<String, Object> parameters) {
+	protected byte[] byteTransformCore(byte[] field, Map<String, Object> parameters) {
 		if (salt == null)
 			initSalt();
-		log.debug("Applying the salt and " + getMdFunctionName() + " hash transformation to field with value: " + field);
-		if (field == null) {
-			return null;
-		}
-		byte[] fieldBytes = null;
-		if (field instanceof byte[]) {
-			fieldBytes = (byte[])field;
-		} else {
-			String fieldString = field.toString();
-			fieldBytes = fieldString.getBytes(Constants.charset);
-		}
 		log.debug("Salting");
-		byte[] saltedBytes = GeneralUtil.concatByteArraysSimple(fieldBytes, salt);
+		byte[] saltedBytes = GeneralUtil.concatByteArraysSimple(field, salt);
 		byte[] encodedValue = md.digest(saltedBytes);
-		log.debug("The salted message digest value for field: '" + field + "' is '" + encodedValue + "'");
 		return encodedValue;
 	}
 }

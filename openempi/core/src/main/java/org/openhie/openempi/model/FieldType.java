@@ -43,7 +43,8 @@ public class FieldType extends BaseObject implements java.io.Serializable
 		Float,
 		Double,
 		Date,
-		Blob
+		Blob,
+		Any
 	}
 
 	private static final long serialVersionUID = -613747077254871503L;

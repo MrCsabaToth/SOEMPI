@@ -108,6 +108,11 @@ public abstract class NgrammingBloomFilterFunctionBase extends HMACFunction
 		}
 	}
 
+	@Override
+	public Object transform(Object field, Map<String, Object> parameters) {
+		return transformString(field, parameters);
+	}
+
 	/**
 	 * Calculate a bloom filter for a given string value.
 	 * The string is broke down to n-grams,
@@ -117,7 +122,7 @@ public abstract class NgrammingBloomFilterFunctionBase extends HMACFunction
 	 * @param field: String to be consumed
 	 */
 	@Override
-	public Object transform(Object field, Map<String, Object> parameters) {
+	protected Object stringTransformCore(String field, Map<String, Object> parameters) {
 		init();
 		m = defaultM;
 		if (parameters != null) {
@@ -202,7 +207,7 @@ public abstract class NgrammingBloomFilterFunctionBase extends HMACFunction
 		byte[] intermediateNGram = nGram.getBytes(Constants.charset);
 		for (int hashRound = 0; hashRound < k; hashRound++) {
 			parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, getSalt(hashRound));
-			intermediateNGram = (byte[])super.transform(intermediateNGram, parameters);
+			intermediateNGram = (byte[])transformByteArray(intermediateNGram, parameters);
 
 			// Truncate the four least significant byte from the digest, and get the integer value
 			long h = getLeastSignificantBytes(intermediateNGram);

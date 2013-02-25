@@ -62,6 +62,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 			String sourceTableName, String targetTableName, LoaderConfig loaderConfiguration,
 			boolean populateCustomFields)
 	{
+		loaderConfiguration.checkFieldTypesCompatibleWithTransformations();
 		// Open up connection, shovel data
 	}
 

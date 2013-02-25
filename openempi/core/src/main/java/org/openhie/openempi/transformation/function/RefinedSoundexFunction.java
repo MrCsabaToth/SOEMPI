@@ -19,7 +19,7 @@ package org.openhie.openempi.transformation.function;
 
 import org.apache.commons.codec.language.RefinedSoundex;;
 
-public class RefinedSoundexFunction extends AbstractTransformationFunction
+public class RefinedSoundexFunction extends AbstractStringTransformationFunction
 {
 	private RefinedSoundex refinedSoundex;
 	
@@ -28,13 +28,7 @@ public class RefinedSoundexFunction extends AbstractTransformationFunction
 		refinedSoundex = new RefinedSoundex();
 	}
 	
-	public Object transform(Object field, java.util.Map<String, Object> parameters) {
-		log.debug("Applying the refined soundex transform to field with value: " + field);
-		if (field == null) {
-			return null;
-		}
-		String encodedValue = refinedSoundex.encode(field.toString());
-		log.debug("The refined soundex value for field: '" + field + "' is '" + encodedValue + "'");
-		return encodedValue;
+	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
+		return refinedSoundex.encode(field);
 	}
 }

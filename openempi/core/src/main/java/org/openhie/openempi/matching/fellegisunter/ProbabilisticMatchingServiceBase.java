@@ -48,6 +48,8 @@ import org.openhie.openempi.model.PersonMatch;
 import org.openhie.openempi.model.User;
 import org.openhie.openempi.recordlinkage.configuration.PrivacySettings;
 import org.openhie.openempi.service.PersonManagerService;
+import org.openhie.openempi.stringcomparison.DistanceMetricType;
+import org.openhie.openempi.stringcomparison.StringComparisonService;
 import org.openhie.openempi.util.GeneralUtil;
 import org.openhie.openempi.util.SerializationUtil;
 
@@ -152,6 +154,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		boolean parameterManagerMode = (componentType == ComponentType.PARAMETER_MANAGER_MODE);
 		if (parameterManagerMode && !emOnly)
 			totalRecords = leftDataset.getTotalRecords() + rightDataset.getTotalRecords();
+		StringComparisonService comparisonService = Context.getStringComparisonService();
 		log.debug("Constructing ColumnMatchInformations...");
 		for (MatchField matchField : matchConfig.getMatchFields()) {
 			ColumnMatchInformation cmi = new ColumnMatchInformation();
@@ -172,7 +175,11 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 				throw new ApplicationException("Field informations don't match; left: " + leftCi + ", right: " + rightCi);
 			}
 			cmi.setFieldType(leftCi.getFieldType().getFieldTypeEnum());
-			cmi.getFieldType();	// to load FieldType before saving
+			//cmi.getFieldType();	// to load FieldType before saving
+			DistanceMetricType distanceMetricType = comparisonService.getDistanceMetricType(matchField.getComparatorFunction().getFunctionName());
+			if (distanceMetricType.getDistanceMetric().getInputType() != cmi.getFieldType().getFieldTypeEnum())
+				throw new ApplicationException("Field types (" + distanceMetricType.getDistanceMetric().getInputType() +
+						") are not compatible with the comparison function input type (" + cmi.getFieldType().getFieldTypeEnum() + ")");
 			cmi.setFieldTypeModifier(leftCi.getFieldTypeModifier());
 			cmi.setFieldMeaning(leftCi.getFieldMeaning().getFieldMeaningEnum());
 			cmi.getFieldMeaning();	// to load FieldType before saving

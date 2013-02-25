@@ -19,13 +19,14 @@ package org.openhie.openempi.transformation.function;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.openhie.openempi.Constants;
 
-public class HMACFunction extends AbstractTransformationFunction
+public class HMACFunction extends AbstractByteArrayTransformationFunction
 {
 	protected String hmacFunctionName; 
 	protected Mac hmac;
@@ -51,19 +52,7 @@ public class HMACFunction extends AbstractTransformationFunction
 		this.hmacFunctionName = hmacFunctionName;
 	}
 
-	public Object transform(Object field, java.util.Map<String, Object> parameters) {
-		log.debug("Applying the " + getHmacFunctionName() + " HMAC transformation to field with value: " + field);
-		if (field == null) {
-			return null;
-		}
-		byte[] fieldBytes = null;
-		if (field instanceof byte[]) {
-			fieldBytes = (byte[])field;
-		} else {
-			String fieldString = field.toString();
-			fieldBytes = fieldString.getBytes(Constants.charset);
-		}
-
+	protected byte[] byteTransformCore(byte[] field, Map<String, Object> parameters) {
 		if (!parameters.containsKey(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME)) {
 			log.error("No signing key passed as a parameter for " + getHmacFunctionName());
 			return null;
@@ -84,8 +73,7 @@ public class HMACFunction extends AbstractTransformationFunction
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
 		}
-		byte[] encodedValue = hmac.doFinal(fieldBytes);
-		log.debug("The message digest value for field: '" + field + "' is '" + encodedValue + "'");
+		byte[] encodedValue = hmac.doFinal(field);
 		return encodedValue;
 	}
 }

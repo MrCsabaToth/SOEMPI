@@ -272,9 +272,6 @@ public class DataLoaderConfigurationLoader implements ConfigurationLoader
 		// it is available for the file loader configuration service to use when needed.
 		//
 		LoaderConfig loaderConfiguration = new LoaderConfig();
-		registry.registerConfigurationEntry(ConfigurationRegistry.DATA_LOADER_CONFIGURATION, 
-				loaderConfiguration);
-		
 		DataLoaderType loaderConfig = (DataLoaderType) configurationFragment;
 		log.debug("Received xml fragment to parse: " + loaderConfig);
 		if (loaderConfig == null || loaderConfig.getDataLoaderConfig().getDataFields().sizeOfDataFieldArray() == 0) {
@@ -317,11 +314,15 @@ public class DataLoaderConfigurationLoader implements ConfigurationLoader
 			}
 			loaderConfiguration.addDataField(loaderDataField);
 		}
+		loaderConfiguration.checkFieldTypesCompatibleWithTransformations();
+		registry.registerConfigurationEntry(ConfigurationRegistry.DATA_LOADER_CONFIGURATION, 
+				loaderConfiguration);
 	}
 
 	public void saveAndRegisterComponentConfiguration(ConfigurationRegistry registry, Object configurationData)
 			throws InitializationException {
 		LoaderConfig loaderConfiguration = (LoaderConfig) configurationData;
+		loaderConfiguration.checkFieldTypesCompatibleWithTransformations();
 		DataLoaderType xmlConfigurationFragment = buildConfigurationFileFragment(loaderConfiguration);
 		log.debug("Saving file loader configuration info xml configuration fragment: " + xmlConfigurationFragment);
 		Context.getConfiguration().saveDataLoaderConfiguration(xmlConfigurationFragment);

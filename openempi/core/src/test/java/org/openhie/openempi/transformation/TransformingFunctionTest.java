@@ -104,7 +104,7 @@ public class TransformingFunctionTest extends BaseServiceTestCase
 		for (TransformationFunctionType tft : list) {
 			TransformationFunction trafo = tft.getTransformationFunction();
 			System.out.println("=== Testing " + trafo.getInputType().toString() + " Metric " + tft.getName() + " ===");
-			if (trafo.getInputType() == FieldType.FieldTypeEnum.String) {
+			if (trafo.getInputType() == FieldType.FieldTypeEnum.String || trafo.getInputType() == FieldType.FieldTypeEnum.Any) {
 				for (String str : strings) {
 					Object output1 = trafo.transform(str, parameters);
 					System.out.println(tft.getName() + " transformation of " + str + " is " + output1 + " (1st time)");
@@ -130,7 +130,8 @@ public class TransformingFunctionTest extends BaseServiceTestCase
 						}
 					}
 				}
-			} else {
+			}
+			if (trafo.getInputType() != FieldType.FieldTypeEnum.String || trafo.getInputType() == FieldType.FieldTypeEnum.Any) {
 				for (byte[] bitStream : bitStreams) {
 					System.out.println(tft.getName() + " transformation of " + bitStream + " is " + trafo.transform(bitStream, null));
 				}

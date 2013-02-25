@@ -17,18 +17,24 @@
  */
 package org.openhie.openempi.transformation.function;
 
-import org.apache.commons.codec.language.DoubleMetaphone;
+import java.util.Map;
 
-public class DoubleMetaphoneFunction extends AbstractStringTransformationFunction
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public abstract class AbstractStringTransformationFunction extends AbstractTransformationFunctionBase
 {
-	private DoubleMetaphone metaphone;
-	
-	public DoubleMetaphoneFunction() {
-		super();
-		metaphone = new DoubleMetaphone();
+	protected final Log log = LogFactory.getLog(getClass());
+
+	public AbstractStringTransformationFunction() {
 	}
 	
-	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
-		return metaphone.encode(field);
+	protected byte[] byteTransformCore(byte[] field, Map<String, Object> parameters) {
+		throw new UnsupportedOperationException("Function " + getName() + " is not byte array type transformation");
 	}
+	
+	public Object transform(Object field, Map<String, Object> parameters) {
+		return transformString(field, parameters);
+	}
+
 }

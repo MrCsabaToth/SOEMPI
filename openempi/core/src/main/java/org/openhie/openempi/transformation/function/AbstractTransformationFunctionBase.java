@@ -21,9 +21,10 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhie.openempi.Constants;
 import org.openhie.openempi.model.FieldType.FieldTypeEnum;
 
-public abstract class AbstractTransformationFunction implements TransformationFunction
+public abstract class AbstractTransformationFunctionBase implements TransformationFunction
 {
 	protected final Log log = LogFactory.getLog(getClass());
 
@@ -33,18 +34,57 @@ public abstract class AbstractTransformationFunction implements TransformationFu
 	private FieldTypeEnum inputType;
 	private FieldTypeEnum outputType;
 	
-	public AbstractTransformationFunction() {
+	public AbstractTransformationFunctionBase() {
 	}
+
+	protected abstract Object stringTransformCore(String field, Map<String, Object> parameters);
 	
-	public AbstractTransformationFunction(String name) {
+	protected Object transformString(Object field, Map<String, Object> parameters) {
+		log.debug("Applying the " + getName() + " transform to field with value: " + field);
+		if (field == null) {
+			return null;
+		}
+		String fieldString = null;
+		if (field instanceof String) {
+			fieldString = (String)field;
+		} else {
+			fieldString = field.toString();
+		}
+		Object encodedValue = stringTransformCore(fieldString, parameters);
+		log.debug("The " + getName() + " value for field: '" + field + "' is '" + encodedValue + "'");
+		return encodedValue;
+	}
+
+	protected abstract byte[] byteTransformCore(byte[] field, Map<String, Object> parameters);
+	
+	protected Object transformByteArray(Object field, Map<String, Object> parameters) {
+		log.debug("Applying the " + getName() + " transform to field with value: " + field);
+		if (field == null) {
+			return null;
+		}
+		byte[] fieldBytes = null;
+		if (field instanceof byte[]) {
+			fieldBytes = (byte[])field;
+		} else {
+			String fieldString;
+			if (field instanceof String)
+				fieldString = (String)field;
+			else
+				fieldString = field.toString();
+			fieldBytes = fieldString.getBytes(Constants.charset);
+		}
+		byte[] encodedValue = byteTransformCore(fieldBytes, parameters);
+		log.debug("The " + getName() + " value for field: '" + field + "' is '" + encodedValue + "'");
+		return encodedValue;
+	}
+
+	public AbstractTransformationFunctionBase(String name) {
 		this.name = name;
 	}
 	
 	public void init(Map<String, String> configParameters) {
 		configuration = configParameters;
 	}
-
-	public abstract Object transform(Object field, Map<String, Object> parameters);
 
 	public Map<String, String> getConfiguration() {
 		return configuration;

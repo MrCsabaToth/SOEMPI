@@ -19,10 +19,9 @@ package org.openhie.openempi.transformation.function;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
-import org.openhie.openempi.Constants;
-
-public class MessageDigestFunction extends AbstractTransformationFunction
+public class MessageDigestFunction extends AbstractByteArrayTransformationFunction
 {
 	protected String mdFunctionName; 
 	protected MessageDigest md;
@@ -48,20 +47,8 @@ public class MessageDigestFunction extends AbstractTransformationFunction
 		this.mdFunctionName = mdFunctionName;
 	}
 
-	public Object transform(Object field, java.util.Map<String, Object> parameters) {
-		log.debug("Applying the " + getMdFunctionName() + " hash transformation to field with value: " + field);
-		if (field == null) {
-			return null;
-		}
-		byte[] fieldBytes = null;
-		if (field instanceof byte[]) {
-			fieldBytes = (byte[])field;
-		} else {
-			String fieldString = field.toString();
-			fieldBytes = fieldString.getBytes(Constants.charset);
-		}
-		byte[] encodedValue = md.digest(fieldBytes);
-		log.debug("The message digest value for field: '" + field + "' is '" + encodedValue + "'");
+	protected byte[] byteTransformCore(byte[] field, Map<String, Object> parameters) {
+		byte[] encodedValue = md.digest(field);
 		return encodedValue;
 	}
 }

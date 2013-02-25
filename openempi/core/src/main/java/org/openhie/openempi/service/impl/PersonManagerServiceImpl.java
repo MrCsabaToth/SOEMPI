@@ -342,6 +342,13 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 				if (fieldTransformation.getFunctionName() != null) {
 					log.trace("Need to generate a value for field " + loaderField.getFieldName() + " using function " +
 							fieldTransformation.getFunctionName());
+					// [ Type check BEGIN
+					//TransformationFunctionType trafoFuncType = transformationService.getTransformationFunctionType(fieldTransformation.getFunctionName());
+					//TransformationFunction trafoFunc = trafoFuncType.getTransformationFunction();
+					//if (trafoFunc.getInputType() != FieldTypeEnum.Any && trafoFunc.getInputType() != loaderField.getFieldType().getFieldTypeEnum())
+					//	throw new UnsupportedOperationException("Not compatible transformation (" + trafoFunc.getInputType() + ") and field type(" +
+					//			loaderField.getFieldType().getFieldTypeEnum() + ")");
+					// ] Type check END
 					Object value = person.getAttribute(loaderField.getFieldName());
 					log.debug("Obtained a value of " + value + " for field " + loaderField.getFieldName());
 					try {

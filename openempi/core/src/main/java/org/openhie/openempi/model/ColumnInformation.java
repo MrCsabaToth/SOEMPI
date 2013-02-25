@@ -47,8 +47,7 @@ public class ColumnInformation extends ColumnSpecification
 	private Double averageFieldLength;
 	private Integer numberOfMissing;
 
-	public ColumnInformation()
-	{
+	public ColumnInformation() {
 		averageFieldLength = 0.0;
 		numberOfMissing = 0;
 	}

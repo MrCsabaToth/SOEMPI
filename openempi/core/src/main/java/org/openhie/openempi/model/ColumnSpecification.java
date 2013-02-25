@@ -47,8 +47,7 @@ public class ColumnSpecification extends BaseField
 	private FieldTypeEnum fieldTypeEnum;
 	private FieldMeaningEnum fieldMeaningEnum;
 
-	public ColumnSpecification()
-	{
+	public ColumnSpecification() {
 		fieldType = null;
 		fieldMeaning = null;
 	}

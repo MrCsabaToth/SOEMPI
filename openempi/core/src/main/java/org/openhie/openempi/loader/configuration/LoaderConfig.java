@@ -20,7 +20,16 @@ package org.openhie.openempi.loader.configuration;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Transient;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.openhie.openempi.configuration.FunctionField;
+import org.openhie.openempi.context.Context;
+import org.openhie.openempi.model.FieldType.FieldTypeEnum;
+import org.openhie.openempi.transformation.TransformationFunctionType;
+import org.openhie.openempi.transformation.TransformationService;
+import org.openhie.openempi.transformation.function.TransformationFunction;
 
 public class LoaderConfig implements Serializable
 {
@@ -58,6 +67,30 @@ public class LoaderConfig implements Serializable
 		return dataFields;
 	}
 
+	@Transient
+	public void checkFieldTypesCompatibleWithTransformations()
+	{
+		TransformationService transformationService = Context.getTransformationService();
+		if (transformationService != null) {
+			for(LoaderDataField loaderField : dataFields) {
+				FunctionField fieldTransformation = loaderField.getFieldTransformation();
+				if (fieldTransformation != null) {
+					if (fieldTransformation.getFunctionName() != null) {
+						TransformationFunctionType trafoFuncType = transformationService.getTransformationFunctionType(fieldTransformation.getFunctionName());
+						if (trafoFuncType != null) {
+							TransformationFunction trafoFunc = trafoFuncType.getTransformationFunction();
+							if (trafoFunc != null) {
+								if (trafoFunc.getInputType() != FieldTypeEnum.Any && trafoFunc.getInputType() != loaderField.getFieldType().getFieldTypeEnum())
+									throw new UnsupportedOperationException("Not compatible transformation (" + trafoFunc.getInputType() + ") and field type(" +
+												loaderField.getFieldType().getFieldTypeEnum() + ")");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	public void setDataFields(List<LoaderDataField> dataFields) {
 		this.dataFields = dataFields;
 	}

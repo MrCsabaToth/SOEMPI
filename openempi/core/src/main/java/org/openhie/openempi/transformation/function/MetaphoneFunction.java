@@ -19,7 +19,7 @@ package org.openhie.openempi.transformation.function;
 
 import org.apache.commons.codec.language.Metaphone;
 
-public class MetaphoneFunction extends AbstractTransformationFunction
+public class MetaphoneFunction extends AbstractStringTransformationFunction
 {
 	private Metaphone metaphone;
 	
@@ -28,13 +28,7 @@ public class MetaphoneFunction extends AbstractTransformationFunction
 		metaphone = new Metaphone();
 	}
 	
-	public Object transform(Object field, java.util.Map<String, Object> parameters) {
-		log.debug("Applying the metaphone transform to field with value: " + field);
-		if (field == null) {
-			return null;
-		}
-		String encodedValue = metaphone.encode(field.toString());
-		log.debug("The metaphone value for field: '" + field + "' is '" + encodedValue + "'");
-		return encodedValue;
+	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
+		return metaphone.encode(field);
 	}
 }

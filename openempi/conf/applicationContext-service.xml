@@ -575,25 +575,25 @@
 	<bean id="Metaphone"
 		class="org.openhie.openempi.transformation.function.MetaphoneFunction">
 		<property name="name" value="Metaphone"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
 	</bean>
 	<bean id="DoubleMetaphone"
 		class="org.openhie.openempi.transformation.function.DoubleMetaphoneFunction">
 		<property name="name" value="DoubleMetaphone"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
 	</bean>
 	<bean id="SoundexFunction"
 		class="org.openhie.openempi.transformation.function.SoundexFunction">
 		<property name="name" value="SoundexFunction"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
 	</bean>
 	<bean id="RefinedSoundex"
 		class="org.openhie.openempi.transformation.function.RefinedSoundexFunction">
 		<property name="name" value="RefinedSoundex"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
 	</bean>
 	<bean id="BloomFilterHybridHMACUnpaddedNgrams"
@@ -601,7 +601,7 @@
 		<property name="name" value="BloomFilterHybridHMACUnpaddedNgrams"/>
 		<property name="hmacFunctionName" value="HmacMD5"/>
 		<property name="hmacFunctionName2" value="HmacSHA1"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 		<property name="ngramPadding" value="false"/>
 	</bean>
@@ -610,7 +610,7 @@
 		<property name="name" value="BloomFilterHybridHMACPaddedNgrams"/>
 		<property name="hmacFunctionName" value="HmacMD5"/>
 		<property name="hmacFunctionName2" value="HmacSHA1"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 		<property name="ngramPadding" value="true"/>
 	</bean>
@@ -618,7 +618,7 @@
 		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter64ByteSaltFunction">
 		<property name="name" value="BloomFilter64ByteSaltUnpaddedNgrams"/>
 		<property name="hmacFunctionName" value="HmacSHA256"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 		<property name="ngramPadding" value="false"/>
 	</bean>
@@ -626,7 +626,7 @@
 		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter64ByteSaltFunction">
 		<property name="name" value="BloomFilter64ByteSaltPaddedNgrams"/>
 		<property name="hmacFunctionName" value="HmacSHA256"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 		<property name="ngramPadding" value="true"/>
 	</bean>
@@ -634,7 +634,7 @@
 		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter4ByteSaltFunction">
 		<property name="name" value="BloomFilter4ByteSaltUnpaddedNgrams"/>
 		<property name="hmacFunctionName" value="HmacSHA256"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 		<property name="ngramPadding" value="false"/>
 	</bean>
@@ -642,7 +642,7 @@
 		class="org.openhie.openempi.transformation.function.bloomfilter.BloomFilter4ByteSaltFunction">
 		<property name="name" value="BloomFilter4ByteSaltPaddedNgrams"/>
 		<property name="hmacFunctionName" value="HmacSHA256"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 		<property name="ngramPadding" value="true"/>
 	</bean>
@@ -651,7 +651,7 @@
 		init-method="init">
 		<property name="name" value="HMACMD5Function"/>
 		<property name="hmacFunctionName" value="HmacMD5"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="HMACSHA1Function"
@@ -659,7 +659,7 @@
 		init-method="init">
 		<property name="name" value="HMACSHA1Function"/>
 		<property name="hmacFunctionName" value="HmacSHA1"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="HMACSHA256Function"
@@ -667,7 +667,7 @@
 		init-method="init">
 		<property name="name" value="HMACSHA256Function"/>
 		<property name="hmacFunctionName" value="HmacSHA256"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="MD5Function"
@@ -675,7 +675,7 @@
 		init-method="init">
 		<property name="name" value="MD5Function"/>
 		<property name="mdFunctionName" value="MD5"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="SHA1Function"
@@ -683,7 +683,7 @@
 		init-method="init">
 		<property name="name" value="SHA1Function"/>
 		<property name="mdFunctionName" value="SHA-1"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="SHA256Function"
@@ -691,7 +691,7 @@
 		init-method="init">
 		<property name="name" value="SHA256Function"/>
 		<property name="mdFunctionName" value="SHA-256"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="SHA384Function"
@@ -699,7 +699,7 @@
 		init-method="init">
 		<property name="name" value="SHA384Function"/>
 		<property name="mdFunctionName" value="SHA-384"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="SHA512Function"
@@ -707,7 +707,7 @@
 		init-method="init">
 		<property name="name" value="SHA512Function"/>
 		<property name="mdFunctionName" value="SHA-512"/>
-		<property name="inputType" value="String"/>
+		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
 
