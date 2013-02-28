@@ -1,23 +1,76 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <localRepository>C:/Users/ctoth/.m2/repository</localRepository>
-  <interactiveMode>true</interactiveMode>
-  <usePluginRegistry>false</usePluginRegistry>
-  <offline>false</offline>
-  <servers>
-    <server>
-      <id>openxds</id>
-      <username>username_on_the_portal</username>
-      <password>password_on_the_portal</password>
-    </server>
-  </servers>
-<!--  <profiles>
-    <profile>
-      <properties>
-        <release.version>2.0.4</release.version>
-      </properties>
-    </profile>
-  </profiles> -->
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+http://maven.apache.org/xsd/settings-1.0.0.xsd">
+<localRepository>/home/ctoth/.m2/repository</localRepository>
+<interactiveMode>true</interactiveMode>
+<usePluginRegistry>false</usePluginRegistry>
+<offline>false</offline>
+
+<!--
+<profiles>
+<profile>
+<id>nexus</id>
+<repositories>
+<repository>
+<id>jhumaven</id>
+<url>http://maven.mse.jhu.edu/m2repository</url>
+</repository>
+<repository>
+<id>hl7repo1</id>
+<url>http://repo.openehealth.org/maven2/releases</url>
+</repository>
+<repository>
+<id>mapfish</id>
+<url>http://dev.mapfish.org/maven/repository/repository</url>
+</repository>
+<repository>
+<id>mvnrepository</id>
+<url>http://mvnrepository.com/artifact</url>
+</repository>
+</repositories>
+</profile>
+</profiles>
+-->
+
+
+<mirrors>
+<mirror>
+<id>nexus</id>
+<mirrorOf>*</mirrorOf>
+<url>http://216.224.183.123/nexus/content/groups/public</url>
+</mirror>
+<mirror>
+<id>nexus</id>
+<mirrorOf>*</mirrorOf>
+<url>http://216.224.183.123/repository</url>
+</mirror>
+</mirrors>
+<profiles>
+<profile>
+<id>nexus</id>
+<repositories>
+<repository>
+<id>central</id>
+<url>http://central</url>
+<releases><enabled>true</enabled></releases>
+<snapshots><enabled>true</enabled></snapshots>
+</repository>
+</repositories>
+<pluginRepositories>
+<pluginRepository>
+<id>central</id>
+<url>http://central</url>
+<releases><enabled>true</enabled></releases>
+<snapshots><enabled>true</enabled></snapshots>
+</pluginRepository>
+</pluginRepositories>
+</profile>
+</profiles>
+
+
+<activeProfiles>
+<activeProfile>nexus</activeProfile>
+</activeProfiles>
+
 </settings>

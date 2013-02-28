@@ -1,0 +1,55 @@
+<meta name="viewport" initial-scale="1.0" user-scale="no"
+maximum-scale="1.0"/>
+<link href="css/default.css" rel="stylesheet" type="text/css">
+
+<script src="js/dom.js"></script>
+<script src="js/rpc.js"></script>
+<script src="js/utils.js"></script>
+
+<script>
+	/**
+	* TODO: Send these functions to their own file
+	*/
+	function readIn(html){
+		var rpc = jx.ajax.getInstance() ;
+		var fn = function(xmlhttp){
+			jx.dom.set.value('out',xmlhttp.responseText);
+		}
+		rpc.send(html,fn);
+	}
+</script>
+<body onload="readIn('about.html')">
+	<div align="center" onclick="window.location.reload(true)" style="cursor:pointer">
+		<b style="font-size:22">SOEMPI: Secure Open Enterprise Master Patient Index</b>
+		<div>
+			<img src="img/logo.jpg"/>
+		</div>
+		<div>Health Information Privacy Lab</div>
+
+	</div>
+	<table align="center" style=" width:85%;height:330px;border:0px solid ffd700">
+			<tr>
+				<td valign="top">
+					<div id='out' style=" height:300px"></div>
+				</td>
+			</tr>
+	</table>
+	<table align="center" style=" width:85%;margin-top:5px;">
+		<tr>
+			<td style="padding:5px" align="">
+				<div style="float:left;width:49.5%">
+					<b>&nbsp;</b>
+				</div>
+				<div class="notification" style="margin-left:6px">
+					<b>Developer's Corner</b>
+					<div style="margin-left:10px">
+						<li type="square">Design: Components & architecture</li>
+						<li type="square"><a href="https://github.com/MrCsabaToth/SOEMPI/">Access the source code</a></li>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	
+</body>
