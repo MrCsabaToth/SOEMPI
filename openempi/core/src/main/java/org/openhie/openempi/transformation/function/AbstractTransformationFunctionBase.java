@@ -115,6 +115,8 @@ public abstract class AbstractTransformationFunctionBase implements Transformati
 	}
 
 	public void setOutputType(FieldTypeEnum outputType) {
+		if (outputType == FieldTypeEnum.Any)
+			throw new UnsupportedOperationException("OutputType cannot be Any");
 		this.outputType = outputType;
 	}
 

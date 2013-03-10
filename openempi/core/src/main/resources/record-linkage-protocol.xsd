@@ -39,15 +39,15 @@ limitations under the License.
 	</xs:complexType>
 	<xs:complexType name="privacy-settings">
 		<xs:sequence>
-			<xs:element name="component-settings" type="rl:component-settings" minOccurs="1"/>
-			<xs:element name="bloomfilter-settings" type="rl:bloomfilter-settings" minOccurs="1"/>
+			<xs:element name="component-settings" type="rl:component-settings"/>
+			<xs:element name="bloomfilter-settings" type="rl:bloomfilter-settings"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="component-settings">
 		<xs:sequence>
-			<xs:element name="keyserver-settings" type="rl:keyserver-settings" minOccurs="1"/>
-			<xs:element name="parameter-manager-settings" type="rl:parameter-manager-settings" minOccurs="1"/>
-			<xs:element name="data-integrator-settings" type="rl:data-integrator-settings" minOccurs="1"/>
+			<xs:element name="keyserver-settings" type="rl:keyserver-settings"/>
+			<xs:element name="parameter-manager-settings" type="rl:parameter-manager-settings"/>
+			<xs:element name="data-integrator-settings" type="rl:data-integrator-settings"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="keyserver-settings">

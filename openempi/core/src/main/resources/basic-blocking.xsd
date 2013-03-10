@@ -31,7 +31,7 @@
 		<xs:complexContent>
 			<xs:extension base="mpi:blocking-configuration-type">
 				<xs:sequence>
-					<xs:element name="number-of-records-to-sample" type="xs:int" minOccurs="1"/>
+					<xs:element name="number-of-records-to-sample" type="xs:int"/>
 					<xs:element name="blocking-rounds" type="bb:blocking-rounds"/>
 				</xs:sequence>
 			</xs:extension>

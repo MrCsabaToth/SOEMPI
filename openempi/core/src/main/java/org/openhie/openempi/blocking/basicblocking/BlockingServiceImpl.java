@@ -26,6 +26,7 @@ import org.openhie.openempi.configuration.Configuration;
 import org.openhie.openempi.context.Context;
 import org.openhie.openempi.dao.PersonDao;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
+import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
@@ -70,8 +71,8 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames();
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames();
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
 		if (leftOriginalIdFieldName != null)
 			leftMatchFieldNames.add(leftOriginalIdFieldName);
 		if (rightOriginalIdFieldName != null)
@@ -86,16 +87,17 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 				log.debug("In round " + count + " added criterion: " + field.getLeftFieldName() + "=" + person.getAttribute(field.getLeftFieldName()));
 			}
 			records.addAll(personDao.blockRecords(leftTableName, example, leftMatchFieldNames));
-			records.addAll(personDao.blockRecords(rightTableName, example, leftMatchFieldNames));
+			records.addAll(personDao.blockRecords(rightTableName, example, rightMatchFieldNames));
 			count++;
 		}
 		List<LeanRecordPair> pairs = new java.util.ArrayList<LeanRecordPair>();
 		StringComparisonService comparisonService = Context.getStringComparisonService();
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
 		for (Person entry : records) {
 			String leftOriginalId = person.getOriginalIdString(leftOriginalIdFieldName);
 			String rightOriginalId = entry.getOriginalIdString(rightOriginalIdFieldName);
 			ComparisonVector comparisonVector =
-					GeneralUtil.scoreRecordPair(person, entry, comparisonService, matchConfiguration.getMatchFields());
+					GeneralUtil.scoreRecordPair(person, entry, comparisonService, matchFields);
 			LeanRecordPair pair = new LeanRecordPair(person.getPersonId(),
 					leftOriginalId,
 					entry.getPersonId(),

@@ -18,7 +18,10 @@
 package org.openempi.webapp.client.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.openhie.openempi.Constants;
 
 import com.extjs.gxt.ui.client.data.BaseModelData;
 
@@ -62,11 +65,39 @@ public class MatchConfigurationWeb extends BaseModelData implements Serializable
 	}
 
 	public List<org.openempi.webapp.client.model.MatchFieldWeb> getMatchFields() {
-		return get(MATCH_FIELDS);
+		return normalizeMatchFields();
 	}
 
 	public void setMatchFields(List<org.openempi.webapp.client.model.MatchFieldWeb> matchFields) {
-		set(MATCH_FIELDS, matchFields);
+		set(MATCH_FIELDS, normalizeMatchFields(matchFields));
+	}
+
+	public List<org.openempi.webapp.client.model.MatchFieldWeb> normalizeMatchFields() {
+		List<org.openempi.webapp.client.model.MatchFieldWeb> matchFields = get(MATCH_FIELDS);
+		return normalizeMatchFields(matchFields);
+	}
+
+	public List<org.openempi.webapp.client.model.MatchFieldWeb> normalizeMatchFields(List<org.openempi.webapp.client.model.MatchFieldWeb> matchFields) {
+		// The goal is to sort the "NoComparisonJustTransfer" type field pairs to the end of the list.
+		// This way we can discard them easier for all the blocking and matching operations.
+		// These fields meant to be only transfer for research purposes as is, and shouldn't participate in the
+		// actual record linkage procedure. (The OriginalId field is such a field too, but that is treated exceptionally.
+		int size = matchFields.size();
+		int end = size;
+		List<org.openempi.webapp.client.model.MatchFieldWeb> noComparisonFields = new ArrayList<org.openempi.webapp.client.model.MatchFieldWeb>();
+		for(int i = 0; i < end;) {
+			if (matchFields.get(i).getComparatorFunction().getFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+				noComparisonFields.add(matchFields.get(i));
+				matchFields.remove(i);
+				end--;
+			} else {
+				i++;
+			}
+		}
+		for(org.openempi.webapp.client.model.MatchFieldWeb mf : noComparisonFields)
+			matchFields.add(mf);
+		noComparisonFields.clear();
+		return matchFields;
 	}
 
 }

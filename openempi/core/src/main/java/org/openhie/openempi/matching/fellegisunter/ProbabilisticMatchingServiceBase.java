@@ -96,7 +96,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		long startTime = System.nanoTime();
 		MatchConfiguration matchConfig =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfig.getMatchFields();
+		List<MatchField> matchFields = matchConfig.getMatchFields(false);
 		int fieldCount = matchFields.size();
 		fellegiSunterParams = new FellegiSunterParameters(fieldCount, 2);
 		List<LeanRecordPair> pairs = pairsParam;
@@ -156,7 +156,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			totalRecords = leftDataset.getTotalRecords() + rightDataset.getTotalRecords();
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		log.debug("Constructing ColumnMatchInformations...");
-		for (MatchField matchField : matchConfig.getMatchFields()) {
+		for (MatchField matchField : matchFields) {
 			ColumnMatchInformation cmi = new ColumnMatchInformation();
 			cmi.setLeftFieldName(matchField.getLeftFieldName());
 			cmi.setRightFieldName(matchField.getRightFieldName());

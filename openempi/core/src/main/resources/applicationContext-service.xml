@@ -534,6 +534,12 @@
 		<property name="inputType" value="Date"/>
 		<property name="outputType" value="Distance"/>
 	</bean>
+	<bean id="NoComparisonJustTransfer"
+		class="org.openhie.openempi.stringcomparison.metrics.NoComparisonJustTransfer">
+		<property name="name" value="DateToJaroWinkler"/>
+		<property name="inputType" value="Any"/>
+		<property name="outputType" value="Distance"/>
+	</bean>
 
 	<bean id="stringComparisonService"
 		class="org.openhie.openempi.stringcomparison.impl.StringComparisonServiceImpl">
@@ -567,6 +573,7 @@
 				<entry key="ScalarLong" value-ref="ScalarLong"/>
 				<entry key="DateToLong" value-ref="DateToLong"/>
 				<entry key="DateToJaroWinkler" value-ref="DateToJaroWinkler"/>
+				<entry key="NoComparisonJustTransfer" value-ref="NoComparisonJustTransfer"/>
 			</map>
 		</property>
 	</bean>

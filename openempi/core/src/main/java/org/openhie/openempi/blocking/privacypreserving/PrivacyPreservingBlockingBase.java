@@ -114,16 +114,12 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields();
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
 
 		calculateEmptyBloomFilters(leftTableName, rightTableName);
 
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames();
-		if (leftOriginalIdFieldName != null)
-			leftMatchFieldNames.add(leftOriginalIdFieldName);
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames();
-		if (rightOriginalIdFieldName != null)
-			rightMatchFieldNames.add(rightOriginalIdFieldName);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
 
 		Collections.sort(bits, new BloomFilterBitStatComparatorByBloomFilterIndex());
 		PrivacyPreservingBlockingSettings ppbs = Context.getConfiguration().getPrivacyPreservingBlockingSettings();
@@ -308,9 +304,9 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields();
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames();
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames();
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
 
 		Configuration config = Context.getConfiguration();
 		PrivacyPreservingBlockingSettings ppbs = config.getPrivacyPreservingBlockingSettings();

@@ -108,7 +108,7 @@ public class DeterministicExactMatchingService extends AbstractMatchingService
 		return matchFields;
 	}
 
-	public void setMatchFieldNames(List<MatchField> matchFields) {
+	public void setMatchFields(List<MatchField> matchFields) {
 		this.matchFields = matchFields;
 	}
 

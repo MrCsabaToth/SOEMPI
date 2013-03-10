@@ -17,7 +17,6 @@
  */
 package org.openhie.openempi.matching;
 
-import org.openhie.openempi.configuration.BaseField;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.service.BaseServiceTestCase;

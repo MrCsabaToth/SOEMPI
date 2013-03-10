@@ -76,11 +76,11 @@ public class RandomSampledBlockingBypassServiceImpl extends AbstractBlockingServ
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields();
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames();
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
 		if (leftOriginalIdFieldName != null)
 			leftMatchFieldNames.add(leftOriginalIdFieldName);
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames();
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
 		if (rightOriginalIdFieldName != null)
 			rightMatchFieldNames.add(rightOriginalIdFieldName);
 

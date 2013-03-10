@@ -557,7 +557,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		// Assemble a temporary MatchConfiguration for our purpose
 		MatchConfiguration matchConfigurationBackup =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields().get(0);
+		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);	// TODO: that's lame, should get probability values in a different way
 		MatchConfiguration matchConfig = new MatchConfiguration();
 		// TODO: request probability values (and other FS settings) from Data Providers??? Who wins?
 		// Right now we inherit the values from Parameter Manager's config
@@ -644,7 +644,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		// Assemble a temporary MatchConfiguration for our purpose
 		MatchConfiguration matchConfigurationBackup =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields().get(0);
+		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);	// TODO: that's lame, should get probability values in a different way
 		MatchConfiguration matchConfig = new MatchConfiguration();
 		// TODO: request probability values (and other FS settings) from Data Providers??? Who wins?
 		// Right now we inherit the values from Parameter Manager's config
@@ -709,7 +709,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			// Assemble a temporary MatchConfiguration for our purpose
 			MatchConfiguration matchConfigurationBackup =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-			MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields().get(0);
+			MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);	// TODO: that's lame, should get probability values in a different way
 			MatchConfiguration matchConfig = new MatchConfiguration();
 			// TODO: request probability values (and other FS settings) from Data Providers??? Who wins?
 			// Right now we inherit the values from Parameter Manager's config

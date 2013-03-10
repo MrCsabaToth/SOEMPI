@@ -308,4 +308,10 @@ public class Constants {
      */
 	public static final String SIGNING_KEY_HMAC_PARAMETER_NAME = "signingKey";
 
+    /**
+     * name of the transformation which signals that the given field meant to not participate in the
+     * record linkage, it should be just carried over as is
+     */
+	public static final String NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME = "NoComparisonJustTransfer";
+
 }

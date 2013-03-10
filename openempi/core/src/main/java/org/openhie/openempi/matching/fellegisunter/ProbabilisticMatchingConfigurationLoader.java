@@ -109,7 +109,7 @@ public class ProbabilisticMatchingConfigurationLoader implements ConfigurationLo
 		buildEMSettingsFragment(matchConfig.getEmSettings(), matchingConfigurationType);
 		org.openhie.openempi.configuration.xml.probabilisticmatching.MatchFields matchFieldsXml =
 			matchingConfigurationType.addNewMatchFields();
-		for (MatchField matchField : matchConfig.getMatchFields()) {
+		for (MatchField matchField : matchConfig.getMatchFields(true)) {
 			buildMatchFieldFragment(matchField, matchFieldsXml);
 		}
 		return matchingConfigurationType;

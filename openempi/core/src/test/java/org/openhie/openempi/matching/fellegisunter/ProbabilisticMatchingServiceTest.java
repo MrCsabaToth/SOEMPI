@@ -54,7 +54,7 @@ public class ProbabilisticMatchingServiceTest extends BaseServiceTestCase
 		// Assemble a temporary MatchConfiguration for our purpose
 		MatchConfiguration matchConfigurationBackup =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields().get(0);
+		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);
 		MatchConfiguration matchConfig = new MatchConfiguration();
 		// Right now we inherit the values from Parameter Manager's config
 		matchConfig.setFalsePositiveProbability(matchConfigurationBackup.getFalsePositiveProbability());

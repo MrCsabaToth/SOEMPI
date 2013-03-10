@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.openhie.openempi.Constants;
 import org.openhie.openempi.model.BaseObject;
 
 public class MatchConfiguration extends BaseObject
@@ -33,9 +34,11 @@ public class MatchConfiguration extends BaseObject
 	private double falsePositiveProbability;
 	private EMSettings emSettings;
 	private List<MatchField> matchFields;
+	private int numberOfRealMatchFields;
 	
 	public MatchConfiguration() {
 		matchFields = new ArrayList<MatchField>();
+		numberOfRealMatchFields = 0;
 	}
 	
 	public double getFalseNegativeProbability() {
@@ -64,32 +67,61 @@ public class MatchConfiguration extends BaseObject
 
 	public void addMatchField(MatchField matchField) {
 		matchFields.add(matchField);
+		normalizeMatchFields();
 	}
 
-	public List<MatchField> getMatchFields() {
+	public List<MatchField> getMatchFields(boolean withNoMatchFields) {
+		normalizeMatchFields();
+		if (!withNoMatchFields && numberOfRealMatchFields < matchFields.size())
+			return matchFields.subList(0, numberOfRealMatchFields);
 		return matchFields;
 	}
 
 	public void setMatchFields(List<MatchField> matchFields) {
 		this.matchFields = matchFields;
+		normalizeMatchFields();
 	}
 
-	public List<String> getLeftFieldNames()
+	public List<String> getLeftFieldNames(boolean withNoMatchFields)
 	{
 		List<String> matchFieldNames = new ArrayList<String>();
-		for (MatchField matchField : matchFields) {
+		for (MatchField matchField : getMatchFields(withNoMatchFields)) {
 			matchFieldNames.add(matchField.getLeftFieldName());
 		}
 		return matchFieldNames;
 	}
 
-	public List<String> getRightFieldNames()
+	public List<String> getRightFieldNames(boolean withNoMatchFields)
 	{
 		List<String> matchFieldNames = new ArrayList<String>();
-		for (MatchField matchField : matchFields) {
+		for (MatchField matchField : getMatchFields(withNoMatchFields)) {
 			matchFieldNames.add(matchField.getRightFieldName());
 		}
 		return matchFieldNames;
+	}
+	
+	public void normalizeMatchFields()
+	{
+		// The goal is to sort the "NoComparisonJustTransfer" type field pairs to the end of the list.
+		// This way we can discard them easier for all the blocking and matching operations.
+		// These fields meant to be only transfer for research purposes as is, and shouldn't participate in the
+		// actual record linkage procedure. (The OriginalId field is such a field too, but that is treated exceptionally.
+		int size = matchFields.size();
+		int end = size;
+		List<MatchField> noComparisonFields = new ArrayList<MatchField>();
+		for(int i = 0; i < end;) {
+			if (matchFields.get(i).getComparatorFunction().getFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+				noComparisonFields.add(matchFields.get(i));
+				matchFields.remove(i);
+				end--;
+			} else {
+				i++;
+			}
+		}
+		for(MatchField mf : noComparisonFields)
+			matchFields.add(mf);
+		numberOfRealMatchFields = end;
+		noComparisonFields.clear();
 	}
 
 	@Override

@@ -231,7 +231,7 @@ public class ConfigurationDataServiceImpl extends RemoteServiceServlet implement
 		emSettingsWeb.setMaxIterations(emSettings.getMaxIterations());
 		emSettingsWeb.setMaxTries(emSettings.getMaxTries());
 		matchConfigurationWeb.setEMSettings(emSettingsWeb);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields();
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(true);
 		List<MatchFieldWeb> matchFieldsWeb = new ArrayList<MatchFieldWeb>();
 		for(MatchField matchField : matchFields) {
 			MatchFieldWeb matchFieldWeb = new MatchFieldWeb();

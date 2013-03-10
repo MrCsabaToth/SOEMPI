@@ -22,8 +22,8 @@
 		<xs:complexContent>
 			<xs:extension base="mpi:matching-configuration-type">
 				<xs:sequence>
-					<xs:element name="false-negative-probability" type="xs:double" minOccurs="0"/>
-					<xs:element name="false-positive-probability" type="xs:double" minOccurs="0"/>
+					<xs:element name="false-negative-probability" type="xs:double"/>
+					<xs:element name="false-positive-probability" type="xs:double"/>
 					<xs:element name="em-settings" type="pm:em-settings"/>
 					<xs:element name="match-fields" type="pm:match-fields"/>
 				</xs:sequence>
@@ -49,10 +49,10 @@
 		<xs:sequence>
 			<xs:element name="left-field-name" type="xs:string"/>
 			<xs:element name="right-field-name" type="xs:string"/>
-			<xs:element name="agreement-probability" type="xs:double" minOccurs="0"/>
-			<xs:element name="disagreement-probability" type="xs:double" minOccurs="0"/>
-			<xs:element name="comparator-function" type="mpi:function-field" minOccurs="0"/>
-			<xs:element name="match-threshold" type="xs:double" minOccurs="0"/>
+			<xs:element name="agreement-probability" type="xs:double"/>
+			<xs:element name="disagreement-probability" type="xs:double"/>
+			<xs:element name="comparator-function" type="mpi:function-field"/>
+			<xs:element name="match-threshold" type="xs:double"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

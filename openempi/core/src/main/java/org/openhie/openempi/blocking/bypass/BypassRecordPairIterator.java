@@ -113,9 +113,9 @@ public class BypassRecordPairIterator implements RecordPairIterator
 		if (matchFields == null) {
 			MatchConfiguration matchConfiguration =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-			matchFields = matchConfiguration.getMatchFields();
-			leftMatchFieldNames = matchConfiguration.getLeftFieldNames();
-			rightMatchFieldNames = matchConfiguration.getRightFieldNames();
+			matchFields = matchConfiguration.getMatchFields(false);
+			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
+			rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
 			if (leftOriginalIdFieldName != null)
 				leftMatchFieldNames.add(leftOriginalIdFieldName);
 			if (rightOriginalIdFieldName != null)
