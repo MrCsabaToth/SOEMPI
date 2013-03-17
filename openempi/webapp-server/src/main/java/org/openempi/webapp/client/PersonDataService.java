@@ -81,7 +81,6 @@ public interface PersonDataService extends RemoteService
 	// We need to figure out how to do the following in a non-matching algorithm specific way
 	// or by pushing it out to a matching-algorithm specific GUI (more likely choice)
 	public PersonMatchWeb testScorePairs(String linkTableName, String leftTableName, String rightTableName,
-			String matchingServiceTypeName, String blockingServiceTypeName, Boolean checkTrueMatch,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Boolean emOnly);
+			String matchingServiceTypeName, String blockingServiceTypeName, Boolean emOnly);
 
 }

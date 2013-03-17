@@ -45,7 +45,7 @@ public class BlockingServiceFindCandidatesTest extends BaseServiceTestCase
 			System.out.println("The record has a value of " + ps.get(0).getAttribute(attribute) + " for field " + attribute);
 		}
 		BlockingService blockingService = Context.getBlockingService();
-		java.util.List<LeanRecordPair> persons = blockingService.findCandidates(TABLE_NAME, TABLE_NAME, null, null, ps.get(0));
+		java.util.List<LeanRecordPair> persons = blockingService.findCandidates(TABLE_NAME, TABLE_NAME, ps.get(0));
 		for (LeanRecordPair entry : persons) {
 			System.out.println("Found candicate matching record pair: " + entry);
 		}

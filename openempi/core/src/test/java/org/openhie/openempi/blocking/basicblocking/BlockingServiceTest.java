@@ -55,8 +55,7 @@ public class BlockingServiceTest extends BaseServiceTestCase
 		rounds.add(round);
 		RecordPairSource recordPairSource = blockingService.getRecordPairSource(rounds, leftDatasetName, rightDatasetName);
 		int i=0;
-		for (RecordPairIterator iter = recordPairSource.iterator(leftDatasetName, rightDatasetName, 
-				PersonUtils.ORIGINAL_ID, PersonUtils.ORIGINAL_ID, false, null); iter.hasNext(); ) {
+		for (RecordPairIterator iter = recordPairSource.iterator(leftDatasetName, rightDatasetName, false, null); iter.hasNext(); ) {
 			LeanRecordPair pair = iter.next();
 			log.trace("Comparing records " + pair.getLeftRecordId() + " and " + pair.getRightRecordId());
 			i++;
@@ -77,8 +76,7 @@ public class BlockingServiceTest extends BaseServiceTestCase
 		BlockingService blockingService = Context.getBlockingService();
 		RecordPairSource recordPairSource = blockingService.getRecordPairSource(leftDatasetName, rightDatasetName);
 		int i=0;
-		for (RecordPairIterator iter = recordPairSource.iterator(leftDatasetName, rightDatasetName, 
-				PersonUtils.ORIGINAL_ID, PersonUtils.ORIGINAL_ID, false, null); iter.hasNext(); ) {
+		for (RecordPairIterator iter = recordPairSource.iterator(leftDatasetName, rightDatasetName, false, null); iter.hasNext(); ) {
 			LeanRecordPair pair = iter.next();
 			log.trace("Comparing records " + pair.getLeftRecordId() + " and " + pair.getRightRecordId());
 			i++;

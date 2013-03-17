@@ -107,10 +107,10 @@ public class BasicRecordPairSource implements RecordPairSource
 		return valueList;
 	}
 
-	public RecordPairIterator iterator(String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
+	public RecordPairIterator iterator(String leftTableName, String rightTableName, boolean emOnly,
+			FellegiSunterParameters fellegiSunterParameters) {
 		BasicRecordPairIterator iterator = new BasicRecordPairIterator(this, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, distinctBinsMode, emOnly, fellegiSunterParameters);
+				distinctBinsMode, emOnly, fellegiSunterParameters);
 		return iterator;
 	}
 

@@ -80,14 +80,12 @@ public abstract class AbstractBlockingServiceBase extends BaseServiceImpl implem
 			String leftTableName, String rightTableName);
 
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
-			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
+			Object matchingServiceCustomParameters, String leftTableName, String rightTableName, List<LeanRecordPair> pairs,
 			boolean emOnly, FellegiSunterParameters fellegiSunterParameters) throws ApplicationException
 	{
 		// Default to using the iterators
 		RecordPairSource source = getRecordPairSource(leftTableName, rightTableName);
-		RecordPairIterator iter = source.iterator(leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, emOnly, fellegiSunterParameters);
+		RecordPairIterator iter = source.iterator(leftTableName, rightTableName, emOnly, fellegiSunterParameters);
 		for (; iter.hasNext(); ) {
 			try {
 				if (!emOnly)
@@ -101,9 +99,7 @@ public abstract class AbstractBlockingServiceBase extends BaseServiceImpl implem
 		}
 	}
 
-	public abstract List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person);
+	public abstract List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName, Person person);
 
-	public abstract void calculateBitStatistics(String matchingServiceType, String leftTableName,
-			String rightTableName, final String leftOriginalIdFieldName, final String rightOriginalIdFieldName);
+	public abstract void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName);
 }

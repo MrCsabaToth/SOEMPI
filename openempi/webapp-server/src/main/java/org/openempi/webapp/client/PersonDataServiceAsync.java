@@ -78,7 +78,6 @@ public interface PersonDataServiceAsync
 	public void getDatasetTableNames(AsyncCallback<List<String>> callback);
 
 	public void testScorePairs(String linkTableName, String leftTableName, String rightTableName,
-			String matchingServiceTypeName, String blockingServiceTypeName, Boolean checkTrueMatch,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Boolean emOnly,
+			String matchingServiceTypeName, String blockingServiceTypeName, Boolean emOnly,
 			AsyncCallback<PersonMatchWeb> callback);
 }

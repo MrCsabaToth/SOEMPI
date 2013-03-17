@@ -76,8 +76,7 @@ public interface BlockingService
 	 */
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
 			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs, boolean emOnly,
-			FellegiSunterParameters fellegiSunterParameters) throws ApplicationException;
+			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) throws ApplicationException;
 	
 	/**
 	 * Given a particular person, the findCandidates method returns a list
@@ -89,13 +88,11 @@ public interface BlockingService
 	 * 
 	 * @return
 	 */
-	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person);
+	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName, Person person);
 	
 	/**
 	 * Calculate bit statistics which later can be used for
 	 * privacy preserving blocking. The data is serialized out.
 	 */
-	public void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName);
+	public void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName);
 }

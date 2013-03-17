@@ -34,6 +34,7 @@ import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.NamePairValuePair;
 import org.openhie.openempi.model.Person;
+import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.stringcomparison.StringComparisonService;
 import org.openhie.openempi.util.GeneralUtil;
 
@@ -52,23 +53,20 @@ public class BasicRecordPairIterator implements RecordPairIterator
 	private List<MatchField> matchFields;
 	private List<String> leftMatchFieldNames;
 	private List<String> rightMatchFieldNames;
+	private String leftOriginalIdFieldName;
+	private String rightOriginalIdFieldName;
 	private Set<String> idPairs = new HashSet<String>(); // we don't need this for distinct blocks
 	private String leftTableName;
 	private String rightTableName;
-	private String leftOriginalIdFieldName;
-	private String rightOriginalIdFieldName;
 	private boolean emOnly;
 	private FellegiSunterParameters fellegiSunterParameters;
 	private boolean distinctBinsMode;	// true - bins are distinct so no record pairs will enumerated more times, no need to check
 
 	public BasicRecordPairIterator(BasicRecordPairSource recordPairSource, String leftTableName,
-			String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName,
-			boolean distinctBinsMode, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
+			String rightTableName, boolean distinctBinsMode, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
 		this.recordPairSource = recordPairSource;
 		this.leftTableName = leftTableName;
 		this.rightTableName = rightTableName;
-		this.leftOriginalIdFieldName = leftOriginalIdFieldName;
-		this.rightOriginalIdFieldName = rightOriginalIdFieldName;
 		this.distinctBinsMode = distinctBinsMode;
 		this.emOnly = emOnly;
 		this.fellegiSunterParameters = fellegiSunterParameters;
@@ -124,13 +122,12 @@ public class BasicRecordPairIterator implements RecordPairIterator
 		if (matchFields == null) {
 			MatchConfiguration matchConfiguration =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
+			PersonQueryService personQueryService = Context.getPersonQueryService();
 			matchFields = matchConfiguration.getMatchFields(false);
 			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-			if (leftOriginalIdFieldName != null)
-				leftMatchFieldNames.add(leftOriginalIdFieldName);
+			leftOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(leftTableName);
 			rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
-			if (rightOriginalIdFieldName != null)
-				rightMatchFieldNames.add(rightOriginalIdFieldName);
+			rightOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(rightTableName);
 		}
 		Person leftExample = new Person();
 		Person rightExample = new Person();
@@ -153,21 +150,17 @@ public class BasicRecordPairIterator implements RecordPairIterator
 				if (!distinctBinsMode)
 					hashKey = p.getPersonId() + "_" + po.getPersonId();
 				if (distinctBinsMode || !idPairs.contains(hashKey)) {
-					String leftOriginalId = p.getOriginalIdString(leftOriginalIdFieldName);
-					String rightOriginalId = po.getOriginalIdString(rightOriginalIdFieldName);
-					ComparisonVector comparisonVector =
-							GeneralUtil.scoreRecordPair(p, po, comparisonService, matchFields);
+					ComparisonVector comparisonVector = GeneralUtil.scoreRecordPair(p, po, comparisonService, matchFields);
 					LeanRecordPair recordPair = null;
 					if (emOnly) {
 						fellegiSunterParameters.incrementVectorFrequency(comparisonVector.getBinaryVectorValue());
 					} else {
-						recordPair = new LeanRecordPair(p.getPersonId(),
-														leftOriginalId,
-														po.getPersonId(),
-														rightOriginalId);
+						recordPair = new LeanRecordPair(p.getPersonId(), po.getPersonId());
 						recordPair.setComparisonVector(comparisonVector);
 					}
 					recordPairs.add(recordPair);
+					String leftOriginalId = p.getStringAttribute(leftOriginalIdFieldName);
+					String rightOriginalId = p.getStringAttribute(rightOriginalIdFieldName);					
 					if (leftOriginalId != null && rightOriginalId != null)
 						if (leftOriginalId.equals(rightOriginalId))
 							countTrueMatch++;

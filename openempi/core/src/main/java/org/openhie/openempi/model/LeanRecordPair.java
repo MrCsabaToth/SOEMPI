@@ -29,16 +29,12 @@ public class LeanRecordPair implements Serializable {
 
 	private long leftRecordId;
 	private long rightRecordId;
-	private String leftOriginalRecordId;
-	private String rightOriginalRecordId;
 	private double weight;
 	private ComparisonVector comparisonVector;
 	
-	public LeanRecordPair(long leftRecordId, String leftOriginalRecordId, long rightRecordId, String rightOriginalRecordId) {
+	public LeanRecordPair(long leftRecordId, long rightRecordId) {
 		this.leftRecordId = leftRecordId;
-		this.leftOriginalRecordId = leftOriginalRecordId;
 		this.rightRecordId = rightRecordId;
-		this.rightOriginalRecordId = rightOriginalRecordId;
 	}
 
 	public long getLeftRecordId() {
@@ -49,28 +45,12 @@ public class LeanRecordPair implements Serializable {
 		this.leftRecordId = leftRecordId;
 	}
 
-	public String getLeftOriginalRecordId() {
-		return leftOriginalRecordId;
-	}
-
-	public void setLeftOriginalRecordId(String leftOriginalRecordId) {
-		this.leftOriginalRecordId = leftOriginalRecordId;
-	}
-	
 	public long getRightRecordId() {
 		return rightRecordId;
 	}
 
 	public void setRightRecordId(long rightRecordId) {
 		this.rightRecordId = rightRecordId;
-	}
-
-	public String getRightOriginalRecordId() {
-		return rightOriginalRecordId;
-	}
-
-	public void setRightOriginalRecordId(String rightOriginalRecordId) {
-		this.rightOriginalRecordId = rightOriginalRecordId;
 	}
 
 	public long getRecordId(int index) {
@@ -112,8 +92,6 @@ public class LeanRecordPair implements Serializable {
 		return new HashCodeBuilder()
 			.append(getLeftRecordId())
 			.append(getRightRecordId())
-			.append(getLeftOriginalRecordId())
-			.append(getRightOriginalRecordId())
 			.toHashCode();
 	}
 
@@ -122,8 +100,6 @@ public class LeanRecordPair implements Serializable {
 		return new ToStringBuilder(this)
 				.append("leftRecordId", leftRecordId)
 				.append("rightRecordId", rightRecordId)
-				.append("leftOriginalRecordId", leftOriginalRecordId)
-				.append("rightOriginalRecordId", rightOriginalRecordId)
 				.append("weight", weight).toString();
 	}
 

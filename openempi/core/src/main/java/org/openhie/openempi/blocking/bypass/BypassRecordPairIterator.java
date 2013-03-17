@@ -54,8 +54,6 @@ public class BypassRecordPairIterator implements RecordPairIterator
 	private List<String> rightMatchFieldNames = null;
 	private String leftTableName;
 	private String rightTableName;
-	private String leftOriginalIdFieldName;
-	private String rightOriginalIdFieldName;
 	private boolean emOnly;
 	private FellegiSunterParameters fellegiSunterParameters;
 
@@ -63,13 +61,10 @@ public class BypassRecordPairIterator implements RecordPairIterator
 	private Long otherPageStart = 0L;
 
 	public BypassRecordPairIterator(BypassRecordPairSource recordPairSource, String leftTableName,
-			String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName, boolean emOnly,
-			FellegiSunterParameters fellegiSunterParameters) {
+			String rightTableName, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
 		initialize();
 		this.leftTableName = leftTableName;
 		this.rightTableName = rightTableName;
-		this.leftOriginalIdFieldName = leftOriginalIdFieldName;
-		this.rightOriginalIdFieldName = rightOriginalIdFieldName;
 		this.emOnly = emOnly;
 		this.fellegiSunterParameters = fellegiSunterParameters;
 	}
@@ -96,10 +91,7 @@ public class BypassRecordPairIterator implements RecordPairIterator
 		if (emOnly) {
 			fellegiSunterParameters.incrementVectorFrequency(comparisonVector.getBinaryVectorValue());
 		} else {
-			recordPair = new LeanRecordPair(actualPerson.getPersonId(),
-											leftOriginalIdFieldName,
-											personOther.getPersonId(),
-											rightOriginalIdFieldName);
+			recordPair = new LeanRecordPair(actualPerson.getPersonId(), personOther.getPersonId());
 			recordPair.setComparisonVector(comparisonVector);
 		}		
 		return recordPair;
@@ -116,10 +108,6 @@ public class BypassRecordPairIterator implements RecordPairIterator
 			matchFields = matchConfiguration.getMatchFields(false);
 			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
 			rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
-			if (leftOriginalIdFieldName != null)
-				leftMatchFieldNames.add(leftOriginalIdFieldName);
-			if (rightOriginalIdFieldName != null)
-				rightMatchFieldNames.add(rightOriginalIdFieldName);
 		}
 
 		if (!isInitialized()) {

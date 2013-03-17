@@ -47,8 +47,7 @@ public class LSHWithCBFMultiPartyServiceImpl extends PrivacyPreservingBlockingBa
 	@SuppressWarnings("unchecked")
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
 			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
-			boolean emOnly, FellegiSunterParameters fellegiSunterParameters) throws ApplicationException {
+			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) throws ApplicationException {
 		List<BloomFilterBitStat> bitStats = null;
 		String fileRepositoryDirectory =
 			Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
@@ -77,8 +76,7 @@ public class LSHWithCBFMultiPartyServiceImpl extends PrivacyPreservingBlockingBa
 		}
 		Collections.sort(importantBits, new BloomFilterBitStatComparatorByBloomFilterIndex());
 
-		getRecordPairs(importantBits, pairs, null, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, emOnly, fellegiSunterParameters);
+		getRecordPairs(importantBits, pairs, null, leftTableName, rightTableName, emOnly, fellegiSunterParameters);
 	}
 
 	public List<Person> populateList(List<Person> personList, List<Long> personIdList) {

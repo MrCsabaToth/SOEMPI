@@ -42,8 +42,7 @@ public abstract class BlockingWithRandomBitsServiceBase extends PrivacyPreservin
 
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
 			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
-			boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
+			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
 		PrivacyPreservingBlockingSettings ppbs = Context.getConfiguration().getPrivacyPreservingBlockingSettings();
 		List<PrivacyPreservingBlockingField> ppbFields = ppbs.getPrivacyPreservingBlockingFields();
 		Integer numberOfRandomBits = ppbs.getNumberOfBlockingBits();
@@ -91,8 +90,7 @@ public abstract class BlockingWithRandomBitsServiceBase extends PrivacyPreservin
 				BloomFilterBitStat bitStat = new BloomFilterBitStat(randomFieldIndex, randomBitIndex);
 				selectedBits.add(bitStat);
 			}
-			getRecordPairs(selectedBits, pairs, idPairHash, leftTableName, rightTableName,
-					leftOriginalIdFieldName, rightOriginalIdFieldName, emOnly, fellegiSunterParameters);
+			getRecordPairs(selectedBits, pairs, idPairHash, leftTableName, rightTableName, emOnly, fellegiSunterParameters);
 		}
 	}
 

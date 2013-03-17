@@ -38,10 +38,10 @@ public class BypassRecordPairSource implements RecordPairSource
 		return null;
 	}
 
-	public RecordPairIterator iterator(String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
-		BypassRecordPairIterator iterator = new BypassRecordPairIterator(this, leftTableName, rightTableName, leftOriginalIdFieldName,
-				rightOriginalIdFieldName, emOnly, fellegiSunterParameters);
+	public RecordPairIterator iterator(String leftTableName, String rightTableName, boolean emOnly,
+			FellegiSunterParameters fellegiSunterParameters) {
+		BypassRecordPairIterator iterator = new BypassRecordPairIterator(this, leftTableName, rightTableName, emOnly,
+				fellegiSunterParameters);
 		return iterator;
 	}
 

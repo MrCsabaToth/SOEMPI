@@ -66,13 +66,13 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 	protected abstract boolean useBinaryScores();
 
 	public Set<LeanRecordPair> match(String blockingServiceTypeName, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) throws ApplicationException {
+			Person person) throws ApplicationException {
 		log.debug("Looking for matches on person " + person);
 		if (!initialized) {
 			throw new ApplicationException("Matching service has not been initialized yet.");
 		}
 		List<LeanRecordPair> pairs = Context.getBlockingServiceSelector().findCandidates(blockingServiceTypeName,
-				leftTableName, rightTableName, leftOriginalIdFieldName, rightOriginalIdFieldName, person);
+				leftTableName, rightTableName, person);
 		Set<LeanRecordPair> matches = new java.util.HashSet<LeanRecordPair>();
 //		scoreRecordPairs(pairs, fellegiSunterParams, false);
 		calculateRecordPairWeights(pairs, fellegiSunterParams);
@@ -90,8 +90,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 
 	public PersonMatch linkRecords(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters, String linkTableName,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName,
-			List<LeanRecordPair> pairsParam, ComponentType componentType, boolean emOnly, boolean persistLinks) throws ApplicationException {
+			String leftTableName, String rightTableName, List<LeanRecordPair> pairsParam, ComponentType componentType,
+			boolean emOnly, boolean persistLinks) throws ApplicationException {
 
 		long startTime = System.nanoTime();
 		MatchConfiguration matchConfig =
@@ -104,8 +104,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			pairs = new ArrayList<LeanRecordPair>();
 		getRecordPairs(blockingServiceTypeName, blockingServiceCustomParameters,
 				matchingServiceTypeName, matchingServiceCustomParameters,
-				leftTableName, rightTableName, leftOriginalIdFieldName, rightOriginalIdFieldName,
-				pairs, emOnly, fellegiSunterParams);
+				leftTableName, rightTableName, pairs, emOnly, fellegiSunterParams);
 		fellegiSunterParams.setMu(matchConfig.getFalsePositiveProbability());
 		fellegiSunterParams.setLambda(matchConfig.getFalseNegativeProbability());
 
@@ -312,12 +311,11 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 
 	public void getRecordPairs(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
+			String leftTableName, String rightTableName, List<LeanRecordPair> pairs,
 			boolean emOnly, FellegiSunterParameters fellegiSunterParams) throws ApplicationException {
 		Context.getBlockingServiceSelector().getRecordPairs(blockingServiceTypeName, blockingServiceCustomParameters,
-				matchingServiceTypeName, matchingServiceCustomParameters, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, pairs, emOnly, fellegiSunterParams);
+				matchingServiceTypeName, matchingServiceCustomParameters, leftTableName, rightTableName, pairs, emOnly,
+				fellegiSunterParams);
 	}
 
 	public void calculateVectorFrequencies(List<LeanRecordPair> pairs, FellegiSunterParameters fellegiSunterParams) {
@@ -373,12 +371,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 				BufferedWriter bw = new BufferedWriter(fw);
 				try {
 					for (LeanRecordPair pair : pairs) {
-						String leftDbId = pair.getLeftOriginalRecordId();
-						String rightDbId = pair.getRightOriginalRecordId();
-						if (leftDbId != null && rightDbId != null) {
-							bw.append(leftDbId + "," + rightDbId + "," + pair.getWeight());
-							bw.newLine();	// System.getProperty("line.separator")
-						}
+						bw.append(Double.toString(pair.getWeight()));	// TODO: write some kind of ids
+						bw.newLine();	// System.getProperty("line.separator")
 					}
 				}
 				finally {
@@ -417,12 +411,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			try {
 				for (LeanRecordPair pair : pairs) {
 //					System.out.println("Pair: " + getRecordPairMatchFields(pair));
-					String marginalProbs = null;
-					String leftOriginalRecordId = pair.getLeftOriginalRecordId();
-					String rightOriginalRecordId = pair.getRightOriginalRecordId();
-					if (writeStat && leftOriginalRecordId != null && rightOriginalRecordId != null) {
-						marginalProbs = leftOriginalRecordId + "," + rightOriginalRecordId + ",";
-					}
+					String marginalProbs = "";
 					ComparisonVector vector = pair.getComparisonVector();
 					vector.calculateProbabilityGivenMatch(fellegiSunterParams.getMValues(), useBinaryScores());
 					vector.calculateProbabilityGivenNonmatch(fellegiSunterParams.getUValues(), useBinaryScores());

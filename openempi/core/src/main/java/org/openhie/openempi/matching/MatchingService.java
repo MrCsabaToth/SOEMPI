@@ -73,11 +73,13 @@ public interface MatchingService
 	 * in each record pair returned is the person passed into the call.
 	 * 
 	 * @param blockingServiceTypeName: name of the blocking service
+	 * @param linkTableName: name of the link table
+	 * @param leftTableName: name of the left table
 	 * @param person: the Person we search matches for
 	 * @return set of records which matches the specified record
 	 */
 	public Set<LeanRecordPair> match(String blockingServiceTypeName, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) throws ApplicationException;
+			Person person) throws ApplicationException;
 	
 	/**
 	 * This method will generate and persist all the record pairs found in the system based
@@ -91,9 +93,7 @@ public interface MatchingService
 	 * @param matchingServiceTypeName: name of the matching service
 	 * @param linkTableName: name of the link table
 	 * @param leftTableName: name of the left table
-	 * @param leftOriginalIdFieldName: name of the field which stores the originalId in the left table
 	 * @param rightTableName: name of the right table
-	 * @param rightOriginalIdFieldName: name of the field which stores the originalId in the right table
 	 * @param blockingServiceCustomParameters: custom parameters for different blocking services
 	 * @param matchingServiceCustomParameters: custom parameters for different matching services
 	 * @param recordPairs: output parameter for record pairs
@@ -106,7 +106,6 @@ public interface MatchingService
 	public PersonMatch linkRecords(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters,
 			String linkTableName, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName,
 			List<LeanRecordPair> pairs, ComponentType componentType, boolean emOnly,
 			boolean storeLinks) throws ApplicationException;
 }

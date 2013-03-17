@@ -26,7 +26,6 @@ public interface RecordPairSource
 {
 	public void init(String leftTableName, String rightTableName);
 	public RecordPairIterator iterator(String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName,
 			boolean emOnly, FellegiSunterParameters fellegiSunterParameters);
 	public List<List<NamePairValuePair>> getBlockingValueList();
 }

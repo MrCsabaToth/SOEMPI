@@ -703,7 +703,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		if (componentType == ComponentType.DATA_INTEGRATOR_MODE) {
 			matchingService.linkRecords(
 					blockingServiceTypeName, matchPairStats, matchingServiceTypeName,
-					null, linkTableName, leftTableName, rightTableName, null, null,
+					null, linkTableName, leftTableName, rightTableName,
 					pairs, componentType, false, true);
 		} else if (componentType == ComponentType.PARAMETER_MANAGER_MODE) {
 			// Assemble a temporary MatchConfiguration for our purpose
@@ -753,7 +753,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			// So here is where we can run several linkRecords with emOnly=true mode
 			PersonMatch personMatch = matchingService.linkRecords(blockingServiceTypeName,
 					null, matchingServiceTypeName, null,
-					linkTableName, leftTableName, rightTableName, null, null, pairs, componentType, false, false);
+					linkTableName, leftTableName, rightTableName, pairs, componentType, false, false);
 
 			// Gather statistics information for DPs so they can calculate partial importance and send it to DI
 			FellegiSunterParameters fellegiSunterParams = matchingService.getFellegiSunterParameters();

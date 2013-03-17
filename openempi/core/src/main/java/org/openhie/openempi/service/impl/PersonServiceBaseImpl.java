@@ -26,6 +26,7 @@ import org.openhie.openempi.dao.PersonLinkDao;
 import org.openhie.openempi.dao.PersonMatchDao;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.Dataset;
+import org.openhie.openempi.model.FieldMeaning.FieldMeaningEnum;
 import org.openhie.openempi.model.FieldType;
 import org.openhie.openempi.model.FieldType.FieldTypeEnum;
 import org.openhie.openempi.model.User;
@@ -43,6 +44,17 @@ public class PersonServiceBaseImpl extends BaseServiceImpl implements PersonServ
 		log.debug("Getting Dataset column information");
 		Dataset dataset = getDatasetByTableName(tableName);
 		return dataset.getColumnInformation();
+	}
+
+	public String getDatasetOriginalIdFieldName(String tableName) {
+		log.debug("Getting Dataset original id field name");
+		Dataset dataset = getDatasetByTableName(tableName);
+		for (ColumnInformation ci : dataset.getColumnInformation()) {
+			if (ci.getFieldMeaning().getFieldMeaningEnum() == FieldMeaningEnum.OriginalId &&
+				ci.getFieldTransformation() == null)
+					return ci.getFieldName();
+		}
+		return null;
 	}
 
 	public List<String> getDatasetTableNames()

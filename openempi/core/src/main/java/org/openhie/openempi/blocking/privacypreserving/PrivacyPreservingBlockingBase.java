@@ -105,8 +105,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 	}
 
 	protected void getRecordPairs(List<BloomFilterBitStat> bits, List<LeanRecordPair> pairs, Set<String> idPairHash,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName,
-			boolean emOnly, FellegiSunterParameters fellegiSunterParams) {
+			String leftTableName, String rightTableName, boolean emOnly, FellegiSunterParameters fellegiSunterParams) {
 		if (emOnly && fellegiSunterParams == null)
 			throw new IllegalArgumentException("Must supply FellegiSunterParameters in case if emOnly mode");
 		PersonQueryService personQueryService = Context.getPersonQueryService();
@@ -125,8 +124,6 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		PrivacyPreservingBlockingSettings ppbs = Context.getConfiguration().getPrivacyPreservingBlockingSettings();
 		List<PrivacyPreservingBlockingField> ppbFields = ppbs.getPrivacyPreservingBlockingFields();
 		List<String> ppbLeftFieldNames = ppbs.getPrivacyPreservingBlockingLeftFieldNames();
-		if (leftOriginalIdFieldName != null)
-			ppbLeftFieldNames.add(leftOriginalIdFieldName);
 
 		int pageSize = Constants.PAGE_SIZE;
 		Long pageStart = 0L;
@@ -180,8 +177,6 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 //		}
 
 		List<String> ppbRightFieldNames = ppbs.getPrivacyPreservingBlockingRightFieldNames();
-		if (rightOriginalIdFieldName != null)
-			ppbRightFieldNames.add(rightOriginalIdFieldName);
 
 //		filename = configDirectory + "/" + PERSONOTHERBUCKETS_FILE_NAME;
 //		file = new File(filename);
@@ -233,6 +228,8 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		}
 
 		// 5. Take each bucket pair and generate pairs from them
+		String leftOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(leftTableName);
+		String rightOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(rightTableName);
 		for (int i = 0; i < numberOfBuckets; i++) {
 			List<Long> bucket = buckets.get(i).getIds();
 			List<Long> otherBucket = otherBuckets.get(i).getIds();
@@ -241,8 +238,6 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 				List<Person> personOthers = personQueryService.getPersonsByIdsTransactionally(rightTableName, otherBucket, rightMatchFieldNames);
 				for (Person person : persons) {
 					for (Person personOther : personOthers) {
-						String leftOriginalId = person.getOriginalIdString(leftOriginalIdFieldName);
-						String rightOriginalId = personOther.getOriginalIdString(rightOriginalIdFieldName);
 						boolean alreadyExamined = false;
 						String idPairStr = null;
 						if (idPairHash != null) {
@@ -256,15 +251,14 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 							if (emOnly) {
 								fellegiSunterParams.incrementVectorFrequency(comparisonVector.getBinaryVectorValue());
 							} else {
-								LeanRecordPair recordPair = new LeanRecordPair(person.getPersonId(),
-										leftOriginalId,
-										personOther.getPersonId(),
-										rightOriginalId);
+								LeanRecordPair recordPair = new LeanRecordPair(person.getPersonId(), personOther.getPersonId());
 								recordPair.setComparisonVector(comparisonVector);
 								pairs.add(recordPair);
 							}
 							if (idPairHash != null)
 								idPairHash.add(idPairStr);
+							String leftOriginalId = person.getStringAttribute(leftOriginalIdFieldName);
+							String rightOriginalId = personOther.getStringAttribute(rightOriginalIdFieldName);
 							if (leftOriginalId != null && rightOriginalId != null) {
 								if (leftOriginalId.equals(rightOriginalId)) {
 									buckets.get(i).incrementTrueMatchCounter();
@@ -291,14 +285,13 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 			List<Long> bucket = buckets.get(i).getIds();
 			List<Long> otherBucket = otherBuckets.get(i).getIds();
 			System.out.println(i + ".: " + bucket.size() + ", " + otherBucket.size() + ", " +
-					buckets.get(i).getTrueMatchCounter());
+					buckets.get(i).getTrueMatchCounter() + " - " + otherBuckets.get(i).getTrueMatchCounter());
 		}
 		// ] Debug print
 		System.out.println("Number of pairs: " + pairs.size());
 	}
 
-	public void calculateBitStatistics(String matchingServiceTypeName, String leftTableName, String rightTableName,
-			final String leftOriginalIdFieldName, final String rightOriginalIdFieldName) {
+	public void calculateBitStatistics(String matchingServiceTypeName, String leftTableName, String rightTableName) {
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 
 		StringComparisonService comparisonService = Context.getStringComparisonService();
@@ -318,11 +311,6 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		leftMatchFieldNames.addAll(ppbLeftFieldNames);
 		List<String> ppbRightFieldNames = ppbs.getPrivacyPreservingBlockingRightFieldNames();
 		rightMatchFieldNames.addAll(ppbRightFieldNames);
-
-		if (leftOriginalIdFieldName != null)
-			leftMatchFieldNames.add(leftOriginalIdFieldName);
-		if (rightOriginalIdFieldName != null)
-			rightMatchFieldNames.add(rightOriginalIdFieldName);
 
 		int pageSize = Constants.PAGE_SIZE;
 		List<Person> randomPersonList = new ArrayList<Person>();
@@ -347,12 +335,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 					new ParallelPersonListIterator<Person, Person>() {
 				public boolean each(Person p, Person po, List<LeanRecordPair> pairs,
 						StringComparisonService comparisonService, List<MatchField> matchFields) {
-					String leftOriginalId = p.getOriginalIdString(leftOriginalIdFieldName);
-					String rightOriginalId = po.getOriginalIdString(rightOriginalIdFieldName);
-					LeanRecordPair recordPair = new LeanRecordPair(p.getPersonId(),
-																	leftOriginalId,
-																	po.getPersonId(),
-																	rightOriginalId);
+					LeanRecordPair recordPair = new LeanRecordPair(p.getPersonId(), po.getPersonId());
 					ComparisonVector comparisonVector =
 							GeneralUtil.scoreRecordPair(p, po, comparisonService, matchFields);
 					recordPair.setComparisonVector(comparisonVector);
@@ -411,25 +394,34 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 			Iterator<Person> personIterator = randomPersonList.iterator();
 			Iterator<Person> personOtherIterator = randomPersonOtherList.iterator();
 			int countMatched = 0;
+			String leftOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(leftTableName);
+			String rightOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(rightTableName);
 			boolean canCountTrueMatches = (leftOriginalIdFieldName != null && rightOriginalIdFieldName != null);
 			int countTrueMatch = 0;
 			int countTrueMatchMatch = 0;
 			while (recordPairIterator.hasNext() && personIterator.hasNext() && personOtherIterator.hasNext()) {
 				LeanRecordPair pair = recordPairIterator.next();
 				boolean trueMatch = false;
-				if (canCountTrueMatches)
-					trueMatch = pair.getLeftOriginalRecordId().equals(pair.getRightOriginalRecordId());
+				String leftOriginalId = "";
+				String rightOriginalId = "";
+				if (canCountTrueMatches) {
+					Person person = personQueryService.getPersonById(leftTableName, pair.getLeftRecordId());
+					Person personOther = personQueryService.getPersonById(rightTableName, pair.getRightRecordId());
+					leftOriginalId = person.getStringAttribute(leftOriginalIdFieldName);
+					rightOriginalId = personOther.getStringAttribute(rightOriginalIdFieldName);
+					trueMatch = leftOriginalId.equals(rightOriginalId);
+				}
 				boolean pairMatches = (pair.getWeight() >= fellegiSunterParams.getUpperBound());
 				if (pairMatches) {
 					countMatched++;
 					if (trueMatch)
 						countTrueMatchMatch++;
 				}
-				if (trueMatch)
-					countTrueMatch++;
-				System.out.println("Pair " + pair.getLeftRecordId() + " (" + pair.getLeftOriginalRecordId() + ")" +
-									", " + pair.getRightRecordId() + " (" + pair.getRightOriginalRecordId() + ")" +
-									(trueMatch ? "*" : "-"));
+				System.out.println("Pair " + pair.getLeftRecordId() +
+						(canCountTrueMatches ? (" (" + leftOriginalId + ")") : "") + ", " + 
+						pair.getRightRecordId() +
+						(canCountTrueMatches ? (" (" + rightOriginalId + ")") : "") + ", " +
+						(trueMatch ? "*" : "-"));
 				Person leftPerson = personIterator.next();
 				Person rightPerson = personOtherIterator.next();
 				int bloomFilterIndex = 0;
@@ -545,8 +537,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		return (List<PairBucketData>)SerializationUtil.deserializeObject(configDirectory, PERSONOTHERBUCKETS_FILE_NAME);
 	}
 
-	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) {
+	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName, Person person) {
 		throw new UnsupportedOperationException("findCandidates is not implemented in PrivacyPreservingBlocking algorithms");
 	}
 

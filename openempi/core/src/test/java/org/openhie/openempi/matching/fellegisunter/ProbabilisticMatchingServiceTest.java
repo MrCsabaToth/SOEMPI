@@ -73,8 +73,7 @@ public class ProbabilisticMatchingServiceTest extends BaseServiceTestCase
 		List<LeanRecordPair> pairs = new ArrayList<LeanRecordPair>();
 		matchingService.linkRecords(Constants.BLOCKING_BYPASS_SERVICE_NAME,
 				null, Constants.PROBABILISTIC_MATCHING_SERVICE_WITH_BINARY_SCORES_NAME, null,
-				linkTableName, leftDatasetName, rightDatasetName, PersonUtils.ORIGINAL_ID,
-				PersonUtils.ORIGINAL_ID, pairs, ComponentType.DATA_INTEGRATOR_MODE, emOnly, true);
+				linkTableName, leftDatasetName, rightDatasetName, pairs, ComponentType.DATA_INTEGRATOR_MODE, emOnly, true);
 		Context.getConfiguration().registerConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY, matchConfigurationBackup);
 	}
 

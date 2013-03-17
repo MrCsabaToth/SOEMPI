@@ -65,17 +65,15 @@ public class DeterministicExactMatchingService extends AbstractMatchingService
 
 	public PersonMatch linkRecords(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters,
-			String linkTableName, String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
+			String linkTableName, String leftTableName, String rightTableName, List<LeanRecordPair> pairs,
 			ComponentType componentType, boolean emOnly, boolean persistLinks) {
 		throw new UnsupportedOperationException("linkRecords is not implemented for DeterministicExactMatchingService");
 	}
 
-	public Set<LeanRecordPair> match(String blockingServiceTypeName, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) {
+	public Set<LeanRecordPair> match(String blockingServiceTypeName, String leftTableName, String rightTableName, Person person) {
 		log.debug("Looking for matches on person " + person);
 		List<LeanRecordPair> candidates = Context.getBlockingServiceSelector().findCandidates(blockingServiceTypeName,
-				leftTableName, rightTableName, leftOriginalIdFieldName, rightOriginalIdFieldName, person);
+				leftTableName, rightTableName, person);
 		//List<LeanRecordPair> candidates = Context.getBlockingService().findCandidates(person);
 		Set<LeanRecordPair> matches = new java.util.HashSet<LeanRecordPair>();
 		for (LeanRecordPair entry : candidates) {

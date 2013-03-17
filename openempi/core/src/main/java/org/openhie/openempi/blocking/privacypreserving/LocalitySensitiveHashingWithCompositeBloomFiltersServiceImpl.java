@@ -37,8 +37,7 @@ public class LocalitySensitiveHashingWithCompositeBloomFiltersServiceImpl extend
 
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
 			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
-			boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
+			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
 		List<BloomFilterBitStat> bitStats = null;
 		String fileRepositoryDirectory =
 			Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
@@ -48,8 +47,7 @@ public class LocalitySensitiveHashingWithCompositeBloomFiltersServiceImpl extend
 //			BloomFilterStatistics bloomFilterStatistics = loadBloomFilterStatistics(configDirectory);
 //			bitStats = bloomFilterStatistics.getBloomFilterBitStats();
 //		} else {
-			calculateBitStatistics(matchingServiceTypeName, leftTableName, rightTableName,
-					leftOriginalIdFieldName, rightOriginalIdFieldName);
+			calculateBitStatistics(matchingServiceTypeName, leftTableName, rightTableName);
 			if (file.exists()) {
 				BloomFilterStatistics bloomFilterStatistics = loadBloomFilterStatistics(fileRepositoryDirectory);
 				bitStats = bloomFilterStatistics.getBloomFilterBitStats();
@@ -67,8 +65,7 @@ public class LocalitySensitiveHashingWithCompositeBloomFiltersServiceImpl extend
 		}
 		Collections.sort(importantBits, new BloomFilterBitStatComparatorByBloomFilterIndex());
 
-		getRecordPairs(importantBits, pairs, null, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, emOnly, fellegiSunterParameters);
+		getRecordPairs(importantBits, pairs, null, leftTableName, rightTableName, emOnly, fellegiSunterParameters);
 	}
 
 	private void saveLeanRecordPairs(String configDirectory, List<LeanRecordPair> pairs) {

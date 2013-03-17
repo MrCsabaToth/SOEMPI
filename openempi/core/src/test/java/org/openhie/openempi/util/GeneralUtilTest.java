@@ -81,7 +81,7 @@ public class GeneralUtilTest extends BaseServiceTestCase {
 		UserDao userDao = (UserDao)applicationContext.getBean("userDao");
 		User user = (User) userDao.loadUserByUsername("admin");
 
-		pair = new LeanRecordPair(1L, "1", 1L, "1");
+		pair = new LeanRecordPair(1L, 1L);
 		person = new Person(1L, user, new java.util.Date());
 		person.setAttribute("fnl", "Csaba");
 		person.setAttribute("lnl", "Toth");

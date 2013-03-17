@@ -43,14 +43,12 @@ public interface BlockingServiceSelector
 			String leftTableName, String rightTableName);
 	
 	public void getRecordPairs(String blockingServiceTypeName, Object blockingServiceCustomParameters,
-			String matchingServiceTypeName, Object matchingServiceCustomParameters, String leftTableName,
-			String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName,
+			String matchingServiceTypeName, Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
 			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) throws ApplicationException;
 
 	public List<LeanRecordPair> findCandidates(String blockingServiceTypeName, String leftTableName,
-			String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person);
+			String rightTableName, Person person);
 
 	public void calculateBitStatistics(String blockingServiceTypeName, String matchingServiceTypeName,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName);
+			String leftTableName, String rightTableName);
 }

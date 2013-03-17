@@ -91,25 +91,21 @@ public class MatchingServiceSelectorImpl extends BaseServiceImpl implements Matc
 	}
 	
 	public Set<LeanRecordPair> match(String matchingServiceTypeName, String blockingServiceTypeName,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, Person person) throws ApplicationException
+			String leftTableName, String rightTableName, Person person) throws ApplicationException
 	{
 		MatchingService matchingService = getMatchingService(matchingServiceTypeName);
-		return matchingService.match(blockingServiceTypeName, leftTableName, rightTableName, leftOriginalIdFieldName,
-				rightOriginalIdFieldName, person);
+		return matchingService.match(blockingServiceTypeName, leftTableName, rightTableName, person);
 	}
 	
 	public PersonMatch linkRecords(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters,
-			String linkTableName, String leftTableName, String leftOriginalIdFieldName,
-			String rightTableName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
+			String linkTableName, String leftTableName, String rightTableName, List<LeanRecordPair> pairs,
 			ComponentType componentType, boolean emOnly, boolean persistLinks) throws ApplicationException
 	{
 		MatchingService matchingService = getMatchingService(matchingServiceTypeName);
 		return matchingService.linkRecords(blockingServiceTypeName, blockingServiceCustomParameters,
 				matchingServiceTypeName, matchingServiceCustomParameters,
-				linkTableName, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, pairs,
+				linkTableName, leftTableName, rightTableName, pairs,
 				componentType, emOnly, persistLinks);
 	}
 

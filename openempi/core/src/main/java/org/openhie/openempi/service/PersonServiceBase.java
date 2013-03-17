@@ -35,6 +35,13 @@ public interface PersonServiceBase
 	public List<ColumnInformation> getDatasetColumnInformation(String tableName);
 	
 	/**
+	 * Returns the current dataset's originalId field name
+	 * 
+	 * @return dataset's originalId field's name if any, null otherwise
+	 */
+	public String getDatasetOriginalIdFieldName(String tableName);
+	
+	/**
 	 * Returns the available dataset tables' name
 	 * 
 	 * @return name of the dataset tables

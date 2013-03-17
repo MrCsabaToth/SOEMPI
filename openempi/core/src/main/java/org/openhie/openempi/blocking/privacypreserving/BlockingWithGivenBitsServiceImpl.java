@@ -29,8 +29,7 @@ public class BlockingWithGivenBitsServiceImpl extends PrivacyPreservingBlockingB
 {
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
 			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
-			boolean emOnly, FellegiSunterParameters fellegiSunterParams) {
+			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParams) {
 		List<BloomFilterBitStat> selectedBits = new ArrayList<BloomFilterBitStat>();
 		List<PrivacyPreservingBlockingField> ppbFields =
 			Context.getConfiguration().getPrivacyPreservingBlockingSettings().getPrivacyPreservingBlockingFields();
@@ -41,8 +40,7 @@ public class BlockingWithGivenBitsServiceImpl extends PrivacyPreservingBlockingB
 				selectedBits.add(bitStat);
 			}
 		}
-		getRecordPairs(selectedBits, pairs, null, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName, emOnly, fellegiSunterParams);
+		getRecordPairs(selectedBits, pairs, null, leftTableName, rightTableName, emOnly, fellegiSunterParams);
 	}
 
 }

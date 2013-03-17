@@ -52,15 +52,13 @@ public class BlockingBypassServiceImpl extends AbstractBlockingServiceBase
 		return recordPairSource;
 	}
 	
-	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) {
+	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName, Person person) {
 		throw new UnsupportedOperationException("findCandidates is not implemented for BypassBlockingService");
 	}
 
 	public void getRecordPairs(Object blockingServiceCustomParameters, String matchingServiceTypeName,
 			Object matchingServiceCustomParameters, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
-			boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
+			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 
 		StringComparisonService comparisonService = Context.getStringComparisonService();
@@ -68,11 +66,7 @@ public class BlockingBypassServiceImpl extends AbstractBlockingServiceBase
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
 		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
 		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-		if (leftOriginalIdFieldName != null)
-			leftMatchFieldNames.add(leftOriginalIdFieldName);
 		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
-		if (rightOriginalIdFieldName != null)
-			rightMatchFieldNames.add(rightOriginalIdFieldName);
 
 		int pageSize = Constants.PAGE_SIZE;
 		Long pageStart = 0L;
@@ -91,17 +85,12 @@ public class BlockingBypassServiceImpl extends AbstractBlockingServiceBase
 					if (otherNumPersons > 0) {
 						for (Person person : personList) {
 							for (Person personOther : personOtherList) {
-								String leftOriginalId = person.getOriginalIdString(leftOriginalIdFieldName);
-								String rightOriginalId = personOther.getOriginalIdString(rightOriginalIdFieldName);
 								ComparisonVector comparisonVector =
 										GeneralUtil.scoreRecordPair(person, personOther, comparisonService, matchFields);
 								if (emOnly) {
 									fellegiSunterParameters.incrementVectorFrequency(comparisonVector.getBinaryVectorValue());
 								} else {
-									LeanRecordPair recordPair = new LeanRecordPair(person.getPersonId(),
-																					leftOriginalId,
-																					personOther.getPersonId(),
-																					rightOriginalId);
+									LeanRecordPair recordPair = new LeanRecordPair(person.getPersonId(), personOther.getPersonId());
 									recordPair.setComparisonVector(comparisonVector);
 									pairs.add(recordPair);
 								}
@@ -115,8 +104,7 @@ public class BlockingBypassServiceImpl extends AbstractBlockingServiceBase
 		} while (numPersons > 0);
 	}
 
-	public void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName) {
+	public void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName) {
 		throw new UnsupportedOperationException("CalculateBitStatistics is not implemented for BlockingBypssService");
 	}
 

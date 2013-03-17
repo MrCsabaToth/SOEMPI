@@ -94,11 +94,6 @@ public class MatchView extends View
 	private ComboBox<ModelPropertyWeb> blockingServiceNameCombo = new ComboBox<ModelPropertyWeb>();
 	private ListStore<ModelPropertyWeb> matchingServiceNameStore = new ListStore<ModelPropertyWeb>();
 	private ComboBox<ModelPropertyWeb> matchingServiceNameCombo = new ComboBox<ModelPropertyWeb>();
-	private CheckBox trueMatchStatusCheckBox;
-	private ListStore<ModelPropertyWeb> leftFieldListStore = new ListStore<ModelPropertyWeb>();
-	private ListStore<ModelPropertyWeb> rightFieldListStore = new ListStore<ModelPropertyWeb>();
-	private ComboBox<ModelPropertyWeb> leftOrigIdFieldNameCombo = new ComboBox<ModelPropertyWeb>();
-	private ComboBox<ModelPropertyWeb> rightOrigIdFieldNameCombo = new ComboBox<ModelPropertyWeb>();
 	private CheckBox emOnlyCheckBox;
 
 	private String leftTableName;
@@ -130,14 +125,8 @@ public class MatchView extends View
 			displayMatches((List<PersonMatchWeb>) event.getData());
 		} else if (event.getType() == AppEvents.LeftDatasetSelected) {
 			leftTableName = (String)event.getData();
-		} else if (event.getType() == AppEvents.LeftDatasetColumnNamesArrived) {
-			List<ModelPropertyWeb> fieldNames = (List<ModelPropertyWeb>)event.getData();
-			reloadLeftFieldCombos(fieldNames);
 		} else if (event.getType() == AppEvents.RightDatasetSelected) {
 			rightTableName = (String)event.getData();
-		} else if (event.getType() == AppEvents.RightDatasetColumnNamesArrived) {
-			List<ModelPropertyWeb> fieldNames = (List<ModelPropertyWeb>)event.getData();
-			reloadRightFieldCombos(fieldNames);
 		} else if (event.getType() == AppEvents.PersonMatchColumnMatchInformationsArrived) {
 			List<ColumnMatchInformationWeb> columnMatchInformation = (List<ColumnMatchInformationWeb>)event.getData();
 			columnMatchInformationsDialog.setStore(columnMatchInformation);
@@ -162,42 +151,6 @@ public class MatchView extends View
 		} else if (event.getType() == AppEvents.PersonMatchPersonAttributesArrived) {
 			PersonWeb person = (PersonWeb)event.getData();
 			personLinksDialog.displayPersonAttributes(person);
-		}
-	}
-
-	private void reloadLeftFieldCombos(List<ModelPropertyWeb> fieldNames) {
-		reloadFieldCombos(fieldNames, true);
-	}
-
-	private void reloadRightFieldCombos(List<ModelPropertyWeb> fieldNames) {
-		reloadFieldCombos(fieldNames, false);
-	}
-
-	private void reloadFieldCombos(List<ModelPropertyWeb> fieldNames, boolean leftOrRight) {
-		// Saving selections if any
-		String fieldName = null;
-		if (leftOrRight)
-			fieldName = ClientUtils.getSelectedStringOfComboBox(leftOrigIdFieldNameCombo);
-		else
-			fieldName = ClientUtils.getSelectedStringOfComboBox(rightOrigIdFieldNameCombo);
-		try {
-			if (leftOrRight) {
-				leftFieldListStore.removeAll();
-				leftFieldListStore.add(fieldNames);
-			} else {
-				rightFieldListStore.removeAll();
-				rightFieldListStore.add(fieldNames);
-			}
-		} catch (Exception e) {
-			Info.display("Message", e.getMessage());
-		}
-		if (fieldName != null) {
-			if (fieldName.length() > 0) {
-				if (leftOrRight)
-					leftOrigIdFieldNameCombo.select(new ModelPropertyWeb(fieldName));
-				else
-					rightOrigIdFieldNameCombo.select(new ModelPropertyWeb(fieldName));
-			}
 		}
 	}
 
@@ -433,26 +386,14 @@ public class MatchView extends View
 				params.add(tableNameEdit.getValue());
 				params.add(blockingServiceName);
 				params.add(matchingServiceName);
-				params.add(trueMatchStatusCheckBox.getValue());
-				String leftOrigIdFieldName = null;
-				String rightOrigIdFieldName = null;
-				if (trueMatchStatusCheckBox.getValue()) {
-					leftOrigIdFieldName = ClientUtils.getSelectedStringOfComboBox(leftOrigIdFieldNameCombo);
-					rightOrigIdFieldName = ClientUtils.getSelectedStringOfComboBox(rightOrigIdFieldNameCombo);
-				}
 				params.add(leftTableName);
 				params.add(rightTableName);
-				params.add(leftOrigIdFieldName);
-				params.add(rightOrigIdFieldName);
 				params.add(emOnlyCheckBox.getValue());
 				controller.handleEvent(new AppEvent(AppEvents.MatchInitiate, params));
 				status.show();
 				matchButton.mask();
 				blockingServiceNameCombo.mask();
 				matchingServiceNameCombo.mask();
-				trueMatchStatusCheckBox.mask();
-				leftOrigIdFieldNameCombo.mask();
-				rightOrigIdFieldNameCombo.mask();
 				emOnlyCheckBox.mask();
 				Dispatcher.get().dispatch(AppEvents.WizardEnded);
 			}
@@ -473,6 +414,15 @@ public class MatchView extends View
 		tableNameEdit.setValidator(new VTypeValidator(VType.ALPHANUMERIC));
 		formPart1.add(tableNameEdit);
 
+		emOnlyCheckBox = new CheckBox();
+		emOnlyCheckBox.setFieldLabel("EM only (no rec. pairs)");
+		emOnlyCheckBox.setBoxLabel("");
+		emOnlyCheckBox.setValue(false);
+		formPart1.add(emOnlyCheckBox);
+
+		LayoutContainer formPart2 = new LayoutContainer();
+		formPart2.setLayout(new FormLayout());
+
 		blockingServiceNameCombo.setEmptyText("Select blocking service...");
 		blockingServiceNameCombo.setFieldLabel("Blocking Service");
 		blockingServiceNameCombo.setForceSelection(true);
@@ -482,7 +432,7 @@ public class MatchView extends View
 		blockingServiceNameCombo.setTypeAhead(true);
 		blockingServiceNameCombo.setTriggerAction(TriggerAction.ALL);
 		blockingServiceNameCombo.setEditable(false);
-		formPart1.add(blockingServiceNameCombo);
+		formPart2.add(blockingServiceNameCombo);
 
 		matchingServiceNameCombo.setEmptyText("Select matching service...");
 		matchingServiceNameCombo.setFieldLabel("Matching Service");
@@ -493,58 +443,11 @@ public class MatchView extends View
 		matchingServiceNameCombo.setTypeAhead(true);
 		matchingServiceNameCombo.setTriggerAction(TriggerAction.ALL);
 		matchingServiceNameCombo.setEditable(false);
-		formPart1.add(matchingServiceNameCombo);
+		formPart2.add(matchingServiceNameCombo);
 
-		LayoutContainer formPart2 = new LayoutContainer();
-		formPart2.setLayout(new FormLayout());
-
-		trueMatchStatusCheckBox = new CheckBox();
-		trueMatchStatusCheckBox.setFieldLabel("Check True Matches");
-		trueMatchStatusCheckBox.setBoxLabel("");
-		trueMatchStatusCheckBox.setValue(false);
-		trueMatchStatusCheckBox.addListener(Events.Change, new Listener<FieldEvent>() {
-			public void handleEvent(FieldEvent fe) {
-				if (trueMatchStatusCheckBox.getValue()) {
-					leftOrigIdFieldNameCombo.unmask();
-					rightOrigIdFieldNameCombo.unmask();
-				} else {
-					leftOrigIdFieldNameCombo.mask();
-					rightOrigIdFieldNameCombo.mask();
-				}
-			}
-		});
-		formPart2.add(trueMatchStatusCheckBox);
-
-		leftOrigIdFieldNameCombo.setEmptyText("Select a field...");
-		leftOrigIdFieldNameCombo.setForceSelection(true);
-		leftOrigIdFieldNameCombo.setDisplayField("name");
-		leftOrigIdFieldNameCombo.setStore(leftFieldListStore);
-		leftOrigIdFieldNameCombo.setTypeAhead(true);
-		leftOrigIdFieldNameCombo.setTriggerAction(TriggerAction.ALL);
-		leftOrigIdFieldNameCombo.setFieldLabel("Left Orig.Id.Fld.");
-		leftOrigIdFieldNameCombo.setEditable(false);
-		formPart2.add(leftOrigIdFieldNameCombo);
-
-		rightOrigIdFieldNameCombo.setEmptyText("Select a field...");
-		rightOrigIdFieldNameCombo.setForceSelection(true);
-		rightOrigIdFieldNameCombo.setDisplayField("name");
-		rightOrigIdFieldNameCombo.setStore(rightFieldListStore);
-		rightOrigIdFieldNameCombo.setTypeAhead(true);
-		rightOrigIdFieldNameCombo.setTriggerAction(TriggerAction.ALL);
-		rightOrigIdFieldNameCombo.setFieldLabel("Right Orig.Id.Fld.");
-		rightOrigIdFieldNameCombo.setEditable(false);
-		formPart2.add(rightOrigIdFieldNameCombo);
-
-		emOnlyCheckBox = new CheckBox();
-		emOnlyCheckBox.setFieldLabel("EM only (no rec. pairs)");
-		emOnlyCheckBox.setBoxLabel("");
-		emOnlyCheckBox.setValue(false);
-		formPart2.add(emOnlyCheckBox);
-
-		trueMatchStatusCheckBox.setValue(true);
 		emOnlyCheckBox.setValue(false);
 
-		container.add(panel, new BorderLayoutData(LayoutRegion.NORTH, 69));
+		container.add(panel, new BorderLayoutData(LayoutRegion.NORTH, 54));
 
 		panel.getButtonBar().add(formPart1);
 		panel.getButtonBar().add(formPart2);
@@ -554,7 +457,7 @@ public class MatchView extends View
 		gridContainer.setLayout(new FitLayout());
 
 		BorderLayoutData data = new BorderLayoutData(LayoutRegion.CENTER);
-		data.setMargins(new Margins(90, 2, 2, 2));
+		data.setMargins(new Margins(75, 2, 2, 2));
 		container.add(gridContainer, data);
 
 		LayoutContainer wrapper = (LayoutContainer) Registry.get(Constants.CENTER_PANEL);

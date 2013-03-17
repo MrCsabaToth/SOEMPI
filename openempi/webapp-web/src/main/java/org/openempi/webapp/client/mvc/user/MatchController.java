@@ -43,9 +43,7 @@ public class MatchController extends AbstractController
 		this.registerEventTypes(AppEvents.MatchView);
 		this.registerEventTypes(AppEvents.MatchInitiate);
 		this.registerEventTypes(AppEvents.LeftDatasetSelected);
-		this.registerEventTypes(AppEvents.LeftDatasetColumnNamesArrived);
 		this.registerEventTypes(AppEvents.RightDatasetSelected);
-		this.registerEventTypes(AppEvents.RightDatasetColumnNamesArrived);
 		this.registerEventTypes(AppEvents.PersonMatchShowMatchColumnsRequest);
 		this.registerEventTypes(AppEvents.PersonMatchShowEMResultsRequest);
 		this.registerEventTypes(AppEvents.PersonMatchShowScoreChartRequest);
@@ -68,14 +66,10 @@ public class MatchController extends AbstractController
 			String linkTableName = (String)params.get(0);
 			String blockingServiceName = (String)params.get(1);
 			String matchingServiceName = (String)params.get(2);
-			Boolean checkTrueMatch = (Boolean)params.get(3);
 			String leftTableName = (String)params.get(4);
 			String rightTableName = (String)params.get(5);
-			String leftOrigIdFieldName = (String)params.get(6);
-			String rightOrigIdFieldName = (String)params.get(7);
-			Boolean emOnly = (Boolean)params.get(8);
-			match(linkTableName, leftTableName, rightTableName, blockingServiceName, matchingServiceName,
-					checkTrueMatch, leftOrigIdFieldName, rightOrigIdFieldName, emOnly);
+			Boolean emOnly = (Boolean)params.get(6);
+			match(linkTableName, leftTableName, rightTableName, blockingServiceName, matchingServiceName, emOnly);
 		} else if (type == AppEvents.LeftDatasetSelected ||
 					type == AppEvents.LeftDatasetColumnNamesArrived ||
 					type == AppEvents.RightDatasetSelected ||
@@ -105,10 +99,9 @@ public class MatchController extends AbstractController
 	}
 
 	private void match(String linkTableName, String leftTableName, String rightTableName,
-			String blockingServiceName, String matchingServiceName, Boolean checkTrueMatch,
-			String leftOrigIdFieldName, String rightOrigIdFieldName, Boolean emOnly) {
-		getPersonDataService().testScorePairs(linkTableName, leftTableName, rightTableName, blockingServiceName, matchingServiceName,
-				checkTrueMatch, leftOrigIdFieldName, rightOrigIdFieldName, emOnly, new AsyncCallback<PersonMatchWeb>()
+			String blockingServiceName, String matchingServiceName, Boolean emOnly) {
+		getPersonDataService().testScorePairs(linkTableName, leftTableName, rightTableName, blockingServiceName,
+				matchingServiceName, emOnly, new AsyncCallback<PersonMatchWeb>()
 		{
 			public void onFailure(Throwable caught) {
 				Dispatcher.forwardEvent(AppEvents.Error, caught);

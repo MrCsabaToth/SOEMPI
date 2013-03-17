@@ -31,6 +31,7 @@ import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstant
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.Person;
+import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.stringcomparison.StringComparisonService;
 import org.openhie.openempi.util.GeneralUtil;
 
@@ -64,8 +65,7 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 	 * provided.
 	 * 
 	 */
-	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) {
+	public List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName, Person person) {
 		blockingRounds = getBlockingRounds();
 		int count = 0;
 
@@ -73,10 +73,6 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
 		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
 		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
-		if (leftOriginalIdFieldName != null)
-			leftMatchFieldNames.add(leftOriginalIdFieldName);
-		if (rightOriginalIdFieldName != null)
-			rightMatchFieldNames.add(rightOriginalIdFieldName);
 
 		List<Person> records = new java.util.ArrayList<Person>();
 		for (BlockingRound round : blockingRounds) {
@@ -94,14 +90,9 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
 		for (Person entry : records) {
-			String leftOriginalId = person.getOriginalIdString(leftOriginalIdFieldName);
-			String rightOriginalId = entry.getOriginalIdString(rightOriginalIdFieldName);
 			ComparisonVector comparisonVector =
 					GeneralUtil.scoreRecordPair(person, entry, comparisonService, matchFields);
-			LeanRecordPair pair = new LeanRecordPair(person.getPersonId(),
-					leftOriginalId,
-					entry.getPersonId(),
-					rightOriginalId);
+			LeanRecordPair pair = new LeanRecordPair(person.getPersonId(), entry.getPersonId());
 			pair.setComparisonVector(comparisonVector);
 			pairs.add(pair);
 		}
@@ -138,8 +129,7 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 		this.distinctBinsMode = distinctBinsMode;
 	}
 
-	public void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName) {
+	public void calculateBitStatistics(String matchingServiceType, String leftTableName, String rightTableName) {
 		throw new UnsupportedOperationException("CalculateBitStatistics is not implemented for BasicBlockingService");
 	}
 

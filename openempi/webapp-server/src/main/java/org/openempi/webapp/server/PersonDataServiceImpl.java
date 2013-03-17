@@ -376,8 +376,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 	}
 
 	public PersonMatchWeb testScorePairs(String linkTableName, String leftTableName, String rightTableName,
-			String blockingServiceTypeName, String matchingServiceTypeName, Boolean checkTrueMatch,
-			String leftOriginalIdFieldName, String rightOriginalIdFieldName, Boolean emOnly)
+			String blockingServiceTypeName, String matchingServiceTypeName, Boolean emOnly)
 	{
 		PersonMatchWeb personMatchWeb = null;
 		try {
@@ -388,8 +387,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			ProbabilisticMatchingServiceBase matchingService = (ProbabilisticMatchingServiceBase)matchingServiceType.getMatchingService();
 
 			PersonMatch personMatch = matchingService.linkRecords(blockingServiceTypeName, null,
-						matchingServiceTypeName, null, linkTableName, leftTableName,
-						rightTableName, leftOriginalIdFieldName, rightOriginalIdFieldName, null,
+						matchingServiceTypeName, null, linkTableName, leftTableName, rightTableName, null,
 						ComponentType.DATA_INTEGRATOR_MODE, emOnly, true);
 			personMatchWeb = ModelTransformer.convertToClientModel(personMatch);
 		} catch (Exception e) {

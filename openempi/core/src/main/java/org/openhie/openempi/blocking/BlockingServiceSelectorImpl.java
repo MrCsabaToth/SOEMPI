@@ -97,28 +97,24 @@ public class BlockingServiceSelectorImpl extends BaseServiceImpl implements Bloc
 
 	public void getRecordPairs(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, List<LeanRecordPair> pairs,
+			String leftTableName, String rightTableName, List<LeanRecordPair> pairs,
 			boolean emOnly, FellegiSunterParameters fellegiSunterParameters) throws ApplicationException {
 		BlockingService blockingService = getBlockingService(blockingServiceTypeName);
 		blockingService.getRecordPairs(blockingServiceCustomParameters, matchingServiceTypeName,
-				matchingServiceCustomParameters, leftTableName, rightTableName, leftOriginalIdFieldName,
-				rightOriginalIdFieldName, pairs, emOnly, fellegiSunterParameters);
+				matchingServiceCustomParameters, leftTableName, rightTableName, pairs, emOnly,
+				fellegiSunterParameters);
 	}
 
 	public List<LeanRecordPair> findCandidates(String blockingServiceTypeName, String leftTableName,
-			String rightTableName, String leftOriginalIdFieldName, String rightOriginalIdFieldName, Person person) {
+			String rightTableName, Person person) {
 		BlockingService blockingService = getBlockingService(blockingServiceTypeName);
-		return blockingService.findCandidates(leftTableName, rightTableName, leftOriginalIdFieldName,
-				rightOriginalIdFieldName, person);
+		return blockingService.findCandidates(leftTableName, rightTableName, person);
 	}
 
 	public void calculateBitStatistics(String blockingServiceTypeName, String matchingServiceTypeName,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName) {
+			String leftTableName, String rightTableName) {
 		BlockingService blockingService = getBlockingService(blockingServiceTypeName);
-		blockingService.calculateBitStatistics(matchingServiceTypeName, leftTableName, rightTableName,
-				leftOriginalIdFieldName, rightOriginalIdFieldName);
+		blockingService.calculateBitStatistics(matchingServiceTypeName, leftTableName, rightTableName);
 	}
 
 }

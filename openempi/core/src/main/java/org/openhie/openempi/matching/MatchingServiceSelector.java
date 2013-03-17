@@ -39,13 +39,11 @@ public interface MatchingServiceSelector
 	public void init(String matchingServiceTypeName, Map<String, Object> configParameters) throws InitializationException;
 	
 	public Set<LeanRecordPair> match(String matchingServiceTypeName, String blockingServiceTypeName,
-			String leftTableName, String rightTableName, String leftOriginalIdFieldName,
-			String rightOriginalIdFieldName, Person person) throws ApplicationException;
+			String leftTableName, String rightTableName, Person person) throws ApplicationException;
 	
 	public PersonMatch linkRecords(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters,
 			String linkTableName, String leftTableName, String leftOriginalIdFieldName,
-			String rightTableName, String rightOriginalIdFieldName,
 			List<LeanRecordPair> pairs, ComponentType componentType,
 			boolean emOnly, boolean persistLinks) throws ApplicationException;
 }
