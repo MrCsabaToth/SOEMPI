@@ -39,7 +39,6 @@
       <inherits name='com.extjs.gxt.charts.Chart' /> 
 
 	  <!-- gwt incubator -->
-	  <inherits name='com.google.gwt.widgetideas.WidgetIdeas' />  
 	  <inherits name='com.google.gwt.junit.JUnit' />
 
       <!-- Specify the app entry point class.                         -->

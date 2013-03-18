@@ -35,11 +35,7 @@
 	
 	<servlet path="/saltDataService" class="org.hiplab.simgap.webapp.server.SaltDataServiceImpl"/>
 
-      <!-- 
-	<servlet path="/testService" class="com.company.server.TestServiceImpl" />
-	  
-	<servlet path='/sampleRemoteService' class='com.company.server.SampleRemoteServiceImpl' />
-	
+    <!--
 	<servlet path='/securityService' class='com.company.server.security.SecurityServiceInMemoryImpl' />
-	 -->
+	-->
 </module>

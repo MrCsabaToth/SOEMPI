@@ -17,9 +17,6 @@
  */
 package org.openhie.openempi.stringcomparison.metrics;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
-
 public class ExactMatchDistanceMetricBinaryVersion extends AbstractDistanceMetric
 {
 	public final static String TRUNCATION_LENGTH = "truncation-length";
@@ -35,7 +32,7 @@ public class ExactMatchDistanceMetricBinaryVersion extends AbstractDistanceMetri
 		}
 		byte[] byteArray1 = (byte[])value1;
 		byte[] byteArray2 = (byte[])value2;
-		if (Arrays.equals(byteArray1, byteArray2))
+		if (java.util.Arrays.equals(byteArray1, byteArray2))
 			return 1.0;
 		return 0.0;
 	}

@@ -12,14 +12,6 @@
 	<packaging>jar</packaging>
 	<name>OpenEMPI - Web (Server Side)</name>
 
-	<!-- for required jms jars -->
-	<repositories>
-		<repository>
-			<id>jboss-maven-repo</id>
-			<url>http://repository.jboss.com/maven2</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -37,6 +29,7 @@
 			<groupId>com.extjs</groupId>
 			<artifactId>gxt</artifactId>
 			<version>${gxt.version}</version>
+			<classifier>gwt22</classifier>
 			<scope>provided</scope>
 		</dependency>
 
@@ -61,6 +54,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>${commons.collections.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -107,7 +105,13 @@
 			<artifactId>dozer</artifactId>
 			<version>${dozer.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.allen-sauer.gwt.log</groupId>
+			<artifactId>gwt-log</artifactId>
+			<version>3.1.7</version>
+		</dependency>
 	</dependencies>
+
 
 	<build>
 		<resources>

@@ -21,12 +21,8 @@ import org.openempi.webapp.client.KeyDataService;
 import org.openempi.webapp.client.KeyDataServiceAsync;
 import org.openempi.webapp.client.SaltDataService;
 import org.openempi.webapp.client.SaltDataServiceAsync;
-import org.openempi.webapp.client.SampleRemoteService;
-import org.openempi.webapp.client.SampleRemoteServiceAsync;
 import org.openempi.webapp.client.SecurityService;
 import org.openempi.webapp.client.SecurityServiceAsync;
-import org.openempi.webapp.client.TestService;
-import org.openempi.webapp.client.TestServiceAsync;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -39,28 +35,10 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
  */
 public class ServiceRegistry {
 	//proxies to our services
-	private TestServiceAsync testService;
-	private SampleRemoteServiceAsync sampleRemoteService;
 	private KeyDataServiceAsync keyDataService;
 	private SaltDataServiceAsync saltDataService;
 	private SecurityServiceAsync securityService;
 
-	
-	public TestServiceAsync getTestService() {
-		if(testService == null) {
-			testService = GWT.create(TestService.class);
-			((ServiceDefTarget)testService).setServiceEntryPoint(GWT.getModuleBaseURL() + "testService");
-		}
-		return testService;
-	}
-	
-	public SampleRemoteServiceAsync getSampleRemoteService() {
-		if(sampleRemoteService == null) {
-			sampleRemoteService = GWT.create(SampleRemoteService.class);
-			((ServiceDefTarget)sampleRemoteService).setServiceEntryPoint(GWT.getModuleBaseURL() + "sampleRemoteService");
-		}
-		return sampleRemoteService;
-	}
 	
 	public KeyDataServiceAsync getKeyDataService() {
 		if(keyDataService == null) {

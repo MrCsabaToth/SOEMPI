@@ -118,6 +118,14 @@
 					<debuglevel>source</debuglevel>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<argLine>-Xms512m -Xmx2048m -XX:MaxPermSize=256m</argLine>
+				</configuration>
+			</plugin>
 <!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -193,11 +201,13 @@
 			</plugin>
 			<!-- Use mvn license:check  or  mvn license:format -->
 			<plugin>
-				<groupId>com.google.code.maven-license-plugin</groupId>
+				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
-				<version>1.4.0</version>
+				<version>1.9.0</version>
 				<configuration>
-					<header>${basedir}/core/src/main/resources/header.txt</header>
+ 					<header>${env.OPENEMPI_HOME}/src/main/resources/header.txt</header>
+ 					<failIfMissing>true</failIfMissing>
+ 					<aggregate>true</aggregate>
 					<excludes>
 						<exclude>**/header.txt</exclude>
 						<exclude>**/*.log</exclude>
@@ -211,6 +221,14 @@
 						<exclude>**/*.tld</exclude>
 						<exclude>**/.myhibernatedata</exclude>
 						<exclude>**/*.png</exclude>
+						<exclude>**/*.jrxml</exclude>
+						<exclude>**/*.jasper</exclude>
+						<exclude>**/*.pdf</exclude>
+						<exclude>**/*.ser</exclude>
+						<exclude>**/*.jrpxml</exclude>
+						<exclude>**/*.jrprint</exclude>
+						<exclude>reports/**</exclude>
+						<exclude>*.db/**</exclude>
 					</excludes>
 
 				</configuration>
@@ -234,6 +252,31 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<repositories>
+<!--
+		<repository>
+			<id>jboss-public</id>
+			<name>JBoss Public Nexus Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>sysnetint</id>
+			<url>http://www.sysnetint.com/repository</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+			<id>com.eaio</id>
+			<name>eaio.com repository</name>
+			<url>http://eaio.com/maven2</url>
+		</repository>
 		<repository>
 			<id>ibiblio</id>
 			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -280,15 +323,33 @@
 		</repository>
 		<repository>
 			<id>gwt-maven</id>
-			<url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo</url>
+			<url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
 		</repository>
 		<repository>
 			<id>for-gwt-incubator</id>
-			<url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+			<url>http://dist.codehaus.org/mule/dependencies/maven2/</url>
 		</repository>
+	-->
 	</repositories>
 
 	<pluginRepositories>
+<!--
+
+		<pluginRepository>
+			<id>jboss-public</id>
+			<name>JBoss Public Nexus Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>maven2</id>
+			<name>Maven 2 Central</name>
+			<url>http://repo1.maven.org/maven2/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>appfuse</id>
+			<name>Appfuse Static Repository</name>
+			<url>http://static.appfuse.org/releases/</url>
+		</pluginRepository>
 		<pluginRepository>
 			<id>codehaus-plugins</id>
 			<url>http://dist.codehaus.org/</url>
@@ -318,6 +379,7 @@
 				<enabled>true</enabled>
 			</releases>
 		</pluginRepository>
+	-->
 	</pluginRepositories>
 
 	<!--
@@ -448,7 +510,7 @@
 				<jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
 				<jdbc.url><![CDATA[jdbc:h2:${java.io.tmpdir}/openempi]]></jdbc.url>
 				<jdbc.username>sa</jdbc.username>
-				<jdbc.password />
+				<jdbc.password/>
 			</properties>
 		</profile>
 		<profile>
@@ -462,7 +524,7 @@
 				<jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
 				<jdbc.url><![CDATA[jdbc:hsqldb:${java.io.tmpdir}/openempi;shutdown=true]]></jdbc.url>
 				<jdbc.username>sa</jdbc.username>
-				<jdbc.password />
+				<jdbc.password/>
 			</properties>
 		</profile>
 		<profile>
@@ -547,7 +609,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.6</version>
+				<version>2.10</version>
 			</plugin>
 			<!-- checkstyle -->
 			<plugin>
@@ -636,6 +698,9 @@
 	</reporting>
 	<properties>
 		<release.version>2.1.3-SNAPSHOT</release.version>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
@@ -650,10 +715,11 @@
 		<!-- Framework dependency versions -->
 		<appfuse.version>2.0.2</appfuse.version>
 		<spring.version>2.5.4</spring.version>
+		<spring-version>2.5.4</spring-version>
 
 		<!-- GWT dependency -->
-		<gwt.version>1.7.1</gwt.version>
-		<gxt.version>2.1.1</gxt.version>
+		<gwt.version>2.4.0</gwt.version>
+		<gxt.version>2.2.5</gxt.version>
 		<platform>windows</platform>
 		<dozer.version>5.1</dozer.version>
 
@@ -687,20 +753,20 @@
 		<jdbc.username>openempi</jdbc.username>
 		<jdbc.password>openempi</jdbc.password>
 
-		<activemq.version>5.4.2</activemq.version>
 		<aspectj.version>1.6.0</aspectj.version>
 		<clickstream.version>1.0.2</clickstream.version>
 		<commons.beanutils.version>1.8.0</commons.beanutils.version>
-		<commons.codec.version>1.4</commons.codec.version>
+		<commons.codec.version>1.6</commons.codec.version>
 		<commons.collections.version>3.2</commons.collections.version>
 		<commons.dbcp.version>1.2.1</commons.dbcp.version>
 		<commons.fileupload.version>1.2.1</commons.fileupload.version>
+		<commons.httpclient.version>3.1</commons.httpclient.version>
 		<commons.io.version>1.3.2</commons.io.version>
 		<commons.lang.version>2.3</commons.lang.version>
 		<commons.pool.version>1.4</commons.pool.version>
 		<displaytag.version>1.1.1</displaytag.version>
 		<dwr.version>2.0.1</dwr.version>
-		<ehcache.version>1.4.1</ehcache.version>
+		<ehcache.version>2.4.6</ehcache.version>
 		<hibernate.annotations.version>3.3.0.ga</hibernate.annotations.version>
 		<hibernate.validator.version>3.0.0.ga</hibernate.validator.version>
 		<hibernate.search.version>3.0.0.GA</hibernate.search.version>
@@ -710,6 +776,7 @@
 		<jpa.version>1.0</jpa.version>
 		<jstl.version>1.1.2</jstl.version>
 		<log4j.version>1.2.15</log4j.version>
+<!--		<slf4j.version>1.6.1</slf4j.version>-->
 		<oscache.version>2.3</oscache.version>
 		<sitemesh.version>2.2.1</sitemesh.version>
 		<spring.security.version>2.0.1</spring.security.version>

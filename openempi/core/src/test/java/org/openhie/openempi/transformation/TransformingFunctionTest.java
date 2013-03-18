@@ -29,8 +29,6 @@ import org.openhie.openempi.service.KeyServerService;
 import org.openhie.openempi.transformation.function.TransformationFunction;
 import org.openhie.openempi.util.BitArray;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 public class TransformingFunctionTest extends BaseServiceTestCase
 {
 	private String[] strings = {
@@ -125,7 +123,7 @@ public class TransformingFunctionTest extends BaseServiceTestCase
 							} else {	// HMAC
 								byte[] output1byteArray = (byte[])output1;
 								byte[] output2byteArray = (byte[])output2;
-								assertTrue(Arrays.equals(output1byteArray, output2byteArray));								
+								assertTrue(java.util.Arrays.equals(output1byteArray, output2byteArray));								
 							}
 						}
 					}
@@ -155,21 +153,21 @@ public class TransformingFunctionTest extends BaseServiceTestCase
 		// [-128, 7, 7, 19, 70, 62, 119, 73, -71, 12, 45, -62, 73, 17, -30, 117]
 		// 0x 80 07 07  13  46  3e   77  49   b9  0c  2d   c2  49  11   e2   75
 		byte[] hmacMD5NonEmptyCheck = new byte[] { -128, 7, 7, 19, 70, 62, 119, 73, -71, 12, 45, -62, 73, 17, -30, 117 };
-		assertTrue(Arrays.equals(hmacMD5NonEmptyValue, hmacMD5NonEmptyCheck));
+		assertTrue(java.util.Arrays.equals(hmacMD5NonEmptyValue, hmacMD5NonEmptyCheck));
 
 		byte[] hmacSHA1NonEmptyValue = (byte[])transformationService.transform(hmacSHA1, nonEmptyString, parameters);
 		System.out.println("HMAC SHA1 non-empty: " + hmacSHA1NonEmptyValue);
 		// [-34, 124, -101, -123, -72, -73, -118, -90, -68, -118, 122, 54, -9, 10, -112, 112, 28, -99, -76, -39]
 		// 0xde   7c    9b    85   b8   b7    8a   a6   bc    8a   7a  36  f7  0a    90   70  1c   9d   b4   d9
 		byte[] hmacSHA1NonEmptyCheck = new byte[] { -34, 124, -101, -123, -72, -73, -118, -90, -68, -118, 122, 54, -9, 10, -112, 112, 28, -99, -76, -39 };
-		assertTrue(Arrays.equals(hmacSHA1NonEmptyValue, hmacSHA1NonEmptyCheck));
+		assertTrue(java.util.Arrays.equals(hmacSHA1NonEmptyValue, hmacSHA1NonEmptyCheck));
 
 		byte[] hmacSHA256NonEmptyValue = (byte[])transformationService.transform(hmacSHA256, nonEmptyString, parameters);
 		System.out.println("HMAC SHA256 non-empty: " + hmacSHA256NonEmptyValue);
 		// [-9, -68, -125, -12, 48, 83, -124, 36, -79, 50, -104, -26, -86, 111, -79, 67, -17, 77, 89, -95, 73, 70, 23, 89, -105, 71, -99, -68, 45, 26, 60, -40]
 		// 0xf7  bc    83   f4  30  53    84  24   b1  32    98   e6   aa   6f   b1  43   ef  4d  59   a1  49  46  17  59    97  47   9d   bc  2d  1a  3c   d8
 		byte[] hmacSHA256NonEmptyCheck = new byte[] { -9, -68, -125, -12, 48, 83, -124, 36, -79, 50, -104, -26, -86, 111, -79, 67, -17, 77, 89, -95, 73, 70, 23, 89, -105, 71, -99, -68, 45, 26, 60, -40 };
-		assertTrue(Arrays.equals(hmacSHA256NonEmptyValue, hmacSHA256NonEmptyCheck));
+		assertTrue(java.util.Arrays.equals(hmacSHA256NonEmptyValue, hmacSHA256NonEmptyCheck));
 	}
 	
 }
