@@ -17,10 +17,10 @@
  */
 package org.openhie.openempi.util;
 
+import java.util.UUID;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.eaio.uuid.UUID;
 
 import junit.framework.TestCase;
 
@@ -29,14 +29,14 @@ public class UUIDGeneratorTest extends TestCase
 	private final Log log = LogFactory.getLog(UUIDGeneratorTest.class);
 	
 	public void testGenerateGUID() {
-		UUID uuid = new UUID();
+		UUID uuid = UUID.randomUUID();
 		log.trace(uuid.toString());
 		
-		UUID uuid2 = new UUID();
+		UUID uuid2 = UUID.randomUUID();
 		log.trace(uuid2.toString());
 		
 		for (int i=0; i < 100; i++) {
-			log.trace(new UUID().toString());
+			log.trace(UUID.randomUUID().toString());
 		}
 		
 		log.trace("The two uuid are the same is a " + uuid.compareTo(uuid2) + " statement.");

@@ -43,14 +43,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!-- 		
-		<dependency>
-			<groupId>org.openhie.openempi</groupId>
-			<artifactId>openempi-webapp</artifactId>
-			<version>${release.version}</version>
-			<type>war</type>
-		</dependency>
- -->
 		<dependency>
 			<groupId>org.openhie.openempi</groupId>
 			<artifactId>openempi-webapp-web</artifactId>
@@ -77,14 +69,6 @@
 							<artifactId>openempi-ejb</artifactId>
 							<bundleDir>/</bundleDir>
 						</ejbModule>
-<!-- 
-						<webModule>
-							<groupId>org.openhie.openempi</groupId>
-							<artifactId>openempi-webapp</artifactId>
-							<bundleDir>/</bundleDir>
-							<contextRoot>openempi-webapp</contextRoot> 
-						</webModule>
- -->						
 						<webModule>
 							<groupId>org.openhie.openempi</groupId>
 							<artifactId>openempi-webapp-web</artifactId>
@@ -92,16 +76,6 @@
 							<contextRoot>SOEMPI</contextRoot>
 						</webModule>
 					</modules>
-<!--					
-					<jboss>
-						<version>5</version>
-						<loader-repository>org.openhie:archive=openempi-${release.version}.ear<loader-repository-config>java2ParentDelegation=false</loader-repository-config>
-						</loader-repository>
-						<data-sources>
-							<data-source>invision-ds.xml</data-source>
-						</data-sources>
-					</jboss>
- -->
 				</configuration>
 			</plugin>
 			<plugin>

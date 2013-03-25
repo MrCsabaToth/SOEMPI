@@ -29,7 +29,7 @@
     <servlet-class>org.openempi.webapp.server.InitializationServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
   <servlet>
     <servlet-name>blockingDataService</servlet-name>
     <servlet-class>org.openempi.webapp.server.BlockingDataServiceImpl</servlet-class>
@@ -73,27 +73,15 @@
   </servlet>
 
   <servlet>
-    <servlet-name>logging</servlet-name>
-    <servlet-class>com.google.gwt.libideas.logging.server.RemoteLoggingServiceImpl</servlet-class>
-    <load-on-startup>11</load-on-startup>
-  </servlet>
-<!--   
-  <servlet>
-    <servlet-name>jUnitHostImpl</servlet-name>
-    <servlet-class>com.google.gwt.junit.server.JUnitHostImpl</servlet-class>
-    <load-on-startup>13</load-on-startup>
-  </servlet>
- -->
-  <servlet>
-  	<servlet-name>fileUploadService</servlet-name>
-  	<servlet-class>org.openempi.webapp.server.FileUploadServlet</servlet-class>
-  	<init-param>
-  		<param-name>uploadDirectory</param-name>
-  		<param-value>fileRepository</param-value>
-  	</init-param>
+    <servlet-name>fileUploadService</servlet-name>
+    <servlet-class>org.openempi.webapp.server.FileUploadServlet</servlet-class>
+    <init-param>
+      <param-name>uploadDirectory</param-name>
+      <param-value>fileRepository</param-value>
+    </init-param>
     <load-on-startup>15</load-on-startup>
   </servlet>
-    
+
   <servlet-mapping>
     <servlet-name>blockingDataService</servlet-name>
     <url-pattern>/org.openempi.webapp.Application/blockingDataService</url-pattern>
@@ -103,7 +91,7 @@
     <servlet-name>configurationDataService</servlet-name>
     <url-pattern>/org.openempi.webapp.Application/configurationDataService</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
     <servlet-name>fileLoaderDataService</servlet-name>
     <url-pattern>/org.openempi.webapp.Application/fileLoaderDataService</url-pattern>
@@ -130,21 +118,11 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>logging</servlet-name>
-    <url-pattern>/org.openempi.webapp.Application/logging</url-pattern>
-  </servlet-mapping>	
-<!-- 
-  <servlet-mapping>
-    <servlet-name>jUnitHostImpl</servlet-name>
-    <url-pattern>/org.openempi.webapp.Application/junithost</url-pattern>
-  </servlet-mapping>
-   -->
-  <servlet-mapping>
     <servlet-name>fileUploadService</servlet-name>
     <url-pattern>/org.openempi.webapp.Application/upload</url-pattern>
   </servlet-mapping>
-  
+
   <welcome-file-list>
-	<welcome-file>Application.html</welcome-file>
+    <welcome-file>Application.html</welcome-file>
   </welcome-file-list>
 </web-app>

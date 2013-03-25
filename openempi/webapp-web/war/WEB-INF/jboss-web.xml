@@ -19,5 +19,5 @@
 
 -->
 <jboss-web>
-    <context-root>SOEMPI</context-root>
+	<context-root>SOEMPI</context-root>
 </jboss-web>

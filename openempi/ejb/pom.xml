@@ -60,7 +60,7 @@
 				<configuration>
 					<ejbVersion>3.0</ejbVersion>
 				</configuration>
-			</plugin>			
+			</plugin>
 		</plugins>
 		<testResources>
 			<testResource>
@@ -117,7 +117,7 @@
 			<groupId>org.openhie.openempi</groupId>
 			<artifactId>openempi-core</artifactId>
 			<version>${release.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
@@ -147,22 +147,7 @@
 					<groupId>xml-apis</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>		
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>${commons.dbcp.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xercesImpl</artifactId>
-					<groupId>xerces</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -292,21 +277,21 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<groupId>org.jboss.client</groupId>
 			<artifactId>jbossall-client</artifactId>
-			<version>4.2.3.GA</version>
+			<version>4.2.3.GA</version>-->
 <!--			<version>5.0.0.GA</version>-->
 <!--			<scope>test</scope>-->
-		</dependency>
-		<dependency>
+<!--		</dependency>-->
+<!--		<dependency>
 			<groupId>org.jboss</groupId>
-<!--			<groupId>org.jboss.naming</groupId>-->
+			<groupId>org.jboss.naming</groupId>
 			<artifactId>jnp-client</artifactId>
 			<version>4.2.2.GA</version>
-<!--			<version>5.0.3.GA</version>-->
+			<version>5.0.3.GA</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp-wiser</artifactId>

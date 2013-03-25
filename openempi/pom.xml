@@ -252,134 +252,9 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<repositories>
-<!--
-		<repository>
-			<id>jboss-public</id>
-			<name>JBoss Public Nexus Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
-		</repository>
-		<repository>
-			<id>sysnetint</id>
-			<url>http://www.sysnetint.com/repository</url>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-			<id>com.eaio</id>
-			<name>eaio.com repository</name>
-			<url>http://eaio.com/maven2</url>
-		</repository>
-		<repository>
-			<id>ibiblio</id>
-			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-		</repository>
-		<repository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>jboss</id>
-			<url>http://repository.jboss.com/maven2</url>
-		</repository>
-		<repository>
-			<id>repository.jboss.org</id>
-			<name>JBoss.org Maven repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-		</repository>
-		<repository>
-			<id>appfuse</id>
-			<url>http://static.appfuse.org/repository</url>
-		</repository>
-		<repository>
-			<id>sysnetint</id>
-			<url>http://www.sysnetint.com/repository</url>
-		</repository>
-		<repository>
-			<id>openxds</id>
-			<url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-			<id>com.eaio</id>
-			<name>eaio.com repository</name>
-			<url>http://eaio.com/maven2</url>
-		</repository>
-		<repository>
-			<id>gwt-maven</id>
-			<url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-		</repository>
-		<repository>
-			<id>for-gwt-incubator</id>
-			<url>http://dist.codehaus.org/mule/dependencies/maven2/</url>
-		</repository>
-	-->
 	</repositories>
 
 	<pluginRepositories>
-<!--
-
-		<pluginRepository>
-			<id>jboss-public</id>
-			<name>JBoss Public Nexus Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>maven2</id>
-			<name>Maven 2 Central</name>
-			<url>http://repo1.maven.org/maven2/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>appfuse</id>
-			<name>Appfuse Static Repository</name>
-			<url>http://static.appfuse.org/releases/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>codehaus-plugins</id>
-			<url>http://dist.codehaus.org/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-		<pluginRepository>
-			<id>gwt-maven-plugins</id>
-			<url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>appfuse</id>
-			<url>http://static.appfuse.org/repository</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>mc-release</id>
-			<name>Local Maven repository of releases</name>
-			<url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-	-->
 	</pluginRepositories>
 
 	<!--
@@ -776,7 +651,6 @@
 		<jpa.version>1.0</jpa.version>
 		<jstl.version>1.1.2</jstl.version>
 		<log4j.version>1.2.15</log4j.version>
-<!--		<slf4j.version>1.6.1</slf4j.version>-->
 		<oscache.version>2.3</oscache.version>
 		<sitemesh.version>2.2.1</sitemesh.version>
 		<spring.security.version>2.0.1</spring.security.version>

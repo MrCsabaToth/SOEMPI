@@ -50,14 +50,6 @@
 			<version>${gxt.version}</version>
 			<classifier>gwt22</classifier>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>runtime</scope>
-		</dependency>
--->
 		<!-- ext-gwt -->
 		<dependency>
 			<groupId>net.sf.gwt-widget</groupId>
@@ -72,16 +64,12 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<groupId>com.allen-sauer.gwt.log</groupId>
 			<artifactId>gwt-log</artifactId>
 			<version>3.1.7</version>
 		</dependency>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>3.1</version>
-		</dependency>
+-->
 	</dependencies>
 
 	<build>
@@ -90,7 +78,7 @@
 		<resources>
 			<resource>
 				<directory>${project.build.sourceDirectory}</directory>
-<!-- 				<targetPath>/tmp</targetPath> -->
+<!--				<targetPath>/tmp</targetPath> -->
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>
@@ -111,18 +99,18 @@
 							<goal>compile</goal>
 							<goal>test</goal>
 							<goal>generateAsync</goal>
-							<!-- 
+							<!--
 							<goal>i18n</goal>
-							 -->
+							-->
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
 				<!--	<logLevel>ALL</logLevel> -->
 					<localWorkers>4</localWorkers>
-					<!-- 
+					<!--
 					<collapse-all-properties />
-					 -->
+					-->
 					<output>${basedir}/war</output>
 					<module>org.openempi.webapp.Application</module>
 					<runClasspathExcludes>
@@ -212,7 +200,7 @@
 					<fileNames><fileName>${project.build.directory}/openempi-webapp-web-${release.version}.war</fileName></fileNames>
 					<hostName>localhost</hostName>
 					<port>8080</port>
-				</configuration>				
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
