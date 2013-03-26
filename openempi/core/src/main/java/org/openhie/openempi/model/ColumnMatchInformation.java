@@ -50,6 +50,7 @@ public class ColumnMatchInformation extends BaseFieldPair
 	private FieldType fieldType;
 	private String fieldTypeModifier;	// VARCHAR length in case of String and format string in case of Date
 	private FieldMeaning fieldMeaning;
+	private String comparisonFunctionName;
 	private Double fellegiSunterMValue;
 	private Double fellegiSunterUValue;
 	private Integer bloomFilterProposedM;
@@ -172,6 +173,15 @@ public class ColumnMatchInformation extends BaseFieldPair
 	public void hydrateAttributes() {
 		getFieldType();
 		getFieldMeaning();
+	}
+
+	@Column(name = "comparison_function_name")
+	public String getComparisonFunctionName() {
+		return comparisonFunctionName;
+	}
+
+	public void setComparisonFunctionName(String comparisonFunctionName) {
+		this.comparisonFunctionName = comparisonFunctionName;
 	}
 
 	@Column(name = "fs_m_value", nullable = false)

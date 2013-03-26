@@ -28,10 +28,10 @@ import org.openhie.openempi.dao.PersonDao;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.Person;
-import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.stringcomparison.StringComparisonService;
 import org.openhie.openempi.util.GeneralUtil;
 
@@ -71,8 +71,8 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 
 		List<Person> records = new java.util.ArrayList<Person>();
 		for (BlockingRound round : blockingRounds) {
@@ -88,7 +88,7 @@ public class BlockingServiceImpl extends AbstractBlockingServiceBase
 		}
 		List<LeanRecordPair> pairs = new java.util.ArrayList<LeanRecordPair>();
 		StringComparisonService comparisonService = Context.getStringComparisonService();
-		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
 		for (Person entry : records) {
 			ComparisonVector comparisonVector =
 					GeneralUtil.scoreRecordPair(person, entry, comparisonService, matchFields);

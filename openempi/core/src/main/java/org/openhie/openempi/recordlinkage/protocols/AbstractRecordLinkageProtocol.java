@@ -41,6 +41,7 @@ import org.openhie.openempi.matching.fellegisunter.BloomFilterParameterAdvice;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.ColumnMatchInformation;
 import org.openhie.openempi.model.Dataset;
@@ -120,26 +121,15 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 				ci.getFieldTransformation().contains("Bloom"));
 	}
 
-	protected List<ColumnInformation> getColumnsForPRLRequest(Dataset dataset, boolean hmacOrBF) throws ApplicationException {
+	protected List<ColumnInformation> getNoMatchColumnInformation(Dataset dataset) {
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 		String localTableName = dataset.getTableName();
 		List<ColumnInformation> localColumnInformation = personQueryService.getDatasetColumnInformation(localTableName);
 		List<ColumnInformation> columnInformation = new ArrayList<ColumnInformation>();	// column information which will be returned
-		List<ColumnInformation> columnInformationForTransferOnlyFields = new ArrayList<ColumnInformation>();
 		MatchConfiguration matchConfiguration =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields(true);
-		PrivacySettings privacySettings =
-				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
-		int defaultK = privacySettings.getBloomfilterSettings().getDefaultK();
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.NoMatchFields);
 		for (MatchField matchField : matchFields) {
-			boolean noComparison = false; // true if the field meant to be carried over for experimental purposes without encoding
-			FunctionField trafo = matchField.getComparatorFunction();
-			if (trafo != null) {
-				if (trafo.getFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME))
-					noComparison = true;
-			}
-
 			ColumnInformation ci1 = null;
 			ColumnInformation ci1r = null;
 			// 1. Try to find the column addressed by the match configuration
@@ -153,93 +143,120 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 			}
 			if (ci1 == null)	// Didn't find it by left field name, get it by the right field name
 				ci1 = ci1r;
-			if (noComparison) {
-				ColumnInformation ciToTransfer = ci1.getClone();
-				columnInformationForTransferOnlyFields.add(ciToTransfer);
-			} else {
-				if (ci1 != null) {
-					// 2.1. Try to find the clear text version of the column
-					ColumnInformation ci2Clear = null;
-					if (isClearTextField(ci1)) {
-						ci2Clear = ci1;
-					} else {
-						for (ColumnInformation ci : localColumnInformation) {
-							if (ci.getFieldMeaning().getFieldMeaningEnum() == ci1.getFieldMeaning().getFieldMeaningEnum() &&
-								isClearTextField(ci))
-							{
-								ci2Clear = ci;
-								break;
-							}
-						}
-					}
-					// 2.2. Try to find HMAC version of the column
-					ColumnInformation ci2Hmac = null;
-					if (isHmacField(ci1)) {
-						ci2Hmac = ci1;
-					} else {
-						for (ColumnInformation ci : localColumnInformation) {
-							if (ci.getFieldMeaning().getFieldMeaningEnum() == ci1.getFieldMeaning().getFieldMeaningEnum() &&
-								isHmacField(ci))
-							{
-								ci2Hmac = ci;
-								break;
-							}
-						}
-					}
-					// 2.3. Try to find bloom filter version of the column
-					ColumnInformation ci2BF = null;
-					if (isBloomFilterField(ci1)) {
-						ci2BF = ci1;
-					} else {
-						for (ColumnInformation ci : localColumnInformation) {
-							if (ci.getFieldMeaning().getFieldMeaningEnum() == ci1.getFieldMeaning().getFieldMeaningEnum() &&
-								isBloomFilterField(ci))
-							{
-								ci2BF = ci;
-								break;
-							}
-						}
-					}
-					if (ci2Clear != null) {
-						// 3. Fill in the bloom filter parameters for that field
-						ColumnInformation ciToSend = null;
-						if (hmacOrBF) {
-							if (ci2Hmac != null) {
-								ciToSend = ci2Hmac.getClone();
-								ciToSend.setAverageFieldLength(ci2Clear.getAverageFieldLength());
-								ciToSend.setNumberOfMissing(ci2Clear.getNumberOfMissing());
-							} else {
-								ciToSend = ci2Clear.getClone();
-							}
-						}
-						if (ci2BF != null) {
-							if (hmacOrBF) {
-								// We need to pass the corresponding Bloom Filter's K parameter
-								ciToSend.setBloomFilterKParameter(ci2BF.getBloomFilterKParameter());
-								ciToSend.setBloomFilterMParameter(ci2BF.getBloomFilterMParameter());
-							} else {
-								ciToSend = ci2BF.getClone();
-								ciToSend.setAverageFieldLength(ci2Clear.getAverageFieldLength());
-								ciToSend.setNumberOfMissing(ci2Clear.getNumberOfMissing());
-							}
-						}
-						if (ciToSend.getBloomFilterKParameter() == null || ciToSend.getBloomFilterKParameter() == 0)
-							ciToSend.setBloomFilterKParameter(defaultK);
-						if (hmacOrBF)
-							ciToSend.setFieldName(ci2Clear.getFieldName());
-						columnInformation.add(ciToSend);
-					} else {
-						throw new ApplicationException("Couldn't find clear text, BF or HMAC version for PRL match field: " +
-								ci1.getFieldName());
-					}
-				} else {
-					throw new ApplicationException("Couldn't find PRL match field: " + matchField.getLeftFieldName() + " (left) or " +
-							matchField.getRightFieldName() + " (right)");
-				}
+			if (ci1 != null) {
+				ColumnInformation ciClone = ci1.getClone();
+				columnInformation.add(ciClone);
 			}
 		}
-		if (columnInformationForTransferOnlyFields.size() > 0)
-			columnInformation.addAll(columnInformationForTransferOnlyFields);
+		return columnInformation;
+	}
+	
+	protected List<ColumnInformation> getColumnsForPRLRequest(Dataset dataset, boolean hmacOrBF) throws ApplicationException
+	{
+		PersonQueryService personQueryService = Context.getPersonQueryService();
+		String localTableName = dataset.getTableName();
+		List<ColumnInformation> localColumnInformation = personQueryService.getDatasetColumnInformation(localTableName);
+		List<ColumnInformation> columnInformation = new ArrayList<ColumnInformation>();	// column information which will be returned
+		MatchConfiguration matchConfiguration =
+				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
+		PrivacySettings privacySettings =
+				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
+		int defaultK = privacySettings.getBloomfilterSettings().getDefaultK();
+		for (MatchField matchField : matchFields) {
+			ColumnInformation ci1 = null;
+			ColumnInformation ci1r = null;
+			// 1. Try to find the column addressed by the match configuration
+			for (ColumnInformation ci : localColumnInformation) {
+				if (ci.getFieldName().equals(matchField.getLeftFieldName())) {
+					ci1 = ci;
+					break;
+				}
+				if (ci.getFieldName().equals(matchField.getRightFieldName()))
+					ci1r = ci;
+			}
+			if (ci1 == null)	// Didn't find it by left field name, get it by the right field name
+				ci1 = ci1r;
+			if (ci1 != null) {
+				// 2.1. Try to find the clear text version of the column
+				ColumnInformation ci2Clear = null;
+				if (isClearTextField(ci1)) {
+					ci2Clear = ci1;
+				} else {
+					for (ColumnInformation ci : localColumnInformation) {
+						if (ci.getFieldMeaning().getFieldMeaningEnum() == ci1.getFieldMeaning().getFieldMeaningEnum() &&
+							isClearTextField(ci))
+						{
+							ci2Clear = ci;
+							break;
+						}
+					}
+				}
+				// 2.2. Try to find HMAC version of the column
+				ColumnInformation ci2Hmac = null;
+				if (isHmacField(ci1)) {
+					ci2Hmac = ci1;
+				} else {
+					for (ColumnInformation ci : localColumnInformation) {
+						if (ci.getFieldMeaning().getFieldMeaningEnum() == ci1.getFieldMeaning().getFieldMeaningEnum() &&
+							isHmacField(ci))
+						{
+							ci2Hmac = ci;
+							break;
+						}
+					}
+				}
+				// 2.3. Try to find bloom filter version of the column
+				ColumnInformation ci2BF = null;
+				if (isBloomFilterField(ci1)) {
+					ci2BF = ci1;
+				} else {
+					for (ColumnInformation ci : localColumnInformation) {
+						if (ci.getFieldMeaning().getFieldMeaningEnum() == ci1.getFieldMeaning().getFieldMeaningEnum() &&
+							isBloomFilterField(ci))
+						{
+							ci2BF = ci;
+							break;
+						}
+					}
+				}
+				if (ci2Clear != null) {
+					// 3. Fill in the bloom filter parameters for that field
+					ColumnInformation ciToSend = null;
+					if (hmacOrBF) {
+						if (ci2Hmac != null) {
+							ciToSend = ci2Hmac.getClone();
+							ciToSend.setAverageFieldLength(ci2Clear.getAverageFieldLength());
+							ciToSend.setNumberOfMissing(ci2Clear.getNumberOfMissing());
+						} else {
+							ciToSend = ci2Clear.getClone();
+						}
+					}
+					if (ci2BF != null) {
+						if (hmacOrBF) {
+							// We need to pass the corresponding Bloom Filter's K parameter
+							ciToSend.setBloomFilterKParameter(ci2BF.getBloomFilterKParameter());
+							ciToSend.setBloomFilterMParameter(ci2BF.getBloomFilterMParameter());
+						} else {
+							ciToSend = ci2BF.getClone();
+							ciToSend.setAverageFieldLength(ci2Clear.getAverageFieldLength());
+							ciToSend.setNumberOfMissing(ci2Clear.getNumberOfMissing());
+						}
+					}
+					if (ciToSend.getBloomFilterKParameter() == null || ciToSend.getBloomFilterKParameter() == 0)
+						ciToSend.setBloomFilterKParameter(defaultK);
+					if (hmacOrBF)
+						ciToSend.setFieldName(ci2Clear.getFieldName());
+					columnInformation.add(ciToSend);
+				} else {
+					throw new ApplicationException("Couldn't find clear text, BF or HMAC version for PRL match field: " +
+							ci1.getFieldName());
+				}
+			} else {
+				throw new ApplicationException("Couldn't find PRL match field: " + matchField.getLeftFieldName() + " (left) or " +
+						matchField.getRightFieldName() + " (right)");
+			}
+		}
 		return columnInformation;
 	}
 

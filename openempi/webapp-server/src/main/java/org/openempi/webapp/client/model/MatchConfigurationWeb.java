@@ -65,16 +65,11 @@ public class MatchConfigurationWeb extends BaseModelData implements Serializable
 	}
 
 	public List<org.openempi.webapp.client.model.MatchFieldWeb> getMatchFields() {
-		return normalizeMatchFields();
+		return get(MATCH_FIELDS);
 	}
 
 	public void setMatchFields(List<org.openempi.webapp.client.model.MatchFieldWeb> matchFields) {
 		set(MATCH_FIELDS, normalizeMatchFields(matchFields));
-	}
-
-	public List<org.openempi.webapp.client.model.MatchFieldWeb> normalizeMatchFields() {
-		List<org.openempi.webapp.client.model.MatchFieldWeb> matchFields = get(MATCH_FIELDS);
-		return normalizeMatchFields(matchFields);
 	}
 
 	public List<org.openempi.webapp.client.model.MatchFieldWeb> normalizeMatchFields(List<org.openempi.webapp.client.model.MatchFieldWeb> matchFields) {
@@ -94,8 +89,7 @@ public class MatchConfigurationWeb extends BaseModelData implements Serializable
 				i++;
 			}
 		}
-		for(org.openempi.webapp.client.model.MatchFieldWeb mf : noComparisonFields)
-			matchFields.add(mf);
+		matchFields.addAll(noComparisonFields);
 		noComparisonFields.clear();
 		return matchFields;
 	}

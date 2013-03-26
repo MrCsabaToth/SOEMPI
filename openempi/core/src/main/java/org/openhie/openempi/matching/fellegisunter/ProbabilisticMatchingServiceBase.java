@@ -37,6 +37,7 @@ import org.openhie.openempi.context.Context;
 import org.openhie.openempi.dao.PersonLinkDao;
 import org.openhie.openempi.dao.hibernate.UniversalDaoHibernate;
 import org.openhie.openempi.matching.AbstractMatchingService;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.ColumnMatchInformation;
 import org.openhie.openempi.model.ComparisonVector;
@@ -96,7 +97,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		long startTime = System.nanoTime();
 		MatchConfiguration matchConfig =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfig.getMatchFields(false);
+		List<MatchField> matchFields = matchConfig.getMatchFields(FieldQuerySelector.MatchOnlyFields);
 		int fieldCount = matchFields.size();
 		fellegiSunterParams = new FellegiSunterParameters(fieldCount, 2);
 		List<LeanRecordPair> pairs = pairsParam;
@@ -175,63 +176,73 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			}
 			cmi.setFieldType(leftCi.getFieldType().getFieldTypeEnum());
 			//cmi.getFieldType();	// to load FieldType before saving
-			DistanceMetricType distanceMetricType = comparisonService.getDistanceMetricType(matchField.getComparatorFunction().getFunctionName());
+			String funcName = matchField.getComparatorFunction().getFunctionName();
+			boolean noMatchField = (funcName.equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME));
+			DistanceMetricType distanceMetricType = comparisonService.getDistanceMetricType(funcName);
 			if (distanceMetricType.getDistanceMetric().getInputType() != cmi.getFieldType().getFieldTypeEnum())
 				throw new ApplicationException("Field types (" + distanceMetricType.getDistanceMetric().getInputType() +
 						") are not compatible with the comparison function input type (" + cmi.getFieldType().getFieldTypeEnum() + ")");
 			cmi.setFieldTypeModifier(leftCi.getFieldTypeModifier());
 			cmi.setFieldMeaning(leftCi.getFieldMeaning().getFieldMeaningEnum());
 			cmi.getFieldMeaning();	// to load FieldType before saving
-			cmi.setFellegiSunterMValue(fellegiSunterParams.getMValue(i));
-			cmi.setFellegiSunterUValue(fellegiSunterParams.getUValue(i));
-			if (!emOnly) {
-				if (parameterManagerMode) {
-					double percentMissing = (Double.valueOf(leftCi.getNumberOfMissing()) +
-											Double.valueOf(rightCi.getNumberOfMissing())) /
-											Double.valueOf(totalRecords);
-					cmi.setPercentMissing(percentMissing);
-					double downweightedRange = cmi.getFellegiSunterWRange() * (1.0 - percentMissing);
-					cmi.setDownweightedRange(downweightedRange);
-					downweightedRangeSum += downweightedRange;
-					PrivacySettings privacySettings =
-							(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
-					// TODO: make p configurable
-					double p = 0.5;	// Bloom filter fill factor
-					double n = (leftDataset.getTotalRecords() * leftCi.getAverageFieldLength() +
-								rightDataset.getTotalRecords() * rightCi.getAverageFieldLength()) /
-								totalRecords +
-								(privacySettings.getBloomfilterSettings().getNGramSize()
-								- 1);
-					double kn = leftCi.getBloomFilterKParameter() * n;
-					double valueFromBloomFormula = Math.pow(p, 1 / kn);	// root(kn,p)
-					double dynamicBFLength = 1 / (1 - valueFromBloomFormula);
-					cmi.setDynamicBloomFilterLength(dynamicBFLength);
-					cmi.setBloomFilterFinalM((int)dynamicBFLength);
-				} else {
-					if (leftCi.getBloomFilterMParameter() != null && leftCi.getBloomFilterMParameter() != Integer.MIN_VALUE)
-						cmi.setBloomFilterFinalM(leftCi.getBloomFilterMParameter());
+			cmi.setComparisonFunctionName(funcName);
+			if (!noMatchField) {
+				cmi.setFellegiSunterMValue(fellegiSunterParams.getMValue(i));
+				cmi.setFellegiSunterUValue(fellegiSunterParams.getUValue(i));
+				if (!emOnly) {
+					if (parameterManagerMode) {
+						double percentMissing = (Double.valueOf(leftCi.getNumberOfMissing()) +
+												Double.valueOf(rightCi.getNumberOfMissing())) /
+												Double.valueOf(totalRecords);
+						cmi.setPercentMissing(percentMissing);
+						double downweightedRange = cmi.getFellegiSunterWRange() * (1.0 - percentMissing);
+						cmi.setDownweightedRange(downweightedRange);
+						downweightedRangeSum += downweightedRange;
+						PrivacySettings privacySettings =
+								(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
+						// TODO: make p configurable
+						double p = 0.5;	// Bloom filter fill factor
+						double n = (leftDataset.getTotalRecords() * leftCi.getAverageFieldLength() +
+									rightDataset.getTotalRecords() * rightCi.getAverageFieldLength()) /
+									totalRecords +
+									(privacySettings.getBloomfilterSettings().getNGramSize()
+									- 1);
+						double kn = leftCi.getBloomFilterKParameter() * n;
+						double valueFromBloomFormula = Math.pow(p, 1 / kn);	// root(kn,p)
+						double dynamicBFLength = 1 / (1 - valueFromBloomFormula);
+						cmi.setDynamicBloomFilterLength(dynamicBFLength);
+						cmi.setBloomFilterFinalM((int)dynamicBFLength);
+					} else {
+						if (leftCi.getBloomFilterMParameter() != null && leftCi.getBloomFilterMParameter() != Integer.MIN_VALUE)
+							cmi.setBloomFilterFinalM(leftCi.getBloomFilterMParameter());
+					}
 				}
 			}
 			log.debug(cmi.toStringLong());
 			columnMatchInformation.add(cmi);
-			i++;
+			if (!noMatchField)
+				i++;
 		}
 		if (parameterManagerMode && !emOnly) {
 			double maxPossibleLength = 0.0;
 			log.debug("Calculating percentBits and BloomFilterPossibleM for ColumnMatchInformations...");
 			for (ColumnMatchInformation cmi : columnMatchInformation) {
-				double percentBits = cmi.getDownweightedRange() / downweightedRangeSum;
-				cmi.setPercentBits(percentBits);
-				double possibleLength = cmi.getDynamicBloomFilterLength() / percentBits;
-				cmi.setBloomFilterPossibleM(possibleLength);
-				if (possibleLength > maxPossibleLength)
-					maxPossibleLength = possibleLength;
+				if (!cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+					double percentBits = cmi.getDownweightedRange() / downweightedRangeSum;
+					cmi.setPercentBits(percentBits);
+					double possibleLength = cmi.getDynamicBloomFilterLength() / percentBits;
+					cmi.setBloomFilterPossibleM(possibleLength);
+					if (possibleLength > maxPossibleLength)
+						maxPossibleLength = possibleLength;
+				}
 				log.debug(cmi.toStringLong());
 			}
 			log.debug("Calculating BloomFilterProposedM for ColumnMatchInformations...");
 			for (ColumnMatchInformation cmi : columnMatchInformation) {
-				double proposedLength = maxPossibleLength * cmi.getPercentBits();
-				cmi.setBloomFilterProposedM((int)proposedLength);
+				if (!cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+					double proposedLength = maxPossibleLength * cmi.getPercentBits();
+					cmi.setBloomFilterProposedM((int)proposedLength);
+				}
 				log.debug(cmi.toStringLong());
 			}
 		}

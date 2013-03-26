@@ -52,6 +52,7 @@ import org.openhie.openempi.matching.fellegisunter.EMSettings;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.recordlinkage.configuration.BloomfilterSettings;
 import org.openhie.openempi.recordlinkage.configuration.ComponentSettings;
 import org.openhie.openempi.recordlinkage.configuration.DataIntegratorSettings;
@@ -231,7 +232,7 @@ public class ConfigurationDataServiceImpl extends RemoteServiceServlet implement
 		emSettingsWeb.setMaxIterations(emSettings.getMaxIterations());
 		emSettingsWeb.setMaxTries(emSettings.getMaxTries());
 		matchConfigurationWeb.setEMSettings(emSettingsWeb);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields(true);
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.AllFields);
 		List<MatchFieldWeb> matchFieldsWeb = new ArrayList<MatchFieldWeb>();
 		for(MatchField matchField : matchFields) {
 			MatchFieldWeb matchFieldWeb = new MatchFieldWeb();

@@ -30,6 +30,7 @@ import org.openhie.openempi.matching.fellegisunter.FellegiSunterParameters;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.Person;
@@ -72,9 +73,9 @@ public class RandomSampledBlockingBypassServiceImpl extends AbstractBlockingServ
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 
 		Configuration config = Context.getConfiguration();
 		BlockingSettings blockingSettings = (BlockingSettings)

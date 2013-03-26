@@ -27,6 +27,7 @@ import org.openhie.openempi.configuration.FunctionField;
 import org.openhie.openempi.configuration.xml.MatchingConfigurationType;
 import org.openhie.openempi.configuration.xml.probabilisticmatching.ProbabilisticMatchingType;
 import org.openhie.openempi.context.Context;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.util.ValidationUtil;
 
 public class ProbabilisticMatchingConfigurationLoader implements ConfigurationLoader
@@ -109,7 +110,7 @@ public class ProbabilisticMatchingConfigurationLoader implements ConfigurationLo
 		buildEMSettingsFragment(matchConfig.getEmSettings(), matchingConfigurationType);
 		org.openhie.openempi.configuration.xml.probabilisticmatching.MatchFields matchFieldsXml =
 			matchingConfigurationType.addNewMatchFields();
-		for (MatchField matchField : matchConfig.getMatchFields(true)) {
+		for (MatchField matchField : matchConfig.getMatchFields(FieldQuerySelector.AllFields)) {
 			buildMatchFieldFragment(matchField, matchFieldsXml);
 		}
 		return matchingConfigurationType;

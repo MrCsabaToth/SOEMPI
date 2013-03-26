@@ -41,6 +41,7 @@ import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingServiceBase;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
@@ -113,12 +114,12 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
 
 		calculateEmptyBloomFilters(leftTableName, rightTableName);
 
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 
 		Collections.sort(bits, new BloomFilterBitStatComparatorByBloomFilterIndex());
 		PrivacyPreservingBlockingSettings ppbs = Context.getConfiguration().getPrivacyPreservingBlockingSettings();
@@ -297,9 +298,9 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		StringComparisonService comparisonService = Context.getStringComparisonService();
 		MatchConfiguration matchConfiguration =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		List<MatchField> matchFields = matchConfiguration.getMatchFields(false);
-		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
+		List<MatchField> matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
+		List<String> leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
+		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 
 		Configuration config = Context.getConfiguration();
 		PrivacyPreservingBlockingSettings ppbs = config.getPrivacyPreservingBlockingSettings();

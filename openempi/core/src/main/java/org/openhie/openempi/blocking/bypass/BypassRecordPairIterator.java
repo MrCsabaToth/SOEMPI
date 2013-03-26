@@ -29,6 +29,7 @@ import org.openhie.openempi.matching.fellegisunter.FellegiSunterParameters;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.Person;
@@ -105,9 +106,9 @@ public class BypassRecordPairIterator implements RecordPairIterator
 		if (matchFields == null) {
 			MatchConfiguration matchConfiguration =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-			matchFields = matchConfiguration.getMatchFields(false);
-			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
-			rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
+			matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
+			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
+			rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 		}
 
 		if (!isInitialized()) {

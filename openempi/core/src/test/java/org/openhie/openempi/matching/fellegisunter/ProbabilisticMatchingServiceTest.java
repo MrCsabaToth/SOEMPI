@@ -25,6 +25,7 @@ import org.openhie.openempi.Constants;
 import org.openhie.openempi.configuration.FunctionField;
 import org.openhie.openempi.configuration.AdminConfiguration.ComponentType;
 import org.openhie.openempi.context.Context;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.service.BaseServiceTestCase;
 import org.openhie.openempi.service.PersonManagerService;
@@ -54,7 +55,7 @@ public class ProbabilisticMatchingServiceTest extends BaseServiceTestCase
 		// Assemble a temporary MatchConfiguration for our purpose
 		MatchConfiguration matchConfigurationBackup =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);
+		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(FieldQuerySelector.MatchOnlyFields).get(0);
 		MatchConfiguration matchConfig = new MatchConfiguration();
 		// Right now we inherit the values from Parameter Manager's config
 		matchConfig.setFalsePositiveProbability(matchConfigurationBackup.getFalsePositiveProbability());

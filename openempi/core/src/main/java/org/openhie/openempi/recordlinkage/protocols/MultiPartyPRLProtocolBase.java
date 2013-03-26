@@ -50,6 +50,7 @@ import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingServiceBase;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.ColumnMatchInformation;
 import org.openhie.openempi.model.Dataset;
@@ -83,10 +84,11 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 	protected abstract boolean twoOrThreeThirdParty();
 	protected abstract String getThirdPartyAddress();
 	protected abstract String getThirdPartyCredential(String dataIntegratorUserName, String parameterManagerUserName);
-	protected abstract boolean getColumnInformationForSend(List<ColumnInformation> columnInformationOrig,
+	protected abstract boolean fillColumnInformationForSend(List<ColumnInformation> matchColumnInformation,
 			List<ColumnInformation> columnInformation, List<String> columnNames);
-	protected abstract void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames,
-			boolean isThereClearField, String defaultHmacFunctionName, List<ColumnInformation> columnInformationOrig,
+	protected abstract void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> matchColumnNames,
+			List<ColumnInformation> matchColumnInformation,
+			List<ColumnInformation> noMatchColumnInformation, boolean isThereClearField, String defaultHmacFunctionName,
 			String thirdPartyAddress, Map<Long,Long> personPseudoIdsReverseLookup, RemotePersonService remotePersonService,
 			String remoteTableName) throws NamingException, ApplicationException;
 	protected abstract void performSecondPhase(Dataset dataset, String matchName, String blockingServiceName, String matchingServiceName,
@@ -95,6 +97,25 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String parameterManagerUserName, String parameterManagerPassword,
 			int personMatchRequestId, int myNonce, Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException;
 	protected abstract int getNonce();
+
+	protected void addNoMatchColumnInformationToSend(List<ColumnInformation> noMatchColumnInformation,
+			List<ColumnInformation> columnInformation, List<String> columnNames)
+	{
+		for (ColumnInformation ci : noMatchColumnInformation) {
+			columnNames.add(ci.getFieldName());
+			ColumnInformation ciClone = ci.getClone();
+			columnInformation.add(ciClone);
+		}
+	}
+
+	protected List<String> fillNoMatchColumnNames(List<ColumnInformation> noMatchColumnInformation, List<String> columnNames)
+	{
+		List<String> allColumnNames = new ArrayList<String>();
+		allColumnNames.addAll(columnNames);
+		for (ColumnInformation ci : noMatchColumnInformation)
+			allColumnNames.add(ci.getFieldName());
+		return allColumnNames;
+	}
 
 	public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName,
 			String matchName, String blockingServiceName, String matchingServiceName,
@@ -116,13 +137,18 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					keyServerUserName, keyServerPassword);
 
 			// 1. Send DataSet and patient data first
-			List<ColumnInformation> columnInformationOrig = getColumnsForPRLRequest(dataset, !twoOrThreeThirdParty());
+			List<ColumnInformation> matchColumnInformation = getColumnsForPRLRequest(dataset, !twoOrThreeThirdParty());
+			List<ColumnInformation> noMatchColumnInformation = getNoMatchColumnInformation(dataset);
 			List<ColumnInformation> columnInformation = new ArrayList<ColumnInformation>();
-			List<String> columnNames = new ArrayList<String>();
+			List<String> matchColumnNames = new ArrayList<String>();
 			String defaultHmacFunctionName = Constants.DEFAULT_HMAC_FUNCTION_NAME;
-			boolean isThereClearField = getColumnInformationForSend(columnInformationOrig, columnInformation, columnNames);
+			boolean isThereClearField = fillColumnInformationForSend(matchColumnInformation, columnInformation, matchColumnNames);
+			
 			long totalRecords = dataset.getTotalRecords();
-			remotePersonService.createDatasetTable(remoteTableName, columnInformation, totalRecords, false);
+			List<ColumnInformation> allColumnInformation = new ArrayList<ColumnInformation>();
+			allColumnInformation.addAll(matchColumnInformation);
+			allColumnInformation.addAll(noMatchColumnInformation);
+			remotePersonService.createDatasetTable(remoteTableName, allColumnInformation, totalRecords, false);
 
 			Map<Long,Long> personPseudoIdsReverseLookup = null;
 			// Don't use pseudoIds for local experiments
@@ -131,8 +157,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			{
 				personPseudoIdsReverseLookup = new HashMap<Long,Long>();
 			}
-			sendFirstPhaseData(dataset, totalRecords, columnNames,
-					isThereClearField, defaultHmacFunctionName, columnInformationOrig,
+			sendFirstPhaseData(dataset, totalRecords, matchColumnNames, matchColumnInformation,
+					noMatchColumnInformation, isThereClearField, defaultHmacFunctionName,
 					thirdPartyAddress, personPseudoIdsReverseLookup, remotePersonService, remoteTableName);
 			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName);
 
@@ -188,25 +214,33 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			// 1. Try to perform the BF encodings from the Dataset in DB
 			List<LoaderDataField> loaderDataForBFReencode = new ArrayList<LoaderDataField>();
 			List<String> columnNames = new ArrayList<String>();
+			List<String> noMatchColumnNames = new ArrayList<String>();
 			for (ColumnMatchInformation cmi : columnMatchInformation) {
 				ColumnInformation ci = new ColumnInformation();
 				String fn = leftOrRightSide ? cmi.getLeftFieldName() : cmi.getRightFieldName();
 				ci.setFieldName(fn);
 				ci.setFieldMeaning(cmi.getFieldMeaning().getFieldMeaningEnum());
-				ci.setFieldType(FieldType.FieldTypeEnum.Blob);
-				ci.setFieldTransformation(Constants.DEFAULT_BLOOM_FILTER_FUNCTION_NAME);
-				ci.setBloomFilterKParameter(defaultK);
-				ci.setBloomFilterMParameter(cmi.getBloomFilterFinalM());
+				if (cmi.getComparisonFunctionName() != null && cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+					ci.setFieldType(cmi.getFieldType().getFieldTypeEnum());
+					noMatchColumnNames.add(fn);
+				} else {
+					ci.setFieldType(FieldType.FieldTypeEnum.Blob);
+					ci.setFieldTransformation(Constants.DEFAULT_BLOOM_FILTER_FUNCTION_NAME);
+					ci.setBloomFilterKParameter(defaultK);
+					ci.setBloomFilterMParameter(cmi.getBloomFilterFinalM());
+				}
 				bfColumnInformation.add(ci);
-
-				LoaderDataField loaderDataField = new LoaderDataField();
-				loaderDataField.setFieldName(fn);
-				loaderDataField.setFieldMeaning(cmi.getFieldMeaning().getFieldMeaningEnum());
-				loaderDataField.setFieldType(FieldType.FieldTypeEnum.Blob);
-				loaderDataField.setSourceColumnIndex(-1);	// Doesn't make sense, this is just in-memory
-				loaderDataField.setSourceFieldName(fn);
-				loaderDataField.setFieldTransformation(getNewFunctionFieldForBFReencoding(defaultK, cmi));
-				loaderDataForBFReencode.add(loaderDataField);
+	
+				if (cmi.getComparisonFunctionName() == null || !cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+					LoaderDataField loaderDataField = new LoaderDataField();
+					loaderDataField.setFieldName(fn);
+					loaderDataField.setFieldMeaning(cmi.getFieldMeaning().getFieldMeaningEnum());
+					loaderDataField.setFieldType(FieldType.FieldTypeEnum.Blob);
+					loaderDataField.setSourceColumnIndex(-1);	// Doesn't make sense, this is just in-memory
+					loaderDataField.setSourceFieldName(fn);
+					loaderDataField.setFieldTransformation(getNewFunctionFieldForBFReencoding(defaultK, cmi));
+					loaderDataForBFReencode.add(loaderDataField);
+				}
 
 				columnNames.add(fn);	// Assuming that the bf parameter advice has clear text field names (because getColumnsForRequestToPM works like that)
 			}
@@ -236,6 +270,10 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 								log.debug("Field " + fn + " has now value " + bfReencodedPerson.getAttribute(fn));
 							}
 						}
+						// Add additional piggybacking no-match columns
+						for (String ncn : noMatchColumnNames) {
+							bfReencodedPerson.setAttribute(ncn, clearTextPerson.getAttribute(ncn));
+						}
 						bfReencodedPersons.add(bfReencodedPerson);
 					}
 					personManagerService.addPersons(newBFTableName, bfReencodedPersons, false, false);
@@ -262,10 +300,14 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				LoaderDataField loaderDataField = new LoaderDataField();
 				loaderDataField.setFieldName(ldf.getFieldName());
 				loaderDataField.setFieldMeaning(ldf.getFieldMeaning().getFieldMeaningEnum());
-				loaderDataField.setFieldType(FieldType.FieldTypeEnum.Blob);
+				if (cmi.getComparisonFunctionName() != null && cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+					loaderDataField.setFieldType(cmi.getFieldType().getFieldTypeEnum());
+				} else {
+					loaderDataField.setFieldType(FieldType.FieldTypeEnum.Blob);
+					loaderDataField.setFieldTransformation(getNewFunctionFieldForBFReencoding(defaultK, cmi));
+				}
 				loaderDataField.setSourceColumnIndex(ldf.getSourceColumnIndex());
 				loaderDataField.setSourceFieldName(ldf.getSourceFieldName());
-				loaderDataField.setFieldTransformation(getNewFunctionFieldForBFReencoding(defaultK, cmi));
 				loaderDataFields.add(loaderDataField);
 			}
 			loaderConfig.setDataFields(loaderDataFields);
@@ -343,7 +385,9 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 	{
 		Integer cbfLength = 0;
 		for (ColumnMatchInformation cmi : columnMatchInformation) {
-			if (cmi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob) {
+			if (cmi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
+				!cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME))
+			{
 				cbfLength += cmi.getBloomFilterProposedM();
 			}
 		}
@@ -369,6 +413,18 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		ci.setBloomFilterKParameter(defaultK);	// TODO
 		ci.setBloomFilterMParameter(cbfLength);
 		cbfColumnInformation.add(ci);
+		List<String> noMatchColumnNames = new ArrayList<String>();
+		for (ColumnMatchInformation cmi : columnMatchInformation) {
+			if (cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME)) {
+				String fn = leftOrRightSide ? cmi.getLeftFieldName() : cmi.getRightFieldName();
+				ColumnInformation nci = new ColumnInformation();
+				nci.setFieldName(fn);
+				nci.setFieldMeaning(cmi.getFieldMeaning().getFieldMeaningEnum());
+				nci.setFieldType(cmi.getFieldType().getFieldTypeEnum());
+				cbfColumnInformation.add(nci);
+				noMatchColumnNames.add(fn);
+			}
+		}
 		personManagerService.createDatasetTable(newCBFTableName, cbfColumnInformation,
 				newBFDataset.getTotalRecords(), false, false);
 		// Sample the recoded bloomfilters -> CBF
@@ -398,6 +454,9 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 						Person cbfPerson = generateCBFWithOverSamplingAndPermutation(
 								person, cbfLength, rnd, seed, bitPermutation, columnMatchInformation,
 								leftOrRightSide);
+						// Add piggy backing no-match columns
+						for (String ncn : noMatchColumnNames)
+							cbfPerson.setAttribute(ncn, person.getAttribute(ncn));
 						cbfPersons.add(cbfPerson);
 					}
 					personManagerService.addPersons(newCBFTableName, cbfPersons, false, false);
@@ -557,7 +616,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		// Assemble a temporary MatchConfiguration for our purpose
 		MatchConfiguration matchConfigurationBackup =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);	// TODO: that's lame, should get probability values in a different way
+		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(FieldQuerySelector.MatchOnlyFields).get(0);	// TODO: that's lame, should get probability values in a different way
 		MatchConfiguration matchConfig = new MatchConfiguration();
 		// TODO: request probability values (and other FS settings) from Data Providers??? Who wins?
 		// Right now we inherit the values from Parameter Manager's config
@@ -604,6 +663,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				}
 			}
 		}
+		// TODO: maybe we need to add piggy backing no-match field here to the MatchField list?
 		
 		ppbs.setPrivacyPreservingBlockingFields(ppbfs);
 		Context.getConfiguration().saveAndRegisterPrivacyPreservingBlockingSettings(ppbs);
@@ -644,7 +704,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		// Assemble a temporary MatchConfiguration for our purpose
 		MatchConfiguration matchConfigurationBackup =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);	// TODO: that's lame, should get probability values in a different way
+		MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(FieldQuerySelector.MatchOnlyFields).get(0);	// TODO: that's lame, should get probability values in a different way
 		MatchConfiguration matchConfig = new MatchConfiguration();
 		// TODO: request probability values (and other FS settings) from Data Providers??? Who wins?
 		// Right now we inherit the values from Parameter Manager's config
@@ -666,6 +726,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		mf.setComparatorFunction(functionField);
 		matchFields.add(mf);
 		matchConfig.setMatchFields(matchFields);
+		// TODO: maybe we need to add piggy backing no-match field here to the MatchField list?
 
 		Context.getConfiguration().registerConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY, matchConfig);
 
@@ -709,7 +770,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			// Assemble a temporary MatchConfiguration for our purpose
 			MatchConfiguration matchConfigurationBackup =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
-			MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(false).get(0);	// TODO: that's lame, should get probability values in a different way
+			MatchField firstOriginalMatchField = matchConfigurationBackup.getMatchFields(FieldQuerySelector.MatchOnlyFields).get(0);	// TODO: that's lame, should get probability values in a different way
 			MatchConfiguration matchConfig = new MatchConfiguration();
 			// TODO: request probability values (and other FS settings) from Data Providers??? Who wins?
 			// Right now we inherit the values from Parameter Manager's config
@@ -746,6 +807,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					}
 				}
 			}
+			// TODO: maybe we need to add piggy backing no-match field here to the MatchField list?
 			matchConfig.setMatchFields(matchFields);
 
 			Context.getConfiguration().registerConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY, matchConfig);

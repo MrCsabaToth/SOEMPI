@@ -28,6 +28,7 @@ import org.openhie.openempi.blocking.RecordPairIterator;
 import org.openhie.openempi.context.Context;
 import org.openhie.openempi.matching.fellegisunter.FellegiSunterParameters;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
+import org.openhie.openempi.matching.fellegisunter.MatchConfiguration.FieldQuerySelector;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
 import org.openhie.openempi.matching.fellegisunter.ProbabilisticMatchingConstants;
 import org.openhie.openempi.model.ComparisonVector;
@@ -123,10 +124,10 @@ public class BasicRecordPairIterator implements RecordPairIterator
 			MatchConfiguration matchConfiguration =
 				(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
 			PersonQueryService personQueryService = Context.getPersonQueryService();
-			matchFields = matchConfiguration.getMatchFields(false);
-			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(false);
+			matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
+			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
 			leftOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(leftTableName);
-			rightMatchFieldNames = matchConfiguration.getRightFieldNames(false);
+			rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 			rightOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(rightTableName);
 		}
 		Person leftExample = new Person();

@@ -36,6 +36,12 @@ public class MatchConfiguration extends BaseObject
 	private List<MatchField> matchFields;
 	private int numberOfRealMatchFields;
 	
+	public enum FieldQuerySelector {
+		AllFields,
+		MatchOnlyFields,
+		NoMatchFields
+	}
+
 	public MatchConfiguration() {
 		matchFields = new ArrayList<MatchField>();
 		numberOfRealMatchFields = 0;
@@ -70,10 +76,12 @@ public class MatchConfiguration extends BaseObject
 		normalizeMatchFields();
 	}
 
-	public List<MatchField> getMatchFields(boolean withNoMatchFields) {
-		normalizeMatchFields();
-		if (!withNoMatchFields && numberOfRealMatchFields < matchFields.size())
+	public List<MatchField> getMatchFields(FieldQuerySelector fieldQuerySelector) {
+		if (fieldQuerySelector == FieldQuerySelector.MatchOnlyFields && numberOfRealMatchFields < matchFields.size()) {
 			return matchFields.subList(0, numberOfRealMatchFields);
+		} else if (fieldQuerySelector == FieldQuerySelector.NoMatchFields && numberOfRealMatchFields > 0) {
+			return matchFields.subList(numberOfRealMatchFields, matchFields.size());
+		}
 		return matchFields;
 	}
 
@@ -82,19 +90,19 @@ public class MatchConfiguration extends BaseObject
 		normalizeMatchFields();
 	}
 
-	public List<String> getLeftFieldNames(boolean withNoMatchFields)
+	public List<String> getLeftFieldNames(FieldQuerySelector fieldQuerySelector)
 	{
 		List<String> matchFieldNames = new ArrayList<String>();
-		for (MatchField matchField : getMatchFields(withNoMatchFields)) {
+		for (MatchField matchField : getMatchFields(fieldQuerySelector)) {
 			matchFieldNames.add(matchField.getLeftFieldName());
 		}
 		return matchFieldNames;
 	}
 
-	public List<String> getRightFieldNames(boolean withNoMatchFields)
+	public List<String> getRightFieldNames(FieldQuerySelector fieldQuerySelector)
 	{
 		List<String> matchFieldNames = new ArrayList<String>();
-		for (MatchField matchField : getMatchFields(withNoMatchFields)) {
+		for (MatchField matchField : getMatchFields(fieldQuerySelector)) {
 			matchFieldNames.add(matchField.getRightFieldName());
 		}
 		return matchFieldNames;
@@ -118,8 +126,7 @@ public class MatchConfiguration extends BaseObject
 				i++;
 			}
 		}
-		for(MatchField mf : noComparisonFields)
-			matchFields.add(mf);
+		matchFields.addAll(noComparisonFields);
 		numberOfRealMatchFields = end;
 		noComparisonFields.clear();
 	}

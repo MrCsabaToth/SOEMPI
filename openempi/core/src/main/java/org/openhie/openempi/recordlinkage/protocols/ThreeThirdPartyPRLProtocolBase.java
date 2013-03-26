@@ -72,19 +72,19 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		return parameterManagerCredential;
 	}
 
-	protected boolean getColumnInformationForSend(List<ColumnInformation> columnInformationOrig,
+	protected boolean fillColumnInformationForSend(List<ColumnInformation> matchColumnInformation,
 			List<ColumnInformation> columnInformation, List<String> columnNames)
 	{
 		boolean isThereClearField = false;
 		String defaultHmacFunctionName = Constants.DEFAULT_HMAC_FUNCTION_NAME;
 		// Searching for default HMAC transformation
-		for (ColumnInformation ci : columnInformationOrig) {
+		for (ColumnInformation ci : matchColumnInformation) {
 			if (ci.getFieldTransformation() != null) {
 				defaultHmacFunctionName = ci.getFieldTransformation();
 				break;
 			}
 		}
-		for (ColumnInformation ci : columnInformationOrig) {
+		for (ColumnInformation ci : matchColumnInformation) {
 			columnNames.add(ci.getFieldName());
 			ColumnInformation ciClone = ci.getClone();
 			if (isClearTextField(ci)) {
@@ -97,8 +97,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		return isThereClearField;
 	}
 
-	protected void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames, boolean isThereClearField,
-			String defaultHmacFunctionName, List<ColumnInformation> columnInformationOrig, String thirdPartyAddress,
+	protected void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames, List<ColumnInformation> matchColumnInformation,
+			List<ColumnInformation> noMatchColumnInformation, boolean isThereClearField, String defaultHmacFunctionName, String thirdPartyAddress,
 			Map<Long,Long> personPseudoIdsReverseLookup, RemotePersonService remotePersonService, String remoteTableName) throws NamingException, ApplicationException {
 		Configuration config = Context.getConfiguration();
 		BlockingSettings blockingSettings = (BlockingSettings)
@@ -107,7 +107,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		int numRecordsToSend = Math.min(numRecordsToSend1, ((Long)totalRecords).intValue());
 		// Do not break down random sampling by PAGE_SIZE, because that could cause id collision
 		PersonQueryService personQueryService = Context.getPersonQueryService();
-		List<Person> persons = personQueryService.getRandomNotNullPersons(dataset.getTableName(), columnNames, numRecordsToSend);
+		List<Person> persons = personQueryService.getRandomNotNullPersons(dataset.getTableName(),
+				fillNoMatchColumnNames(noMatchColumnInformation, columnNames), numRecordsToSend);
 		// HMAC transform the needed fields
 		if (isThereClearField) {
 			TransformationService transformationService = Context.getTransformationService();
@@ -117,7 +118,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, signingKey);
 			for (Person person : persons) {
-				for (ColumnInformation ci : columnInformationOrig) {
+				for (ColumnInformation ci : matchColumnInformation) {
 					if (isClearTextField(ci)) {
 						Object value = person.getAttribute(ci.getFieldName());
 						log.debug("Obtained a value of " + value + " for clear text field " + ci.getFieldName());

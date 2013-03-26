@@ -244,6 +244,7 @@ CREATE TABLE column_match_information (
     field_type_cd integer NOT NULL,
     field_type_modifier varchar(255),
     field_meaning_cd integer NOT NULL,
+    comparison_function_name varchar(255),
     fs_m_value double precision,
     fs_u_value double precision,
     bf_proposed_m double precision,

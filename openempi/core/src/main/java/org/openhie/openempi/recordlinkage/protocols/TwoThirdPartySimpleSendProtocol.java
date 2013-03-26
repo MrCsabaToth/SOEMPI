@@ -99,7 +99,9 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			remotePersonService.authenticate(serverAddress4DI, dataIntegratorUserName, dataIntegratorPassword,
 					keyServerUserName, keyServerPassword);
 
-			List<ColumnInformation> columnInformation = new ArrayList<ColumnInformation>();
+			// Send all columns here, it's not PRL
+			// Maybe we could do some intelligent cherry picking analyzing the match configuration?
+			List<ColumnInformation> columnInformation = dataset.getColumnInformation();
 			remotePersonService.createDatasetTable(remoteTableName, columnInformation, dataset.getTotalRecords(),
 					false);
 

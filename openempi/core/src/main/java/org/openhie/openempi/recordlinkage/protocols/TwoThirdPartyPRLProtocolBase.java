@@ -62,10 +62,10 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 		return dataIntegratorCredential;
 	}
 
-	protected boolean getColumnInformationForSend(List<ColumnInformation> columnInformationOrig,
+	protected boolean fillColumnInformationForSend(List<ColumnInformation> matchColumnInformation,
 			List<ColumnInformation> columnInformation, List<String> columnNames)
 	{
-		for (ColumnInformation ci : columnInformationOrig) {
+		for (ColumnInformation ci : matchColumnInformation) {
 			columnNames.add(ci.getFieldName());
 			ColumnInformation ciClone = ci.getClone();
 			columnInformation.add(ciClone);
@@ -73,15 +73,17 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 		return false;	// Return value doesn't have meaning in case of 2 3rd party protocol
 	}
 
-	protected void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames, boolean isThereClearField,
-			String defaultHmacFunctionName, List<ColumnInformation> columnInformationOrig, String thirdPartyAddress,
+	protected void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames,
+			List<ColumnInformation> matchColumnInformation, List<ColumnInformation> noMatchColumnInformation,
+			boolean isThereClearField, String defaultHmacFunctionName, String thirdPartyAddress,
 			Map<Long,Long> personPseudoIdsReverseLookup, RemotePersonService remotePersonService, String remoteTableName) throws NamingException, ApplicationException {
 		long firstResult = 0L;
 		boolean morePatients = true;
 		List<Person> persons = null;
 		PersonQueryService personQueryService = Context.getPersonQueryService();
+		List<String> allColumnNames = fillNoMatchColumnNames(noMatchColumnInformation, columnNames);
 		do {
-			persons = personQueryService.getPersonsPaged(dataset.getTableName(), columnNames, firstResult, Constants.PAGE_SIZE);
+			persons = personQueryService.getPersonsPaged(dataset.getTableName(), allColumnNames, firstResult, Constants.PAGE_SIZE);
 			morePatients = (persons != null && persons.size() > 0);
 			if (morePatients) {
 				// Don't use pseudoIds for local experiments

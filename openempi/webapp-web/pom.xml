@@ -50,6 +50,12 @@
 			<version>${gxt.version}</version>
 			<classifier>gwt22</classifier>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- ext-gwt -->
 		<dependency>
 			<groupId>net.sf.gwt-widget</groupId>
