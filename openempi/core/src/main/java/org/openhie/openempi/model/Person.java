@@ -97,12 +97,14 @@ public class Person extends BaseObject implements java.io.Serializable
 	}
 
 	@Transient
-	public String getStringAttribute(String originalIdFieldName) {
-		if (originalIdFieldName == null)
+	public String getStringAttribute(String fieldName) {
+		if (fieldName == null)
 			return null;
-		if (originalIdFieldName.length() <= 0)
+		if (fieldName.length() <= 0)
 			return null;
-		Object o = getAttribute(originalIdFieldName);
+		Object o = getAttribute(fieldName);
+		if (o == null)
+			return null;
 		if (o instanceof String)
 			return (String)o;
 		return o.toString();

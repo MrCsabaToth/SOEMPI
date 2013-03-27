@@ -157,10 +157,10 @@ public class DatasetSelectionView extends View
 		rightDatasetNameCombo.setStore(datasetNameStore);
 		rightDatasetNameCombo.setTypeAhead(true);
 		rightDatasetNameCombo.setTriggerAction(TriggerAction.ALL);
-		rightDatasetNameCombo.addListener(Events.SelectionChange, new Listener<FieldEvent>() {
-			public void handleEvent(FieldEvent fe) {
+		rightDatasetNameCombo.addSelectionChangedListener(new SelectionChangedListener<ModelPropertyWeb>() {
+			public void selectionChanged(SelectionChangedEvent<ModelPropertyWeb> se) {
 				String rightTableName = null;
-				List<ModelPropertyWeb> rightTableNameSelection = rightDatasetNameCombo.getSelection();
+				List<ModelPropertyWeb> rightTableNameSelection = se.getSelection();
 				if (rightTableNameSelection != null) {
 					if (rightTableNameSelection.size() > 0) {
 						rightTableName = rightTableNameSelection.get(0).getName();

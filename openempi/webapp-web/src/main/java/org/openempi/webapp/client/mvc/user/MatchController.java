@@ -66,14 +66,11 @@ public class MatchController extends AbstractController
 			String linkTableName = (String)params.get(0);
 			String blockingServiceName = (String)params.get(1);
 			String matchingServiceName = (String)params.get(2);
-			String leftTableName = (String)params.get(4);
-			String rightTableName = (String)params.get(5);
-			Boolean emOnly = (Boolean)params.get(6);
+			String leftTableName = (String)params.get(3);
+			String rightTableName = (String)params.get(4);
+			Boolean emOnly = (Boolean)params.get(5);
 			match(linkTableName, leftTableName, rightTableName, blockingServiceName, matchingServiceName, emOnly);
-		} else if (type == AppEvents.LeftDatasetSelected ||
-					type == AppEvents.LeftDatasetColumnNamesArrived ||
-					type == AppEvents.RightDatasetSelected ||
-					type == AppEvents.RightDatasetColumnNamesArrived) {
+		} else if (type == AppEvents.LeftDatasetSelected || type == AppEvents.RightDatasetSelected) {
 			forwardToView(matchView, event);
 		} else if (type == AppEvents.PersonMatchShowMatchColumnsRequest) {
 			PersonMatchWeb personMatch = (PersonMatchWeb)event.getData();
