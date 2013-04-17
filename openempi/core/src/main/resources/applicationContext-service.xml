@@ -717,6 +717,56 @@
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="Blob"/>
 	</bean>
+	<bean id="NumberCorruptor"
+		class="org.openhie.openempi.transformation.function.corruption.NumberCorruptor">
+		<property name="name" value="NumberCorruptor"/>
+		<property name="inputType" value="Any"/>
+		<property name="outputType" value="String"/>
+		<property name="defaultInsertionProbability" value="0.01"/>
+		<property name="defaultDeletionProbability" value="0.03"/>
+		<property name="defaultSubstitutionProbability" value="0.07"/>
+		<property name="defaultTranspositionProbability" value="0.01"/>
+	</bean>
+	<bean id="StringCorruptor"
+		class="org.openhie.openempi.transformation.function.corruption.StringCorruptor">
+		<property name="name" value="StringrCorruptor"/>
+		<property name="inputType" value="Any"/>
+		<property name="outputType" value="String"/>
+		<property name="defaultPhoneticErrorProbability" value="0.006"/>
+		<property name="defaultOcrErrorProbability" value="0.002"/>
+		<property name="defaultInsertionProbability" value="0.01"/>
+		<property name="defaultDeletionProbability" value="0.03"/>
+		<property name="defaultSubstitutionProbability" value="0.07"/>
+		<property name="defaultTranspositionProbability" value="0.01"/>
+	</bean>
+	<bean id="NicknameCorruptor"
+		class="org.openhie.openempi.transformation.function.corruption.NicknameCorruptor">
+		<property name="name" value="NicknameCorruptor"/>
+		<property name="inputType" value="Any"/>
+		<property name="outputType" value="String"/>
+		<property name="defaultReplaceProbability" value="0.03"/>
+		<property name="defaultPhoneticErrorProbability" value="0.006"/>
+		<property name="defaultOcrErrorProbability" value="0.002"/>
+		<property name="defaultInsertionProbability" value="0.01"/>
+		<property name="defaultDeletionProbability" value="0.03"/>
+		<property name="defaultSubstitutionProbability" value="0.07"/>
+		<property name="defaultTranspositionProbability" value="0.01"/>
+	</bean>
+	<bean id="LastnameCorruptor"
+		class="org.openhie.openempi.transformation.function.corruption.LastnameCorruptor">
+		<property name="name" value="LastnameCorruptor"/>
+		<property name="inputType" value="Any"/>
+		<property name="outputType" value="String"/>
+		<property name="defaultHyphenateProbability" value="0.002"/>
+		<property name="defaultFemaleReplaceProbability" value="0.02"/>
+		<property name="defaultMaleReplaceProbability" value="0.002"/>
+		<property name="defaultPhoneticErrorProbability" value="0.006"/>
+		<property name="defaultOcrErrorProbability" value="0.002"/>
+		<property name="defaultInsertionProbability" value="0.01"/>
+		<property name="defaultDeletionProbability" value="0.03"/>
+		<property name="defaultSubstitutionProbability" value="0.07"/>
+		<property name="defaultTranspositionProbability" value="0.01"/>
+	</bean>
 
 	<bean id="transformationService"
 		class="org.openhie.openempi.transformation.impl.TransformationServiceImpl"
@@ -741,6 +791,10 @@
 				<entry key="SHA256Function" value-ref="SHA256Function"/>
 				<entry key="SHA384Function" value-ref="SHA384Function"/>
 				<entry key="SHA512Function" value-ref="SHA512Function"/>
+				<entry key="NumberCorruptor" value-ref="NumberCorruptor"/>
+				<entry key="StringCorruptor" value-ref="StringCorruptor"/>
+				<entry key="NicknameCorruptor" value-ref="NicknameCorruptor"/>
+				<entry key="LastnameCorruptor" value-ref="LastnameCorruptor"/>
 			</map>
 		</property>
 	</bean>

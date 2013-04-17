@@ -28,15 +28,52 @@ public class NumberCorruptor extends AbstractStringTransformationFunction
 	static final String SUBSTITUTION_PROBABILITY_TAG = "substitution_probability";
 	static final String TRANSPOSITION_PROBABILITY_TAG = "transposition_probability";
 
+	private double defaultInsertionProbability = 0.0;
+	private double defaultDeletionProbability = 0.0;
+	private double defaultSubstitutionProbability = 0.0;
+	private double defaultTranspositionProbability = 0.0;
+
 	public NumberCorruptor() {
 		super();
 	}
-	
+
+	public double getDefaultInsertionProbability() {
+		return defaultInsertionProbability;
+	}
+
+	public void setDefaultInsertionProbability(String probability) {
+		this.defaultInsertionProbability = Double.parseDouble(probability);
+	}
+
+	public double getDefaultDeletionProbability() {
+		return defaultDeletionProbability;
+	}
+
+	public void setDeletionProbability(String probability) {
+		this.defaultDeletionProbability = Double.parseDouble(probability);
+	}
+
+	public double getDefaultSubstitutionProbability() {
+		return defaultSubstitutionProbability;
+	}
+
+	public void setSubstitutionProbability(String probability) {
+		this.defaultSubstitutionProbability = Double.parseDouble(probability);
+	}
+
+	public double getDefaultTranspositionProbability() {
+		return defaultTranspositionProbability;
+	}
+
+	public void setTranspositionProbability(String probability) {
+		this.defaultTranspositionProbability = Double.parseDouble(probability);
+	}
+
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
-		double insertionProbability = 0.0;		// default
-		double deletionProbability = 0.0;		// default
-		double substitutionProbability = 0.0;	// default
-		double transpositionProbability = 0.0;	// default
+		double insertionProbability = defaultInsertionProbability;
+		double deletionProbability = defaultDeletionProbability;
+		double substitutionProbability = defaultSubstitutionProbability;
+		double transpositionProbability = defaultTranspositionProbability;
 
 		String corrupted = field;
 		Random rnd = new Random();
@@ -44,14 +81,17 @@ public class NumberCorruptor extends AbstractStringTransformationFunction
 			insertionProbability = (Double)parameters.get(INSERTION_PROBABILITY_TAG);
 		if (rnd.nextDouble() < insertionProbability)
 			corrupted = TypographicError.insertNumber(field, rnd);
+
 		if (parameters.containsKey(DELETION_PROBABILITY_TAG))
 			deletionProbability = (Double)parameters.get(DELETION_PROBABILITY_TAG);
 		if (rnd.nextDouble() < deletionProbability)
 			corrupted = TypographicError.delete(corrupted, rnd);
+
 		if (parameters.containsKey(SUBSTITUTION_PROBABILITY_TAG))
 			substitutionProbability = (Double)parameters.get(SUBSTITUTION_PROBABILITY_TAG);
 		if (rnd.nextDouble() < substitutionProbability)
 			corrupted = TypographicError.substituteNumber(corrupted, rnd);
+
 		if (parameters.containsKey(TRANSPOSITION_PROBABILITY_TAG))
 			transpositionProbability = (Double)parameters.get(TRANSPOSITION_PROBABILITY_TAG);
 		if (rnd.nextDouble() < transpositionProbability)
