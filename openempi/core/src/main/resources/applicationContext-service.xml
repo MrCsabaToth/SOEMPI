@@ -718,54 +718,62 @@
 		<property name="outputType" value="Blob"/>
 	</bean>
 	<bean id="NumberCorruptor"
-		class="org.openhie.openempi.transformation.function.corruption.NumberCorruptor">
+		class="org.openhie.openempi.transformation.function.corruption.NumberCorruptor"
+		init-method="init">
 		<property name="name" value="NumberCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultInsertionProbability" value="0.01"/>
-		<property name="defaultDeletionProbability" value="0.03"/>
-		<property name="defaultSubstitutionProbability" value="0.07"/>
-		<property name="defaultTranspositionProbability" value="0.01"/>
+		<property name="defaultInsertionProbability">
+			<value type="java.lang.Double">0.01</value>
+		</property>
+		<property name="defaultDeletionProbability">
+			<value type="java.lang.Double">0.03</value>
+		</property>
+		<property name="defaultSubstitutionProbability">
+			<value type="java.lang.Double">0.07</value>
+		</property>
+		<property name="defaultTranspositionProbability">
+			<value type="java.lang.Double">0.01</value>
+		</property>
 	</bean>
 	<bean id="StringCorruptor"
-		class="org.openhie.openempi.transformation.function.corruption.StringCorruptor">
+		class="org.openhie.openempi.transformation.function.corruption.StringCorruptor"
+		parent="NumberCorruptor" init-method="init">
 		<property name="name" value="StringrCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultPhoneticErrorProbability" value="0.006"/>
-		<property name="defaultOcrErrorProbability" value="0.002"/>
-		<property name="defaultInsertionProbability" value="0.01"/>
-		<property name="defaultDeletionProbability" value="0.03"/>
-		<property name="defaultSubstitutionProbability" value="0.07"/>
-		<property name="defaultTranspositionProbability" value="0.01"/>
+		<property name="defaultPhoneticErrorProbability">
+			<value type="java.lang.Double">0.006</value>
+		</property>
+		<property name="defaultOcrErrorProbability">
+			<value type="java.lang.Double">0.002</value>
+		</property>
 	</bean>
 	<bean id="NicknameCorruptor"
-		class="org.openhie.openempi.transformation.function.corruption.NicknameCorruptor">
+		class="org.openhie.openempi.transformation.function.corruption.NicknameCorruptor"
+		parent="StringCorruptor" init-method="init">
 		<property name="name" value="NicknameCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultReplaceProbability" value="0.03"/>
-		<property name="defaultPhoneticErrorProbability" value="0.006"/>
-		<property name="defaultOcrErrorProbability" value="0.002"/>
-		<property name="defaultInsertionProbability" value="0.01"/>
-		<property name="defaultDeletionProbability" value="0.03"/>
-		<property name="defaultSubstitutionProbability" value="0.07"/>
-		<property name="defaultTranspositionProbability" value="0.01"/>
+		<property name="defaultReplaceProbability">
+			<value type="java.lang.Double">0.03</value>
+		</property>
 	</bean>
 	<bean id="LastnameCorruptor"
-		class="org.openhie.openempi.transformation.function.corruption.LastnameCorruptor">
+		class="org.openhie.openempi.transformation.function.corruption.LastnameCorruptor"
+		parent="StringCorruptor" init-method="init">
 		<property name="name" value="LastnameCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultHyphenateProbability" value="0.002"/>
-		<property name="defaultFemaleReplaceProbability" value="0.02"/>
-		<property name="defaultMaleReplaceProbability" value="0.002"/>
-		<property name="defaultPhoneticErrorProbability" value="0.006"/>
-		<property name="defaultOcrErrorProbability" value="0.002"/>
-		<property name="defaultInsertionProbability" value="0.01"/>
-		<property name="defaultDeletionProbability" value="0.03"/>
-		<property name="defaultSubstitutionProbability" value="0.07"/>
-		<property name="defaultTranspositionProbability" value="0.01"/>
+		<property name="defaultHyphenateProbability">
+			<value type="java.lang.Double">0.002</value>
+		</property>
+		<property name="defaultFemaleReplaceProbability">
+			<value type="java.lang.Double">0.02</value>
+		</property>
+		<property name="defaultMaleReplaceProbability">
+			<value type="java.lang.Double">0.002</value>
+		</property>
 	</bean>
 
 	<bean id="transformationService"

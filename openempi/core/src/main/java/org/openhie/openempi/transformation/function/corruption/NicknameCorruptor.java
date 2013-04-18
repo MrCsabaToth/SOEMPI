@@ -23,18 +23,18 @@ public class NicknameCorruptor extends StringCorruptor
 {
 	static final String REPLACE_PROBABILITY_TAG = "replace_probability";
 
-	private double defaultReplaceProbability = 0.0;
+	private Double defaultReplaceProbability = 0.0;
 
 	public NicknameCorruptor() {
 		super();
 	}
 
-	public double getDefaultReplaceProbability() {
+	public Double getDefaultReplaceProbability() {
 		return defaultReplaceProbability;
 	}
 
-	public void setDefaultReplaceProbability(String probability) {
-		this.defaultReplaceProbability = Double.parseDouble(probability);
+	public void setDefaultReplaceProbability(Double probability) {
+		this.defaultReplaceProbability = probability;
 	}
 
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {

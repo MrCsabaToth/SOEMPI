@@ -26,36 +26,36 @@ public class LastnameCorruptor extends StringCorruptor
 	static final String HYPHENATE_PROBABILITY_TAG = "hyphenate_probability";
 	static final String GENDER_TAG = "gender";
 
-	private double defaultFemaleReplaceProbability = 0.0;
-	private double defaultMaleReplaceProbability = 0.0;
-	private double defaultHyphenateProbability = 0.0;
+	private Double defaultFemaleReplaceProbability = 0.0;
+	private Double defaultMaleReplaceProbability = 0.0;
+	private Double defaultHyphenateProbability = 0.0;
 
 	public LastnameCorruptor() {
 		super();
 	}
 
-	public double getDefaultFemaleReplaceProbability() {
+	public Double getDefaultFemaleReplaceProbability() {
 		return defaultFemaleReplaceProbability;
 	}
 
-	public void setDefaultFemaleReplaceProbability(String probability) {
-		this.defaultFemaleReplaceProbability = Double.parseDouble(probability);
+	public void setDefaultFemaleReplaceProbability(Double probability) {
+		this.defaultFemaleReplaceProbability = probability;
 	}
 
-	public double getDefaultMaleReplaceProbability() {
+	public Double getDefaultMaleReplaceProbability() {
 		return defaultMaleReplaceProbability;
 	}
 
-	public void setDefaultMaleReplaceProbability(String probability) {
-		this.defaultMaleReplaceProbability = Double.parseDouble(probability);
+	public void setDefaultMaleReplaceProbability(Double probability) {
+		this.defaultMaleReplaceProbability = probability;
 	}
 
-	public double getDefaultHyphenateProbability() {
+	public Double getDefaultHyphenateProbability() {
 		return defaultHyphenateProbability;
 	}
 
-	public void setDefaultHyphenateProbability(String probability) {
-		this.defaultHyphenateProbability = Double.parseDouble(probability);
+	public void setDefaultHyphenateProbability(Double probability) {
+		this.defaultHyphenateProbability = probability;
 	}
 
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {

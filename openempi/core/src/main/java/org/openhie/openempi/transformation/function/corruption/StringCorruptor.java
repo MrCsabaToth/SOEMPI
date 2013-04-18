@@ -24,27 +24,27 @@ public class StringCorruptor extends NumberCorruptor
 	static final String PHONETIC_ERROR_PROBABILITY_TAG = "phonetic_error_probability";
 	static final String OCR_ERROR_PROBABILITY_TAG = "ocr_error_probability";
 
-	private double defaultPhoneticErrorProbability = 0.0;
-	private double defaultOcrErrorProbability = 0.0;
+	private Double defaultPhoneticErrorProbability = 0.0;
+	private Double defaultOcrErrorProbability = 0.0;
 
 	public StringCorruptor() {
 		super();
 	}
 
-	public double getDefaultPhoneticErrorProbability() {
+	public Double getDefaultPhoneticErrorProbability() {
 		return defaultPhoneticErrorProbability;
 	}
 
-	public void setDefaultPhoneticErrorProbability(String probability) {
-		this.defaultPhoneticErrorProbability = Double.parseDouble(probability);
+	public void setDefaultPhoneticErrorProbability(Double probability) {
+		this.defaultPhoneticErrorProbability = probability;
 	}
 
-	public double getDefaultOcrErrorProbability() {
+	public Double getDefaultOcrErrorProbability() {
 		return defaultOcrErrorProbability;
 	}
 
-	public void setOcrErrorProbability(String probability) {
-		this.defaultOcrErrorProbability = Double.parseDouble(probability);
+	public void setOcrErrorProbability(Double probability) {
+		this.defaultOcrErrorProbability = probability;
 	}
 
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {

@@ -28,45 +28,45 @@ public class NumberCorruptor extends AbstractStringTransformationFunction
 	static final String SUBSTITUTION_PROBABILITY_TAG = "substitution_probability";
 	static final String TRANSPOSITION_PROBABILITY_TAG = "transposition_probability";
 
-	private double defaultInsertionProbability = 0.0;
-	private double defaultDeletionProbability = 0.0;
-	private double defaultSubstitutionProbability = 0.0;
-	private double defaultTranspositionProbability = 0.0;
+	private Double defaultInsertionProbability = 0.0;
+	private Double defaultDeletionProbability = 0.0;
+	private Double defaultSubstitutionProbability = 0.0;
+	private Double defaultTranspositionProbability = 0.0;
 
 	public NumberCorruptor() {
 		super();
 	}
 
-	public double getDefaultInsertionProbability() {
+	public Double getDefaultInsertionProbability() {
 		return defaultInsertionProbability;
 	}
 
-	public void setDefaultInsertionProbability(String probability) {
-		this.defaultInsertionProbability = Double.parseDouble(probability);
+	public void setDefaultInsertionProbability(Double probability) {
+		this.defaultInsertionProbability = probability;
 	}
 
-	public double getDefaultDeletionProbability() {
+	public Double getDefaultDeletionProbability() {
 		return defaultDeletionProbability;
 	}
 
-	public void setDeletionProbability(String probability) {
-		this.defaultDeletionProbability = Double.parseDouble(probability);
+	public void setDeletionProbability(Double probability) {
+		this.defaultDeletionProbability = probability;
 	}
 
-	public double getDefaultSubstitutionProbability() {
+	public Double getDefaultSubstitutionProbability() {
 		return defaultSubstitutionProbability;
 	}
 
-	public void setSubstitutionProbability(String probability) {
-		this.defaultSubstitutionProbability = Double.parseDouble(probability);
+	public void setSubstitutionProbability(Double probability) {
+		this.defaultSubstitutionProbability = probability;
 	}
 
-	public double getDefaultTranspositionProbability() {
+	public Double getDefaultTranspositionProbability() {
 		return defaultTranspositionProbability;
 	}
 
-	public void setTranspositionProbability(String probability) {
-		this.defaultTranspositionProbability = Double.parseDouble(probability);
+	public void setTranspositionProbability(Double probability) {
+		this.defaultTranspositionProbability = probability;
 	}
 
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
