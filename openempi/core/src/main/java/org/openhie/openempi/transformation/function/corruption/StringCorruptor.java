@@ -24,26 +24,26 @@ public class StringCorruptor extends NumberCorruptor
 	static final String PHONETIC_ERROR_PROBABILITY_TAG = "phonetic_error_probability";
 	static final String OCR_ERROR_PROBABILITY_TAG = "ocr_error_probability";
 
-	private Double defaultPhoneticErrorProbability = 0.0;
-	private Double defaultOcrErrorProbability = 0.0;
+	private double defaultPhoneticErrorProbability = 0.0;
+	private double defaultOcrErrorProbability = 0.0;
 
 	public StringCorruptor() {
 		super();
 	}
 
-	public Double getDefaultPhoneticErrorProbability() {
+	public double getDefaultPhoneticErrorProbability() {
 		return defaultPhoneticErrorProbability;
 	}
 
-	public void setDefaultPhoneticErrorProbability(Double probability) {
+	public void setDefaultPhoneticErrorProbability(double probability) {
 		this.defaultPhoneticErrorProbability = probability;
 	}
 
-	public Double getDefaultOcrErrorProbability() {
+	public double getDefaultOcrErrorProbability() {
 		return defaultOcrErrorProbability;
 	}
 
-	public void setOcrErrorProbability(Double probability) {
+	public void setDefaultOcrErrorProbability(double probability) {
 		this.defaultOcrErrorProbability = probability;
 	}
 

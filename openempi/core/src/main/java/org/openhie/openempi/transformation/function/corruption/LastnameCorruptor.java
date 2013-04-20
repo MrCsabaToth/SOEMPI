@@ -26,35 +26,35 @@ public class LastnameCorruptor extends StringCorruptor
 	static final String HYPHENATE_PROBABILITY_TAG = "hyphenate_probability";
 	static final String GENDER_TAG = "gender";
 
-	private Double defaultFemaleReplaceProbability = 0.0;
-	private Double defaultMaleReplaceProbability = 0.0;
-	private Double defaultHyphenateProbability = 0.0;
+	private double defaultFemaleReplaceProbability = 0.0;
+	private double defaultMaleReplaceProbability = 0.0;
+	private double defaultHyphenateProbability = 0.0;
 
 	public LastnameCorruptor() {
 		super();
 	}
 
-	public Double getDefaultFemaleReplaceProbability() {
+	public double getDefaultFemaleReplaceProbability() {
 		return defaultFemaleReplaceProbability;
 	}
 
-	public void setDefaultFemaleReplaceProbability(Double probability) {
+	public void setDefaultFemaleReplaceProbability(double probability) {
 		this.defaultFemaleReplaceProbability = probability;
 	}
 
-	public Double getDefaultMaleReplaceProbability() {
+	public double getDefaultMaleReplaceProbability() {
 		return defaultMaleReplaceProbability;
 	}
 
-	public void setDefaultMaleReplaceProbability(Double probability) {
+	public void setDefaultMaleReplaceProbability(double probability) {
 		this.defaultMaleReplaceProbability = probability;
 	}
 
-	public Double getDefaultHyphenateProbability() {
+	public double getDefaultHyphenateProbability() {
 		return defaultHyphenateProbability;
 	}
 
-	public void setDefaultHyphenateProbability(Double probability) {
+	public void setDefaultHyphenateProbability(double probability) {
 		this.defaultHyphenateProbability = probability;
 	}
 

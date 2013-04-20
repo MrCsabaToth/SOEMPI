@@ -28,44 +28,44 @@ public class NumberCorruptor extends AbstractStringTransformationFunction
 	static final String SUBSTITUTION_PROBABILITY_TAG = "substitution_probability";
 	static final String TRANSPOSITION_PROBABILITY_TAG = "transposition_probability";
 
-	private Double defaultInsertionProbability = 0.0;
-	private Double defaultDeletionProbability = 0.0;
-	private Double defaultSubstitutionProbability = 0.0;
-	private Double defaultTranspositionProbability = 0.0;
+	private double defaultInsertionProbability = 0.0;
+	private double defaultDeletionProbability = 0.0;
+	private double defaultSubstitutionProbability = 0.0;
+	private double defaultTranspositionProbability = 0.0;
 
 	public NumberCorruptor() {
 		super();
 	}
 
-	public Double getDefaultInsertionProbability() {
+	public double getDefaultInsertionProbability() {
 		return defaultInsertionProbability;
 	}
 
-	public void setDefaultInsertionProbability(Double probability) {
+	public void setDefaultInsertionProbability(double probability) {
 		this.defaultInsertionProbability = probability;
 	}
 
-	public Double getDefaultDeletionProbability() {
+	public double getDefaultDeletionProbability() {
 		return defaultDeletionProbability;
 	}
 
-	public void setDeletionProbability(Double probability) {
+	public void setDefaultDeletionProbability(double probability) {
 		this.defaultDeletionProbability = probability;
 	}
 
-	public Double getDefaultSubstitutionProbability() {
+	public double getDefaultSubstitutionProbability() {
 		return defaultSubstitutionProbability;
 	}
 
-	public void setSubstitutionProbability(Double probability) {
+	public void setDefaultSubstitutionProbability(double probability) {
 		this.defaultSubstitutionProbability = probability;
 	}
 
-	public Double getDefaultTranspositionProbability() {
+	public double getDefaultTranspositionProbability() {
 		return defaultTranspositionProbability;
 	}
 
-	public void setTranspositionProbability(Double probability) {
+	public void setDefaultTranspositionProbability(double probability) {
 		this.defaultTranspositionProbability = probability;
 	}
 
