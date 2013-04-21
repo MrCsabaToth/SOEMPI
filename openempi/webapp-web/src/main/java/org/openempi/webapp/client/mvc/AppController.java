@@ -223,6 +223,26 @@ public class AppController extends Controller {
 				// Info.display("Information", "We've got the record linkage protocol names: " + result);
 			}
 		});
+		
+		referenceDataService.initializeLastnameCache(new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				Dispatcher.forwardEvent(AppEvents.Error, caught);
+			}
+
+			public void onSuccess(Void result) {
+				// Info.display("Information", "We've initialized last name cache");
+			}
+		});
+
+		referenceDataService.initializeNicknameCache(new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				Dispatcher.forwardEvent(AppEvents.Error, caught);
+			}
+
+			public void onSuccess(Void result) {
+				// Info.display("Information", "We've initialized nick name cache");
+			}
+		});
 
 	}
 

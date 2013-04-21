@@ -32,4 +32,8 @@ public interface ReferenceDataServiceAsync
 	public void getMatchingServiceNames(AsyncCallback<List<String>> callback);
 
 	public void getRecordLinkageProtocolNames(AsyncCallback<List<String>> callback);
+
+	public void initializeNicknameCache(AsyncCallback<Void> callback);
+
+	public void initializeLastnameCache(AsyncCallback<Void> callback);
 }

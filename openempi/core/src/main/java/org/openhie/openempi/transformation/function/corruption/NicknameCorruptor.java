@@ -21,7 +21,9 @@ import java.util.Random;
 
 public class NicknameCorruptor extends StringCorruptor
 {
-	static final String REPLACE_PROBABILITY_TAG = "replace_probability";
+	public static final String NICKNAME_CORRUPTOR_NAME = "NicknameCorruptor";
+
+	public static final String REPLACE_PROBABILITY_TAG = "replace_probability";
 
 	private double defaultReplaceProbability = 0.0;
 

@@ -17,7 +17,9 @@
  */
 package org.openempi.webapp.server;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -30,7 +32,10 @@ import org.openhie.openempi.matching.MatchingServiceSelector;
 import org.openhie.openempi.model.FieldType;
 import org.openhie.openempi.recordlinkage.RecordLinkageProtocolSelector;
 import org.openhie.openempi.stringcomparison.StringComparisonService;
+import org.openhie.openempi.transformation.TransformationFunctionType;
 import org.openhie.openempi.transformation.TransformationService;
+import org.openhie.openempi.transformation.function.corruption.LastnameCorruptor;
+import org.openhie.openempi.transformation.function.corruption.NicknameCorruptor;
 import org.springframework.context.ApplicationContext;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -127,6 +132,40 @@ public class ReferenceDataServiceImpl extends RemoteServiceServlet implements Re
 			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 			List<String> recordLinkageProtocolNames = recordLinkageProtocolSelector.getRecordLinkageProtocolNames();
 			return recordLinkageProtocolNames;
+		} catch (Throwable t) {
+			log.error("Failed to execute: " + t.getMessage(), t);
+			throw new RuntimeException(t);
+		}
+	}
+
+	public void initializeNicknameCache() {
+		log.debug("Received request to initialize 'Nickname -> name' and 'Name -> nickname' cache structures.");
+		try {
+			TransformationService transformationService = Context.getTransformationService();
+			TransformationFunctionType transformationFunctionType =
+					transformationService.getTransformationFunctionType(NicknameCorruptor.NICKNAME_CORRUPTOR_NAME);
+			// A dummy trafo will cause the cache to populate
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put(NicknameCorruptor.REPLACE_PROBABILITY_TAG, (double)1.0);
+			transformationFunctionType.getTransformationFunction().transform("dummy", params);
+		} catch (Throwable t) {
+			log.error("Failed to execute: " + t.getMessage(), t);
+			throw new RuntimeException(t);
+		}
+	}
+
+	public void initializeLastnameCache() {
+		log.debug("Received request to initialize Lastname cache structures.");
+		try {
+			TransformationService transformationService = Context.getTransformationService();
+			TransformationFunctionType transformationFunctionType =
+					transformationService.getTransformationFunctionType(LastnameCorruptor.LASTNAME_CORRUPTOR_NAME);
+			// A dummy trafo will cause the cache to populate
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put(LastnameCorruptor.HYPHENATE_PROBABILITY_TAG, (double)0.0);
+			params.put(LastnameCorruptor.MALE_REPLACE_PROBABILITY_TAG, (double)1.0);
+			params.put(LastnameCorruptor.GENDER_TAG, "M");
+			transformationFunctionType.getTransformationFunction().transform("dummy", params);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);

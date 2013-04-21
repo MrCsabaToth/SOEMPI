@@ -56,8 +56,8 @@ public class NicknameSwapout extends SwapoutBase
 					String tail = line.substring(firstComma + 1);
 					String head = line.substring(0, firstComma);
 					map.put(head, Arrays.asList(tail.split(",")));
-					lineIndex++;
 				}
+				lineIndex++;
 			}
 		}
 		catch (IOException e) {

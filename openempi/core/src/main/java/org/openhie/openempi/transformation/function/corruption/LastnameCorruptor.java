@@ -21,10 +21,12 @@ import java.util.Random;
 
 public class LastnameCorruptor extends StringCorruptor
 {
-	static final String FEMALE_REPLACE_PROBABILITY_TAG = "female_replace_probability";
-	static final String MALE_REPLACE_PROBABILITY_TAG = "male_replace_probability";
-	static final String HYPHENATE_PROBABILITY_TAG = "hyphenate_probability";
-	static final String GENDER_TAG = "gender";
+	public static final String LASTNAME_CORRUPTOR_NAME = "LastnameCorruptor";
+
+	public static final String FEMALE_REPLACE_PROBABILITY_TAG = "female_replace_probability";
+	public static final String MALE_REPLACE_PROBABILITY_TAG = "male_replace_probability";
+	public static final String HYPHENATE_PROBABILITY_TAG = "hyphenate_probability";
+	public static final String GENDER_TAG = "gender";
 
 	private double defaultFemaleReplaceProbability = 0.0;
 	private double defaultMaleReplaceProbability = 0.0;
@@ -77,7 +79,7 @@ public class LastnameCorruptor extends StringCorruptor
 
 			double replaceProbability = 0.0;
 			if (parameters.containsKey(GENDER_TAG)) {
-				String genderStr = (String)parameters.get(FEMALE_REPLACE_PROBABILITY_TAG);
+				String genderStr = (String)parameters.get(GENDER_TAG);
 				if (genderStr.toUpperCase().startsWith("M"))
 					replaceProbability = maleReplaceProbability;
 				else

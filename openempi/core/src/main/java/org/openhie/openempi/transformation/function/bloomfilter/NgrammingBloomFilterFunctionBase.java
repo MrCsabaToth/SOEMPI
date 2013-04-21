@@ -110,7 +110,7 @@ public abstract class NgrammingBloomFilterFunctionBase extends HMACFunction
 
 	@Override
 	public Object transform(Object field, Map<String, Object> parameters) {
-		return transformString(field, parameters);
+		return transformString(field, parameters != null ? parameters : new HashMap<String, Object>());
 	}
 
 	/**

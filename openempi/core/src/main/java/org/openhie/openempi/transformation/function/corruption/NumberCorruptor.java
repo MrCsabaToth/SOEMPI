@@ -23,10 +23,10 @@ import org.openhie.openempi.transformation.function.AbstractStringTransformation
 
 public class NumberCorruptor extends AbstractStringTransformationFunction
 {
-	static final String INSERTION_PROBABILITY_TAG = "insertion_probability";
-	static final String DELETION_PROBABILITY_TAG = "deletion_probability";
-	static final String SUBSTITUTION_PROBABILITY_TAG = "substitution_probability";
-	static final String TRANSPOSITION_PROBABILITY_TAG = "transposition_probability";
+	public static final String INSERTION_PROBABILITY_TAG = "insertion_probability";
+	public static final String DELETION_PROBABILITY_TAG = "deletion_probability";
+	public static final String SUBSTITUTION_PROBABILITY_TAG = "substitution_probability";
+	public static final String TRANSPOSITION_PROBABILITY_TAG = "transposition_probability";
 
 	private double defaultInsertionProbability = 0.0;
 	private double defaultDeletionProbability = 0.0;

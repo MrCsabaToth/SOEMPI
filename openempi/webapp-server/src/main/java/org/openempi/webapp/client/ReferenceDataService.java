@@ -32,4 +32,8 @@ public interface ReferenceDataService extends RemoteService
 	public List<String> getMatchingServiceNames();
 
 	public List<String> getRecordLinkageProtocolNames();
+
+	public void initializeNicknameCache();
+
+	public void initializeLastnameCache();
 }

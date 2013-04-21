@@ -17,6 +17,7 @@
  */
 package org.openhie.openempi.transformation.function;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -34,6 +35,6 @@ public abstract class AbstractByteArrayTransformationFunction extends AbstractTr
 	}
 	
 	public Object transform(Object field, Map<String, Object> parameters) {
-		return transformByteArray(field, parameters);
+		return transformByteArray(field, parameters != null ? parameters : new HashMap<String, Object>());
 	}
 }

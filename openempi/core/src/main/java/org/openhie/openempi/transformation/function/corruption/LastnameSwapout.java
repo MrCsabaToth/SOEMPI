@@ -59,13 +59,13 @@ public class LastnameSwapout extends SwapoutBase
 					total += weight;
 					LastNameListElement lnle = new LastNameListElement(head, total, 0.0);
 					LASTNAMES.add(lnle);
-					lineIndex++;
 				}
+				lineIndex++;
 			}
 			double lastTotal = 0.0;
 			for (LastNameListElement lnle : LASTNAMES) {
 				lnle.higherBound = lnle.lowerBound / total;
-				lnle.lowerBound = lastTotal / total;
+				lnle.lowerBound = lastTotal;
 				lastTotal = lnle.higherBound;
 			}
 			// Correcting last element for whatever reason

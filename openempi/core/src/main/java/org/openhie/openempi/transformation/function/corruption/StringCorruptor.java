@@ -21,8 +21,8 @@ import java.util.Random;
 
 public class StringCorruptor extends NumberCorruptor
 {
-	static final String PHONETIC_ERROR_PROBABILITY_TAG = "phonetic_error_probability";
-	static final String OCR_ERROR_PROBABILITY_TAG = "ocr_error_probability";
+	public static final String PHONETIC_ERROR_PROBABILITY_TAG = "phonetic_error_probability";
+	public static final String OCR_ERROR_PROBABILITY_TAG = "ocr_error_probability";
 
 	private double defaultPhoneticErrorProbability = 0.0;
 	private double defaultOcrErrorProbability = 0.0;
