@@ -87,7 +87,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 		return personManagerService.createDatasetTable(sessionKey, tableName, columnInformation, totalRecords, withIndexesAndConstraints);
 	}
 
-	public void addPerson(String tableName, Person person, boolean populateCustomFields, boolean existenceCheck) throws NamingException, ApplicationException
+	public void addPerson(String tableName, Person person, boolean applyFieldTransformations, boolean existenceCheck) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
 			log.warn("Session is not authenticated while trying to import person to remote host.");
@@ -96,10 +96,10 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 
 		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
 		PersonManagerService personManagerService = remotePersonServiceLocator.getPersonManagerService();
-		/*Person personResult =*/ personManagerService.addPerson(sessionKey, tableName, person, populateCustomFields, existenceCheck);
+		/*Person personResult =*/ personManagerService.addPerson(sessionKey, tableName, person, applyFieldTransformations, existenceCheck);
 	}
 
-	public void addPersons(String tableName, List<Person> persons, boolean populateCustomFields, boolean existenceCheck) throws NamingException, ApplicationException
+	public void addPersons(String tableName, List<Person> persons, boolean applyFieldTransformations, boolean existenceCheck) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
 			log.warn("Session is not authenticated while trying to import person to remote host.");
@@ -108,7 +108,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 
 		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
 		PersonManagerService personManagerService = remotePersonServiceLocator.getPersonManagerService();
-		/*Person personResult =*/ personManagerService.addPersons(sessionKey, tableName, persons, populateCustomFields, existenceCheck);
+		/*Person personResult =*/ personManagerService.addPersons(sessionKey, tableName, persons, applyFieldTransformations, existenceCheck);
 	}
 
 	public void addIndexesAndConstraintsToDatasetTable(String tableName) throws NamingException, ApplicationException

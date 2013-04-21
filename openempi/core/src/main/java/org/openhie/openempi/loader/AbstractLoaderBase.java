@@ -39,11 +39,11 @@ public abstract class AbstractLoaderBase extends BaseServiceImpl implements Data
 	protected PersonManagerService personManagerService;
 	protected List<ColumnInformation> columnInformation;
 	
-	public boolean loadPerson(String tableName, Person person, boolean populateCustomFields) {
+	public boolean loadPerson(String tableName, Person person, boolean applyFieldTransformations) {
 		log.debug("Attempting to load person entry " + person);
 		contributePersonToStatistics(person);
 		try {
-			personManagerService.addPerson(tableName, person, populateCustomFields, false);
+			personManagerService.addPerson(tableName, person, applyFieldTransformations, false);
 		} catch (Exception e) {
 			log.error("Failed while adding person entry to the system. Error: " + e, e);
 			if (e.getCause() instanceof org.hibernate.exception.SQLGrammarException) {
@@ -76,10 +76,10 @@ public abstract class AbstractLoaderBase extends BaseServiceImpl implements Data
 		}
 	}
 
-	public boolean loadPersons(String tableName, List<Person> persons, boolean populateCustomFields) {
+	public boolean loadPersons(String tableName, List<Person> persons, boolean applyFieldTransformations) {
 		log.debug("Attempting to load persons (" + persons.size() + ")");
 		try {
-			personManagerService.addPersons(tableName, persons, populateCustomFields, false);
+			personManagerService.addPersons(tableName, persons, applyFieldTransformations, false);
 		} catch (Exception e) {
 			log.error("Failed while adding person entry to the system. Error: " + e, e);
 			if (e.getCause() instanceof org.hibernate.exception.SQLGrammarException) {

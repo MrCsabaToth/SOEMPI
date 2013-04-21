@@ -281,7 +281,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		return GeneralUtil.doesConfigurationNeedKeyServer(loaderConfiguration);
 	}
 
-	private void importFileEntry(DatasetWeb dataset, boolean populateCustomFields, String tableName,
+	private void importFileEntry(DatasetWeb dataset, boolean applyFieldTransformations, String tableName,
 			String keyServerUserName, String keyServerPassword)
 	{
 		// KeyService is not needed if we only hash (SHA-1, MD5, etc) fields
@@ -295,7 +295,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 
 		DataLoaderServiceSelector dataLoaderServiceSelector = Context.getDataLoaderServiceSelector();
 		DataLoaderService dataLoaderService = dataLoaderServiceSelector.getDataLoaderServiceType(ConfigurableFileLoader.LOADER_ALIAS).getDataServiceService();
-		dataLoaderService.loadFile(dataset.getFileName(), tableName, loaderConfiguration, populateCustomFields);
+		dataLoaderService.loadFile(dataset.getFileName(), tableName, loaderConfiguration, applyFieldTransformations);
 		PersonManagerService personService = Context.getPersonManagerService();
 		org.openhie.openempi.model.Dataset datasetFound = personService.getDatasetByTableName(dataset.getTableName());
 		datasetFound.setImported("Y");

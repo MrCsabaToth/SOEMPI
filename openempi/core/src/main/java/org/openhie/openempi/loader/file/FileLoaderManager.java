@@ -31,9 +31,9 @@ public class FileLoaderManager extends BaseSpringApp
 	public FileLoaderManager() {
 	}
 	
-	private void loadFile(String loaderAlias, String filename, String tableName, LoaderConfig loaderConfiguration, boolean populateCustomFields) {
+	private void loadFile(String loaderAlias, String filename, String tableName, LoaderConfig loaderConfiguration, boolean applyFieldTransformations) {
 		DataLoaderService service = Context.getDataLoaderServiceSelector().getDataLoaderServiceType(loaderAlias).getDataServiceService();
-		service.loadFile(filename, tableName, loaderConfiguration, populateCustomFields);
+		service.loadFile(filename, tableName, loaderConfiguration, applyFieldTransformations);
 	}
 	
 	public static void main(String[] args) {

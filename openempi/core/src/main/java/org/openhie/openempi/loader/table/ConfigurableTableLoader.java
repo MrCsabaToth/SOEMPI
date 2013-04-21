@@ -38,9 +38,9 @@ public class ConfigurableTableLoader extends AbstractTableLoader
 	public static final String LOADER_ALIAS = "configurableTableLoader";
 	protected LoaderConfig loaderConfiguration;
 
-	public void loadFile(String fileName, String tableName, LoaderConfig loaderConfiguration, boolean populateCustomFields) {
+	public void loadFile(String fileName, String tableName, LoaderConfig loaderConfiguration, boolean applyFieldTransformations) {
 		this.loaderConfiguration = loaderConfiguration;
-		super.loadFile(fileName, tableName, loaderConfiguration, populateCustomFields);
+		super.loadFile(fileName, tableName, loaderConfiguration, applyFieldTransformations);
 	}
 
 	protected Person processLine(String line, int lineIndex) {
@@ -118,7 +118,7 @@ public class ConfigurableTableLoader extends AbstractTableLoader
 	private boolean processLoaderDataField(LoaderDataField loaderDataField, String value,
 			Person person, Map<String,List<LoaderFieldComposition>> fieldCompositions)
 	{
-		if (!isPopulatedField(value))
+		if (isFieldNullOrEmpty(value))
 			return true;
 		String fieldName = loaderDataField.getFieldName();
 		if (loaderDataField.getSubFields() != null) {
@@ -152,11 +152,8 @@ public class ConfigurableTableLoader extends AbstractTableLoader
 		return true;
 	}
 
-	private boolean isPopulatedField(String field) {
-		if (field != null && field.length() > 0) {
-			return true;
-		}
-		return false;
+	private boolean isFieldNullOrEmpty(String field) {
+		return (field == null || field.length() <= 0);
 	}
 	
 	private boolean processField(LoaderTargetField loaderTargetField, Object value,

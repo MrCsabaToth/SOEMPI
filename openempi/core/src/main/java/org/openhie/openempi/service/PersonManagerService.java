@@ -160,7 +160,7 @@ public interface PersonManagerService extends PersonServiceBase
 	 * @param person
 	 */
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public Person addPerson(String tableName, Person person, boolean populateCustomFields, boolean existenceCheck) throws ApplicationException;
+	public Person addPerson(String tableName, Person person, boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException;
 	
 	/**
 	 * Adds person records to the EMPI. The system will check each person if the same identifier is already known to the system. If the person
@@ -169,7 +169,7 @@ public interface PersonManagerService extends PersonServiceBase
 	 * @param persons
 	 */
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public void addPersons(String tableName, List<Person> persons, boolean populateCustomFields, boolean existenceCheck) throws ApplicationException;
+	public void addPersons(String tableName, List<Person> persons, boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException;
 
 	/**
 	 * Add indexes and constraints to a previously created dataset table.

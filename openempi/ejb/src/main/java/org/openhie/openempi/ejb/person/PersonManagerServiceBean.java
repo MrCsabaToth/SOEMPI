@@ -45,20 +45,20 @@ public class PersonManagerServiceBean extends BaseSpringInjectableBean implement
 		return personService.createDatasetTable(tableName, columnInformation, totalRecords, true, withIndexesAndConstraints);
 	}
 
-	public Person addPerson(String sessionKey, String tableName, Person person, boolean populateCustomFields, boolean existenceCheck) throws ApplicationException {
+	public Person addPerson(String sessionKey, String tableName, Person person, boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException {
 		log.trace("In addPerson method.");
 		Context.authenticate(sessionKey);
 		org.openhie.openempi.service.PersonManagerService personService =
 				Context.getPersonManagerService();
-		return personService.addPerson(tableName, person, populateCustomFields, existenceCheck);
+		return personService.addPerson(tableName, person, applyFieldTransformations, existenceCheck);
 	}
 
-	public void addPersons(String sessionKey, String tableName, List<Person> persons, boolean populateCustomFields, boolean existenceCheck) throws ApplicationException {
+	public void addPersons(String sessionKey, String tableName, List<Person> persons, boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException {
 		log.trace("In addPersons method.");
 		Context.authenticate(sessionKey);
 		org.openhie.openempi.service.PersonManagerService personService =
 				Context.getPersonManagerService();
-		personService.addPersons(tableName, persons, populateCustomFields, existenceCheck);
+		personService.addPersons(tableName, persons, applyFieldTransformations, existenceCheck);
 	}
 
 	public void addIndexesAndConstraints(String sessionKey, String tableName) throws ApplicationException

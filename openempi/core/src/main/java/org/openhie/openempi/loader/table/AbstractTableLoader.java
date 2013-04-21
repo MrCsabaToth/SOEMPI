@@ -46,7 +46,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 	}
 
 	public void loadFile(String filename, String tableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields)
+			boolean applyFieldTransformations)
 	{
 		File file = new File(filename);
 		log.debug("Loading file " + file.getAbsolutePath());
@@ -54,25 +54,26 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 			log.error("Input file is not available.");
 			throw new RuntimeException("Input file " + filename + " is not readable.");
 		}
-		parseFile(file, tableName, loaderConfiguration, populateCustomFields);
+		parseFile(file, tableName, loaderConfiguration, applyFieldTransformations);
 		// This is a table loader, cannot parse a file
 	}
 
 	public void loadTable(String hostAddress, String dbUserName, String dbPassword, String dbName,
 			String sourceTableName, String targetTableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields)
+			boolean applyFieldTransformations)
 	{
 		loaderConfiguration.checkFieldTypesCompatibleWithTransformations();
 		// Open up connection, shovel data
 	}
 
 	public void parseFile(File file, String tableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields) {
+			boolean applyFieldTransformations) {
 		List<ColumnInformation> columnInformationConverted = convertLoaderConfigurationToColumnInformation(loaderConfiguration);
 		Dataset dataset = personManagerService.createDatasetTable(tableName, columnInformationConverted, 0, false, false);
 		dataset = personManagerService.getDatasetByTableName(tableName);
 		columnInformation = dataset.getColumnInformation();
-		BufferedReader reader = null;
+		// TODO
+/*		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException e) {
@@ -98,7 +99,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 					persons.add(person);
 					contributePersonToStatistics(person);
 					if (persons.size() >= pageSize) {
-						loadPersons(tableName, persons, populateCustomFields);
+						loadPersons(tableName, persons, applyFieldTransformations);
 						persons.clear();
 					}
 				}
@@ -106,7 +107,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 			// If the number of records is not divisible by the page size, there will be some
 			// remaining list of persons
 			if (persons.size() > 0)
-				loadPersons(tableName, persons, populateCustomFields);
+				loadPersons(tableName, persons, applyFieldTransformations);
 		} catch (IOException e) {
 			log.error("Failed while loading the input file. Error: " + e);
 			throw new RuntimeException("Failed while loading the input file.");
@@ -117,7 +118,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 				averageLen = ci.getAverageFieldLength() / (loadedLines - ci.getNumberOfMissing());
 			ci.setAverageFieldLength(averageLen);
 		}
-		dataset.setTotalRecords(loadedLines);
+		dataset.setTotalRecords(loadedLines);*/
 		personManagerService.updateDataset(dataset);
 		personManagerService.addIndexesAndConstraintsToDatasetTable(tableName);
 	}

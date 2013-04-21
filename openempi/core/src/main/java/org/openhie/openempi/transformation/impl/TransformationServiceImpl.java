@@ -50,6 +50,16 @@ public class TransformationServiceImpl extends BaseServiceImpl implements Transf
 
 	public Object transform(FunctionField transformationFunction, Object field, Map<String, Object> parameters) {
 		TransformationFunction transformationFunc = getTransformationFunction(transformationFunction.getFunctionName());
+		Map<String, Object> parameters2 = transformationFunction.getFunctionParameters();
+		if (parameters2 != null) {
+			// Merge parameters. The ones which were supplied directly to the function call (parameters)
+			// have precedence over the ones which come from the loader config (parameters2)
+			for (Map.Entry<String, Object> entry : parameters2.entrySet()) {
+			    String key = entry.getKey();
+			    if (!parameters.containsKey(key))
+			    	parameters.put(key, entry.getValue());
+			}
+		}
 		return transformationFunc.transform(field, parameters);
 	}
 

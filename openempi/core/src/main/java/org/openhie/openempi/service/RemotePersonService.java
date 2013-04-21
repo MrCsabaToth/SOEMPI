@@ -41,11 +41,11 @@ public interface RemotePersonService
 	public Dataset createDatasetTable(String tableName, List<ColumnInformation> columnInformation,
 			long totalRecords, boolean withIndexesAndConstraints) throws NamingException, ApplicationException;
 
-	public void addPerson(String tableName, Person person, boolean populateCustomFields,
+	public void addPerson(String tableName, Person person, boolean applyFieldTransformations,
 			boolean existenceCheck) throws NamingException, ApplicationException;
 
 	public void addPersons(String tableName, List<Person> person,
-			boolean populateCustomFields, boolean existenceCheck) throws NamingException, ApplicationException;
+			boolean applyFieldTransformations, boolean existenceCheck) throws NamingException, ApplicationException;
 
 	public List<Person> getPersonsPaged(String tableName, long firstResult,
 			int maxResults) throws NamingException, ApplicationException;

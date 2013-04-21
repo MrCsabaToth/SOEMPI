@@ -36,7 +36,7 @@ import org.openhie.openempi.model.Person;
 public abstract class AbstractFileLoader extends AbstractLoaderBase implements DataLoaderService
 {
 	public void loadFile(String filename, String tableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields)
+			boolean applyFieldTransformations)
 	{
 		loaderConfiguration.checkFieldTypesCompatibleWithTransformations();
 		
@@ -77,7 +77,7 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 					persons.add(person);
 					contributePersonToStatistics(person);
 					if (persons.size() >= pageSize) {
-						loadPersons(tableName, persons, populateCustomFields);
+						loadPersons(tableName, persons, applyFieldTransformations);
 						persons.clear();
 					}
 				}
@@ -85,7 +85,7 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 			// If the number of records is not divisible by the page size, there will be some
 			// remaining list of persons
 			if (persons.size() > 0)
-				loadPersons(tableName, persons, populateCustomFields);
+				loadPersons(tableName, persons, applyFieldTransformations);
 		}
 		catch (IOException e) {
 			log.error("Failed while loading the input file. Error: " + e);
@@ -112,9 +112,9 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 
 	public void loadTable(String hostAddress, String dbName, String dbUserName, String dbPassword,
 			String sourceTableName, String targetTableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields)
+			boolean applyFieldTransformations)
 	{
-		// This is a file loader, cannot load a DB table
+		throw new UnsupportedOperationException("This is a file loader, cannot load a DB table");
 	}
 
 	protected abstract Person processLine(String line, int lineIndex);

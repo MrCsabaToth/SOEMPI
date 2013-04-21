@@ -25,14 +25,14 @@ import org.openhie.openempi.model.Person;
 public interface DataLoaderService
 {
 	public void loadFile(String filename, String tableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields);
+			boolean applyFieldTransformations);
 
 	public void loadTable(String hostAddress, String dbName, String dbUserName, String dbPassword,
 			String sourceTableName, String targetTableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields);
+			boolean applyFieldTransformations);
 
-	public boolean loadPerson(String tableName, Person person, boolean populateCustomFields);
+	public boolean loadPerson(String tableName, Person person, boolean applyFieldTransformations);
 
-	public boolean loadPersons(String tableName, List<Person> persons, boolean populateCustomFields);
+	public boolean loadPersons(String tableName, List<Person> persons, boolean applyFieldTransformations);
 
 }

@@ -31,6 +31,8 @@ import org.openhie.openempi.loader.configuration.LoaderConfig;
 import org.openhie.openempi.loader.configuration.LoaderDataField;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.Dataset;
+import org.openhie.openempi.model.FieldMeaning.FieldMeaningEnum;
+import org.openhie.openempi.model.FieldType.FieldTypeEnum;
 import org.openhie.openempi.model.FieldType;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.PersonLink;
@@ -41,6 +43,7 @@ import org.openhie.openempi.service.KeyServerService;
 import org.openhie.openempi.service.PersonManagerService;
 import org.openhie.openempi.service.ValidationService;
 import org.openhie.openempi.transformation.TransformationService;
+import org.openhie.openempi.transformation.function.corruption.LastnameCorruptor;
 import org.openhie.openempi.util.BitArray;
 import org.openhie.openempi.util.GeneralUtil;
 import org.openhie.openempi.util.ValidationUtil;
@@ -174,7 +177,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		personLinkDao.addIndexesAndConstraints(tableName, leftDatasetName, rightDatasetName);
 	}
 
-	private void addPersonInternal(String tableName, Person person, boolean populateCustomFields,
+	private void addPersonInternal(String tableName, Person person, boolean applyFieldTransformations,
 			boolean existenceCheck, ValidationService validationService, User currentUser,
 			java.util.Date now) throws ApplicationException {
 		validationService.validate(person);
@@ -189,8 +192,8 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		
 		// Before we save the entry we need to generate any custom
 		// fields that have been requested through configuration
-		if (populateCustomFields)
-			populateCustomFields(person);
+		if (applyFieldTransformations)
+			applyFieldTransformations(person);
 
 		person.setDateCreated(now);
 		person.setUserCreatedBy(currentUser);
@@ -204,13 +207,13 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 	 * 3. The matching algorithm is invoked to identify matches and association links are established between the existing
 	 * patient and other aliases of the patient that were identified based on the algorithm.
 	 */
-	public Person addPerson(String tableName, Person person, boolean populateCustomFields, boolean existenceCheck) throws ApplicationException {
+	public Person addPerson(String tableName, Person person, boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException {
 		ValidationService validationService = Context.getValidationService();
 		User currentUser = getCurrentUser();
 		log.debug("Current user is " + currentUser);
 		java.util.Date now = new java.util.Date();
 
-		addPersonInternal(tableName, person, populateCustomFields, existenceCheck, validationService, currentUser, now);
+		addPersonInternal(tableName, person, applyFieldTransformations, existenceCheck, validationService, currentUser, now);
 
 		personDao.addPerson(tableName, person);
 
@@ -227,13 +230,13 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 	 * 3. The matching algorithm is invoked to identify matches and association links are established between the existing
 	 * patient and other aliases of the patient that were identified based on the algorithm.
 	 */
-	public void addPersons(String tableName, List<Person> persons, boolean populateCustomFields, boolean existenceCheck) throws ApplicationException {
+	public void addPersons(String tableName, List<Person> persons, boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException {
 		ValidationService validationService = Context.getValidationService();
 		User currentUser = getCurrentUser();
 		log.debug("Current user is " + currentUser);
 		java.util.Date now = new java.util.Date();
 		for (Person person : persons) {
-			addPersonInternal(tableName, person, populateCustomFields, existenceCheck, validationService, currentUser, now);
+			addPersonInternal(tableName, person, applyFieldTransformations, existenceCheck, validationService, currentUser, now);
 		}
 
 		personDao.addPersons(tableName, persons);
@@ -282,7 +285,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 
 		// Before we save the entry we need to generate any custom
 		// fields that have been requested through configuration
-		populateCustomFields(person);
+		applyFieldTransformations(person);
 		
 		updatePerson(tableName, person, personFound);
 		
@@ -325,7 +328,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		Context.getMatchingService().initializeRepository();
 	}
 	
-	private void populateCustomFields(Person person) {
+	private void applyFieldTransformations(Person person) {
 		TransformationService transformationService = Context.getTransformationService();
 //		List<LoaderDataField> loaderFields = Context.getFileLoaderConfigurationService().getConfiguration().getDataFields();
 		LoaderConfig currentLoaderConfiguration =
@@ -359,7 +362,22 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 								parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, signingKey);
 								transformedValue = transformationService.transform(fieldTransformation, value, parameters);
 							} else {
-								transformedValue = transformationService.transform(fieldTransformation, value);
+								// Passing gender parameter for LastnameCorruptor
+								// There are different swapout probabilities for male and female
+								Map<String, Object> parameters = null;
+								if (fieldTransformation.getFunctionName().equals(LastnameCorruptor.LASTNAME_CORRUPTOR_NAME)) {
+									for (LoaderDataField ldf : loaderFields) {
+										if (ldf.getFieldMeaning().getFieldMeaningEnum() == FieldMeaningEnum.Gender) {
+											parameters = new HashMap<String, Object>();
+											Object genderAttribObj = person.getAttribute(ldf.getFieldName());
+											if (genderAttribObj != null) {
+												String genderStr = genderAttribObj.toString();
+												parameters.put(LastnameCorruptor.GENDER_TAG, genderStr);
+											}
+										}
+									}
+								}
+								transformedValue = transformationService.transform(fieldTransformation, value, parameters);
 							}
 							if (transformedValue instanceof BitArray) {
 								byte[] byteArrayRep = ((BitArray)transformedValue).getByteArrayRep();

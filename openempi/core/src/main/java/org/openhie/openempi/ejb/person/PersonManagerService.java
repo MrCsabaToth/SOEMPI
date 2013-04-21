@@ -34,10 +34,10 @@ public interface PersonManagerService
 			boolean withIndexesAndConstraints) throws ApplicationException;
 
 	public Person addPerson(String sessionKey, String tableName, Person person,
-			boolean populateCustomFields, boolean existenceCheck) throws ApplicationException;
+			boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException;
 
 	public void addPersons(String sessionKey, String tableName, List<Person> persons,
-			boolean populateCustomFields, boolean existenceCheck) throws ApplicationException;
+			boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException;
 
 	public void addIndexesAndConstraints(String sessionKey, String tableName) throws ApplicationException;
 

@@ -78,27 +78,27 @@ public class DataLoaderServiceSelectorImpl extends BaseServiceImpl implements Da
 	}
 
 	public void loadFile(String dataLoaderServiceTypeName, String filename, String tableName,
-			LoaderConfig loaderConfiguration, boolean populateCustomFields)
+			LoaderConfig loaderConfiguration, boolean applyFieldTransformations)
 	{
 		DataLoaderService dataLoaderService = getDataLoaderService(dataLoaderServiceTypeName);
-		dataLoaderService.loadFile(filename, tableName, loaderConfiguration, populateCustomFields);
+		dataLoaderService.loadFile(filename, tableName, loaderConfiguration, applyFieldTransformations);
 	}
 
 	public void loadTable(String dataLoaderServiceTypeName, String hostAddress,
 			String dbUserName, String dbPassword, String dbName,
 			String sourceTableName, String targetTableName, LoaderConfig loaderConfiguration,
-			boolean populateCustomFields)
+			boolean applyFieldTransformations)
 	{
 		DataLoaderService dataLoaderService = getDataLoaderService(dataLoaderServiceTypeName);
 		dataLoaderService.loadTable(hostAddress, dbUserName, dbPassword, dbName, sourceTableName,
-				targetTableName, loaderConfiguration, populateCustomFields);
+				targetTableName, loaderConfiguration, applyFieldTransformations);
 	}
 
 	public void loadPerson(String dataLoaderServiceTypeName, String tableName, Person person,
-			boolean populateCustomFields)
+			boolean applyFieldTransformations)
 	{
 		DataLoaderService dataLoaderService = getDataLoaderService(dataLoaderServiceTypeName);
-		dataLoaderService.loadPerson(tableName, person, populateCustomFields);
+		dataLoaderService.loadPerson(tableName, person, applyFieldTransformations);
 	}
 
 }

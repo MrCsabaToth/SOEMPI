@@ -31,12 +31,12 @@ public interface DataLoaderServiceSelector
 	public DataLoaderServiceType getDataLoaderServiceType(String name);
 	
 	public void loadFile(String dataLoaderServiceTypeName, String filename, String tableName,
-			LoaderConfig loaderConfiguration, boolean populateCustomFields);
+			LoaderConfig loaderConfiguration, boolean applyFieldTransformations);
 
 	public void loadTable(String dataLoaderServiceTypeName, String hostAddress,
 			String dbUserName, String dbPassword, String dbName, String sourceTableName,
-			String targetTableName, LoaderConfig loaderConfiguration, boolean populateCustomFields);
+			String targetTableName, LoaderConfig loaderConfiguration, boolean applyFieldTransformations);
 
 	public void loadPerson(String dataLoaderServiceTypeName, String tableName, Person person,
-			boolean populateCustomFields);
+			boolean applyFieldTransformations);
 }
