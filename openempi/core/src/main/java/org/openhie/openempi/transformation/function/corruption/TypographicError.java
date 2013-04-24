@@ -28,7 +28,9 @@ public class TypographicError
 		return sb.toString();
 	}
 
-	private static char getCharacterFromRange(char minChar, char maxChar, Random rnd) {
+	public static char getCharacterFromRange(char minChar, char maxChar, Random rnd) {
+		if (minChar == maxChar)
+			return minChar;
 		return (char)(minChar + (char)rnd.nextInt(maxChar - minChar));
 	}
 	
@@ -48,6 +50,8 @@ public class TypographicError
 	}
 
 	public static String delete(String input, Random rnd) {
+		if (input.length() == 0)
+			return "";
 		StringBuilder sb = new StringBuilder(input);
 		int deletionPoint = rnd.nextInt(input.length());
 		sb.deleteCharAt(deletionPoint);
@@ -55,6 +59,8 @@ public class TypographicError
 	}
 
 	public static String substitute(String input, char minChar, char maxChar, Random rnd) {
+		if (input.length() == 0)
+			return "";
 		StringBuilder sb = new StringBuilder(input);
 		int substPoint = rnd.nextInt(input.length());
 		sb.setCharAt(substPoint, getCharacterFromRange(minChar, maxChar, rnd));
@@ -77,6 +83,8 @@ public class TypographicError
 	}
 
 	public static String transpose(String input, Random rnd) {	// Only neighbors
+		if (input.length() <= 1)
+			return input;
 		StringBuilder sb = new StringBuilder(input);
 		int transpPoint = rnd.nextInt(input.length() - 1);
 		char ch = sb.charAt(transpPoint);

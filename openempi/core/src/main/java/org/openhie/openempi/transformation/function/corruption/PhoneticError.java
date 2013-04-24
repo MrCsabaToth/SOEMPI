@@ -393,10 +393,9 @@ public class PhoneticError
 
 	public static String phoneticError(String input, Random rnd) {
 		StringBuilder sb = new StringBuilder(input);
-		int maxTries = 100;
 		Set<String> beforeKeys = CONST_PHONETIC_ERROR_MAP.keySet();
 		String[] befores = (String[])beforeKeys.toArray();
-		for(int i = 0; i < maxTries; i++) {
+		for(int i = 0; i < befores.length; i++) {
 			int beforeIndex = rnd.nextInt(befores.length);
 			String before = befores[beforeIndex];
 			PhoneticErrorDefinition ped = CONST_PHONETIC_ERROR_MAP.get(before);

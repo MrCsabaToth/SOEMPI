@@ -111,7 +111,7 @@ public class OCRError
 
 	public static String ocrError(String input, Random rnd) {
 		StringBuilder sb = new StringBuilder(input);
-		int maxTries = 20;
+		int maxTries = input.length();
 		for(int i = 0; i < maxTries; i++) {
 			int substPoint = rnd.nextInt(input.length());
 			String before = null;

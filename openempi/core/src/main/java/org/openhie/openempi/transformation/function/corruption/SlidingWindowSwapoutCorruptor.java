@@ -17,7 +17,9 @@
  */
 package org.openhie.openempi.transformation.function.corruption;
 
-import java.util.Random;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openhie.openempi.transformation.function.AbstractStringTransformationFunction;
 
@@ -28,6 +30,8 @@ public class SlidingWindowSwapoutCorruptor extends AbstractStringTransformationF
 
 	private double defaultSwapoutProbability = 0.0;
 	private int defaultSlidingWindowSize = 0;
+	
+	private List<String> swapoutList = new ArrayList<String>();
 
 	public SlidingWindowSwapoutCorruptor() {
 		super();
@@ -51,20 +55,17 @@ public class SlidingWindowSwapoutCorruptor extends AbstractStringTransformationF
 
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {
 		double swapoutProbability = defaultSwapoutProbability;
-		int slidingWindowSize = defaultSlidingWindowSize;
 
 		String corrupted = field;
-		Random rnd = new Random();
+		SecureRandom rnd = new SecureRandom();
 
 		if (parameters.containsKey(SWAPOUT_PROBABILITY_TAG))
 			swapoutProbability = (Double)parameters.get(SWAPOUT_PROBABILITY_TAG);
-		if (rnd.nextDouble() < swapoutProbability)
-			corrupted = TypographicError.delete(corrupted, rnd);
-
-		if (parameters.containsKey(SLIDING_WINDOW_SIZE_TAG))
-			slidingWindowSize = (Integer)parameters.get(SLIDING_WINDOW_SIZE_TAG);
-		if (rnd.nextDouble() < slidingWindowSize)
-			corrupted = TypographicError.insertNumber(field, rnd);
+		if (rnd.nextDouble() < swapoutProbability && swapoutList.size() > 0)
+			corrupted = swapoutList.get(rnd.nextInt(swapoutList.size()));
+		swapoutList.add(field);
+		if (swapoutList.size() > defaultSlidingWindowSize)
+			swapoutList.remove(0);
 
 		return corrupted;
 	}
