@@ -17,124 +17,113 @@
  */
 package org.openhie.openempi.transformation.function.corruption;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class OCRError
 {
-	private static final Map<String, String> CONST_OCR_ERROR_MAP =
-	    Collections.unmodifiableMap(new HashMap<String, String>() {{
-	    	put("5", "S");
-	    	put("5", "s");
-	    	put("s", "5");
-	    	put("S", "5");
-	    	put("2", "Z");
-	    	put("Z", "2");
-	    	put("2", "z");
-	    	put("z", "2");
-	    	put("1", "|");
-	    	put("6", "G");
-	    	put("G", "6");
-	    	put("g", "9");
-	    	put("9", "g");
-	    	put("q", "9");
-	    	put("9", "q");
-	    	put("q", "4");
-	    	put("4", "q");
-	    	put("B", "8");
-	    	put("A", "4");
-	    	put("0", "o");
-	    	put("o", "0");
-	    	put("0", "O");
-	    	put("O", "0");
-	    	put("m", "n");
-	    	put("u", "v");
-	    	put("v", "u");
-	    	put("U", "V");
-	    	put("V", "U");
-	    	put("Y", "V");
-	    	put("V", "Y");
-	    	put("y", "v");
-	    	put("v", "y");
-	    	put("D", "O");
-	    	put("Q", "O");
-	    	put("F", "P");
-	    	put("E", "F");
-	    	put("l", "J");
-	    	put("j", "i");
-	    	put("i", "j");
-	    	put("l", "1");
-	    	put("1", "l");
-	    	put("g", "q");
-	    	put("q", "g");
-	    	put("h", "b");
-	    	put("b", "h");
-	    	put("l", "I");
-	    	put("I", "l");
-	    	put("i", "'l");
-	    	put("13", "B");
-	    	put("12", "R");
-	    	put("17", "n");
-	    	put("iii", "m");
-	    	put("cl", "d");
-	    	put("w", "vv");
-	    	put("vv", "w");
-	    	put("ri", "n");
-	    	put("k", "lc");
-	    	put("lc", "k");
-	    	put("lo", "b");
-	    	put("b", "lo");
-	    	put("IJ", "U");
-	    	put("lJ", "U");
-	    	put("LI", "U");
-	    	put("I-I", "H");
-	    	put("H", "I-I");
-	    	put("l>", "b");
-	    	put("1>", "b");
-	    	put("l<", "k");
-	    	put("1<", "k");
-	    	put("m", "rn");
-	    	put("rn", "m");
-	    	put("l", "|");
-	    	put("i", ":");
-	    	put("'", "\"");
-	    	put("`", "\"");
-	    	put("`", "'");
-	    	put("'", "`");
-	    	put("'", "@");
-	    	put("`", "@");
-	    	put("|", "l");
-	    	put("8", "&");
+	private static final List<StringTuple> CONST_OCR_ERROR_MAP =
+	    Collections.unmodifiableList(new ArrayList<StringTuple>() {{
+	    	add(new StringTuple("5", "S"));
+	    	add(new StringTuple("5", "s"));
+	    	add(new StringTuple("s", "5"));
+	    	add(new StringTuple("S", "5"));
+	    	add(new StringTuple("2", "Z"));
+	    	add(new StringTuple("Z", "2"));
+	    	add(new StringTuple("2", "z"));
+	    	add(new StringTuple("z", "2"));
+	    	add(new StringTuple("1", "|"));
+	    	add(new StringTuple("6", "G"));
+	    	add(new StringTuple("G", "6"));
+	    	add(new StringTuple("g", "9"));
+	    	add(new StringTuple("9", "g"));
+	    	add(new StringTuple("q", "9"));
+	    	add(new StringTuple("9", "q"));
+	    	add(new StringTuple("q", "4"));
+	    	add(new StringTuple("4", "q"));
+	    	add(new StringTuple("B", "8"));
+	    	add(new StringTuple("A", "4"));
+	    	add(new StringTuple("0", "o"));
+	    	add(new StringTuple("o", "0"));
+	    	add(new StringTuple("0", "O"));
+	    	add(new StringTuple("O", "0"));
+	    	add(new StringTuple("m", "n"));
+	    	add(new StringTuple("u", "v"));
+	    	add(new StringTuple("v", "u"));
+	    	add(new StringTuple("U", "V"));
+	    	add(new StringTuple("V", "U"));
+	    	add(new StringTuple("Y", "V"));
+	    	add(new StringTuple("V", "Y"));
+	    	add(new StringTuple("y", "v"));
+	    	add(new StringTuple("v", "y"));
+	    	add(new StringTuple("D", "O"));
+	    	add(new StringTuple("Q", "O"));
+	    	add(new StringTuple("F", "P"));
+	    	add(new StringTuple("E", "F"));
+	    	add(new StringTuple("l", "J"));
+	    	add(new StringTuple("j", "i"));
+	    	add(new StringTuple("i", "j"));
+	    	add(new StringTuple("l", "1"));
+	    	add(new StringTuple("1", "l"));
+	    	add(new StringTuple("g", "q"));
+	    	add(new StringTuple("q", "g"));
+	    	add(new StringTuple("h", "b"));
+	    	add(new StringTuple("b", "h"));
+	    	add(new StringTuple("l", "I"));
+	    	add(new StringTuple("I", "l"));
+	    	add(new StringTuple("i", "'l"));
+	    	add(new StringTuple("13", "B"));
+	    	add(new StringTuple("12", "R"));
+	    	add(new StringTuple("17", "n"));
+	    	add(new StringTuple("iii", "m"));
+	    	add(new StringTuple("cl", "d"));
+	    	add(new StringTuple("w", "vv"));
+	    	add(new StringTuple("vv", "w"));
+	    	add(new StringTuple("ri", "n"));
+	    	add(new StringTuple("k", "lc"));
+	    	add(new StringTuple("lc", "k"));
+	    	add(new StringTuple("lo", "b"));
+	    	add(new StringTuple("b", "lo"));
+	    	add(new StringTuple("IJ", "U"));
+	    	add(new StringTuple("lJ", "U"));
+	    	add(new StringTuple("LI", "U"));
+	    	add(new StringTuple("I-I", "H"));
+	    	add(new StringTuple("H", "I-I"));
+	    	add(new StringTuple("l>", "b"));
+	    	add(new StringTuple("1>", "b"));
+	    	add(new StringTuple("l<", "k"));
+	    	add(new StringTuple("1<", "k"));
+	    	add(new StringTuple("m", "rn"));
+	    	add(new StringTuple("rn", "m"));
+	    	add(new StringTuple("l", "|"));
+	    	add(new StringTuple("i", ":"));
+	    	add(new StringTuple("'", "\""));
+	    	add(new StringTuple("`", "\""));
+	    	add(new StringTuple("`", "'"));
+	    	add(new StringTuple("'", "`"));
+	    	add(new StringTuple("'", "@"));
+	    	add(new StringTuple("`", "@"));
+	    	add(new StringTuple("|", "l"));
+	    	add(new StringTuple("8", "&"));
 	    }});
 
 	public static String ocrError(String input, Random rnd) {
 		StringBuilder sb = new StringBuilder(input);
-		int maxTries = input.length();
+		int maxTries = CONST_OCR_ERROR_MAP.size();
 		for(int i = 0; i < maxTries; i++) {
+			int ocrErrorIndex = rnd.nextInt(maxTries);
+			StringTuple tuple = CONST_OCR_ERROR_MAP.get(ocrErrorIndex);
 			int substPoint = rnd.nextInt(input.length());
-			String before = null;
-			String after = null;
-			int substPoint2 = substPoint + 1;
-			before = Character.toString(input.charAt(substPoint));
-			after = CONST_OCR_ERROR_MAP.get(before);
-			if (after == null) {
-				if (substPoint < input.length() - 1) {	// try to replace a 2 character combination
-					substPoint2++;
-					before = input.substring(substPoint, substPoint2);
-					after = CONST_OCR_ERROR_MAP.get(before);
-					if (after == null) {
-						if (substPoint < input.length() - 2) {	// try to replace a 3 character combination
-							substPoint2++;
-							before = input.substring(substPoint, substPoint2);
-							after = CONST_OCR_ERROR_MAP.get(before);
-						}
-					}
-				}
-			}
-			if (after != null) {
-				sb.replace(substPoint, substPoint2, after);
+			int index = input.indexOf(tuple.before, substPoint);
+			if (index == -1)
+				index = input.lastIndexOf(tuple.before, substPoint);
+			if (index != -1) {
+				int substPoint2 = substPoint + tuple.before.length();
+				sb.replace(substPoint, substPoint2, tuple.after);
 				break;
 			}
 		}

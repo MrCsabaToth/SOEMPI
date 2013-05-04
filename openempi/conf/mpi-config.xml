@@ -108,6 +108,66 @@
                     </dl:target-field>
                 </dl:data-field>
                 <dl:data-field>
+                    <dl:source-column-index>1</dl:source-column-index>
+                    <dl:source-field-name/>
+                    <dl:target-field>
+                        <dl:field-name>familynamecorrupted</dl:field-name>
+                        <dl:field-type>string</dl:field-type>
+                        <dl:field-type-modifier>32</dl:field-type-modifier>
+                        <dl:field-meaning>family-name</dl:field-meaning>
+                        <dl:field-transformation>
+                            <function-name>LastnameCorruptor</function-name>
+                            <parameters>
+                                <parameter>
+                                    <parameter-name>female_replace_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>male_replace_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>hyphenate_probability</parameter-name>
+                                    <parameter-value>0.5</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>phonetic_error_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>ocr_error_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>insertion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>deletion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>substitution_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>transposition_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                            </parameters>
+                        </dl:field-transformation>
+                    </dl:target-field>
+                </dl:data-field>
+                <dl:data-field>
                     <dl:source-column-index>2</dl:source-column-index>
                     <dl:source-field-name/>
                     <dl:target-field>
@@ -167,6 +227,56 @@
                     </dl:target-field>
                 </dl:data-field>
                 <dl:data-field>
+                    <dl:source-column-index>2</dl:source-column-index>
+                    <dl:source-field-name/>
+                    <dl:target-field>
+                        <dl:field-name>givennamecorrupted</dl:field-name>
+                        <dl:field-type>string</dl:field-type>
+                        <dl:field-type-modifier>128</dl:field-type-modifier>
+                        <dl:field-meaning>given-name</dl:field-meaning>
+                        <dl:field-transformation>
+                            <function-name>NicknameCorruptor</function-name>
+                            <parameters>
+                                <parameter>
+                                    <parameter-name>replace_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>phonetic_error_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>ocr_error_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>insertion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>deletion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>substitution_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>transposition_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                            </parameters>
+                        </dl:field-transformation>
+                    </dl:target-field>
+                </dl:data-field>
+                <dl:data-field>
                     <dl:source-column-index>3</dl:source-column-index>
                     <dl:source-field-name/>
                     <dl:target-field>
@@ -201,6 +311,56 @@
                     </dl:target-field>
                 </dl:data-field>
                 <dl:data-field>
+                    <dl:source-column-index>3</dl:source-column-index>
+                    <dl:source-field-name/>
+                    <dl:target-field>
+                        <dl:field-name>middlenamecorrupted</dl:field-name>
+                        <dl:field-type>string</dl:field-type>
+                        <dl:field-type-modifier>128</dl:field-type-modifier>
+                        <dl:field-meaning>middle-name</dl:field-meaning>
+                        <dl:field-transformation>
+                            <function-name>NicknameCorruptor</function-name>
+                            <parameters>
+                                <parameter>
+                                    <parameter-name>replace_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>phonetic_error_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>ocr_error_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>insertion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>deletion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>substitution_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>transposition_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                            </parameters>
+                        </dl:field-transformation>
+                    </dl:target-field>
+                </dl:data-field>
+                <dl:data-field>
                     <dl:source-column-index>4</dl:source-column-index>
                     <dl:source-field-name/>
                     <dl:target-field>
@@ -208,6 +368,41 @@
                         <dl:field-type>string</dl:field-type>
                         <dl:field-type-modifier>16</dl:field-type-modifier>
                         <dl:field-meaning>birth-state</dl:field-meaning>
+                    </dl:target-field>
+                </dl:data-field>
+                <dl:data-field>
+                    <dl:source-column-index>4</dl:source-column-index>
+                    <dl:source-field-name/>
+                    <dl:target-field>
+                        <dl:field-name>birthstatecorrupted</dl:field-name>
+                        <dl:field-type>string</dl:field-type>
+                        <dl:field-type-modifier>20</dl:field-type-modifier>
+                        <dl:field-meaning>birth-state</dl:field-meaning>
+                        <dl:field-transformation>
+                            <function-name>StringCorruptor</function-name>
+                            <parameters>
+                                <parameter>
+                                    <parameter-name>insertion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>deletion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>substitution_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>transposition_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                            </parameters>
+                        </dl:field-transformation>
                     </dl:target-field>
                 </dl:data-field>
                 <dl:data-field>
@@ -257,6 +452,41 @@
                     </dl:target-field>
                 </dl:data-field>
                 <dl:data-field>
+                    <dl:source-column-index>5</dl:source-column-index>
+                    <dl:source-field-name/>
+                    <dl:target-field>
+                        <dl:field-name>citycorrupted</dl:field-name>
+                        <dl:field-type>string</dl:field-type>
+                        <dl:field-type-modifier>20</dl:field-type-modifier>
+                        <dl:field-meaning>city</dl:field-meaning>
+                        <dl:field-transformation>
+                            <function-name>StringCorruptor</function-name>
+                            <parameters>
+                                <parameter>
+                                    <parameter-name>insertion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>deletion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>substitution_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>transposition_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                            </parameters>
+                        </dl:field-transformation>
+                    </dl:target-field>
+                </dl:data-field>
+                <dl:data-field>
                     <dl:source-column-index>6</dl:source-column-index>
                     <dl:source-field-name/>
                     <dl:target-field>
@@ -295,6 +525,41 @@
                                     <parameter-name>k</parameter-name>
                                     <parameter-value>40</parameter-value>
                                     <parameter-type>integer</parameter-type>
+                                </parameter>
+                            </parameters>
+                        </dl:field-transformation>
+                    </dl:target-field>
+                </dl:data-field>
+                <dl:data-field>
+                    <dl:source-column-index>7</dl:source-column-index>
+                    <dl:source-field-name/>
+                    <dl:target-field>
+                        <dl:field-name>addresscorrupted</dl:field-name>
+                        <dl:field-type>string</dl:field-type>
+                        <dl:field-type-modifier>144</dl:field-type-modifier>
+                        <dl:field-meaning>address</dl:field-meaning>
+                        <dl:field-transformation>
+                            <function-name>StringCorruptor</function-name>
+                            <parameters>
+                                <parameter>
+                                    <parameter-name>insertion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>deletion_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>substitution_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
+                                </parameter>
+                                <parameter>
+                                    <parameter-name>transposition_probability</parameter-name>
+                                    <parameter-value>0.9</parameter-value>
+                                    <parameter-type>double</parameter-type>
                                 </parameter>
                             </parameters>
                         </dl:field-transformation>
@@ -412,64 +677,64 @@
         </privacy-preserving-blocking-source-fields>
     </privacy-preserving-blocking>
     <pm:probabilistic-matching>
-        <pm:false-negative-probability>0.0010</pm:false-negative-probability>
-        <pm:false-positive-probability>0.0010</pm:false-positive-probability>
+        <pm:false-negative-probability>0.001</pm:false-negative-probability>
+        <pm:false-positive-probability>0.001</pm:false-positive-probability>
         <pm:em-settings>
             <pm:m-initial>0.9</pm:m-initial>
             <pm:u-initial>0.1</pm:u-initial>
-            <pm:p-initial>0.0010</pm:p-initial>
+            <pm:p-initial>0.001</pm:p-initial>
             <pm:convergence-error>1.0E-7</pm:convergence-error>
             <pm:max-iterations>1000</pm:max-iterations>
             <pm:max-tries>10</pm:max-tries>
         </pm:em-settings>
         <pm:match-fields>
             <pm:match-field>
-                <pm:left-field-name>givennamebloomfilter</pm:left-field-name>
-                <pm:right-field-name>givennamebloomfilter</pm:right-field-name>
-                <pm:agreement-probability>0.9</pm:agreement-probability>
-                <pm:disagreement-probability>0.1</pm:disagreement-probability>
+                <pm:left-field-name>familyname</pm:left-field-name>
+                <pm:right-field-name>familyname</pm:right-field-name>
+                <pm:agreement-probability>0.85</pm:agreement-probability>
+                <pm:disagreement-probability>0.2</pm:disagreement-probability>
                 <pm:comparator-function>
-                    <function-name>DiceBinary</function-name>
+                    <function-name>JaroWinkler</function-name>
                 </pm:comparator-function>
                 <pm:match-threshold>0.9</pm:match-threshold>
             </pm:match-field>
             <pm:match-field>
-                <pm:left-field-name>familynamebloomfilter</pm:left-field-name>
-                <pm:right-field-name>familynamebloomfilter</pm:right-field-name>
-                <pm:agreement-probability>0.9</pm:agreement-probability>
-                <pm:disagreement-probability>0.1</pm:disagreement-probability>
+                <pm:left-field-name>givenname</pm:left-field-name>
+                <pm:right-field-name>givenname</pm:right-field-name>
+                <pm:agreement-probability>0.85</pm:agreement-probability>
+                <pm:disagreement-probability>0.2</pm:disagreement-probability>
                 <pm:comparator-function>
-                    <function-name>DiceBinary</function-name>
+                    <function-name>JaroWinkler</function-name>
                 </pm:comparator-function>
                 <pm:match-threshold>0.9</pm:match-threshold>
             </pm:match-field>
             <pm:match-field>
-                <pm:left-field-name>middlenamebloomfilter</pm:left-field-name>
-                <pm:right-field-name>middlenamebloomfilter</pm:right-field-name>
-                <pm:agreement-probability>0.9</pm:agreement-probability>
-                <pm:disagreement-probability>0.1</pm:disagreement-probability>
+                <pm:left-field-name>middlename</pm:left-field-name>
+                <pm:right-field-name>middlename</pm:right-field-name>
+                <pm:agreement-probability>0.85</pm:agreement-probability>
+                <pm:disagreement-probability>0.2</pm:disagreement-probability>
                 <pm:comparator-function>
-                    <function-name>DiceBinary</function-name>
+                    <function-name>JaroWinkler</function-name>
                 </pm:comparator-function>
                 <pm:match-threshold>0.9</pm:match-threshold>
             </pm:match-field>
             <pm:match-field>
-                <pm:left-field-name>citybloomfilter</pm:left-field-name>
-                <pm:right-field-name>citybloomfilter</pm:right-field-name>
-                <pm:agreement-probability>0.9</pm:agreement-probability>
-                <pm:disagreement-probability>0.1</pm:disagreement-probability>
+                <pm:left-field-name>city</pm:left-field-name>
+                <pm:right-field-name>city</pm:right-field-name>
+                <pm:agreement-probability>0.85</pm:agreement-probability>
+                <pm:disagreement-probability>0.2</pm:disagreement-probability>
                 <pm:comparator-function>
-                    <function-name>DiceBinary</function-name>
+                    <function-name>JaroWinkler</function-name>
                 </pm:comparator-function>
                 <pm:match-threshold>0.9</pm:match-threshold>
             </pm:match-field>
             <pm:match-field>
-                <pm:left-field-name>addressbloomfilter</pm:left-field-name>
-                <pm:right-field-name>addressbloomfilter</pm:right-field-name>
-                <pm:agreement-probability>0.9</pm:agreement-probability>
-                <pm:disagreement-probability>0.1</pm:disagreement-probability>
+                <pm:left-field-name>address</pm:left-field-name>
+                <pm:right-field-name>address</pm:right-field-name>
+                <pm:agreement-probability>0.85</pm:agreement-probability>
+                <pm:disagreement-probability>0.2</pm:disagreement-probability>
                 <pm:comparator-function>
-                    <function-name>DiceBinary</function-name>
+                    <function-name>JaroWinkler</function-name>
                 </pm:comparator-function>
                 <pm:match-threshold>0.9</pm:match-threshold>
             </pm:match-field>
@@ -477,7 +742,7 @@
     </pm:probabilistic-matching>
     <admin-configuration>
         <file-repository-directory>fileRepository</file-repository-directory>
-        <component-mode>data-provider</component-mode>
+        <component-mode>data-integrator</component-mode>
         <experimental-mode>true</experimental-mode>
     </admin-configuration>
 </mpi-config>

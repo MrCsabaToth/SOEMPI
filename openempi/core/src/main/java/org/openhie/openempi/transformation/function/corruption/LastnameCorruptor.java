@@ -67,9 +67,18 @@ public class LastnameCorruptor extends StringCorruptor
 
 		String corrupted = field;
 		Random rnd = new Random();
+		int gender = 0;	// no info
+		if (parameters.containsKey(GENDER_TAG)) {
+			String genderStr = (String)parameters.get(GENDER_TAG);
+			if (genderStr.toUpperCase().startsWith("M")) {
+				gender = 1;	// male
+			} else {
+				gender = 2;	// female
+			}
+		}
 		if (parameters.containsKey(HYPHENATE_PROBABILITY_TAG))
 			hyphenateProbability = (Double)parameters.get(HYPHENATE_PROBABILITY_TAG);
-		if (rnd.nextDouble() < hyphenateProbability) {
+		if (gender == 2 && rnd.nextDouble() < hyphenateProbability) {
 			corrupted = corrupted + "-" + LastnameSwapout.swapout(rnd);
 		} else {
 			if (parameters.containsKey(FEMALE_REPLACE_PROBABILITY_TAG))
@@ -78,14 +87,11 @@ public class LastnameCorruptor extends StringCorruptor
 				maleReplaceProbability = (Double)parameters.get(MALE_REPLACE_PROBABILITY_TAG);
 
 			double replaceProbability = 0.0;
-			if (parameters.containsKey(GENDER_TAG)) {
-				String genderStr = (String)parameters.get(GENDER_TAG);
-				if (genderStr.toUpperCase().startsWith("M"))
-					replaceProbability = maleReplaceProbability;
-				else
-					replaceProbability = femaleReplaceProbability;
-			} else {
-				replaceProbability = (femaleReplaceProbability + maleReplaceProbability) / 2;
+			switch (gender) {
+			case 1: replaceProbability = maleReplaceProbability; break;
+			case 2: replaceProbability = femaleReplaceProbability; break;
+			default:
+			case 0: replaceProbability = (femaleReplaceProbability + maleReplaceProbability) / 2; break;
 			}
 			if (rnd.nextDouble() < replaceProbability)
 				corrupted = LastnameSwapout.swapout(rnd);

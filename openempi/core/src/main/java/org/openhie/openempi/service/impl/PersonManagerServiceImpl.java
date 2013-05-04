@@ -356,22 +356,27 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 					log.debug("Obtained a value of " + value + " for field " + loaderField.getFieldName());
 					try {
 						if (value != null) {
+							Map<String, Object> originalParameters = fieldTransformation.getFunctionParameters();
+							Map<String, Object> parameters = null;
+							if (originalParameters != null)
+								parameters = (Map<String, Object>)((HashMap<String, Object>)originalParameters).clone();
 							Object transformedValue = null;
 							if (fieldTransformation.getFunctionName().contains("HMAC")) {	// Can be bare HMAC, or hybrid HMAC bloom filter
-								Map<String, Object> parameters = new HashMap<String, Object>();
+								if (parameters == null)
+									parameters = new HashMap<String, Object>();
 								parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, signingKey);
 								transformedValue = transformationService.transform(fieldTransformation, value, parameters);
 							} else {
 								// Passing gender parameter for LastnameCorruptor
 								// There are different swapout probabilities for male and female
-								Map<String, Object> parameters = null;
 								if (fieldTransformation.getFunctionName().equals(LastnameCorruptor.LASTNAME_CORRUPTOR_NAME)) {
 									for (LoaderDataField ldf : loaderFields) {
 										if (ldf.getFieldMeaning().getFieldMeaningEnum() == FieldMeaningEnum.Gender) {
-											parameters = new HashMap<String, Object>();
 											Object genderAttribObj = person.getAttribute(ldf.getFieldName());
 											if (genderAttribObj != null) {
 												String genderStr = genderAttribObj.toString();
+												if (parameters == null)
+													parameters = new HashMap<String, Object>();
 												parameters.put(LastnameCorruptor.GENDER_TAG, genderStr);
 											}
 										}
