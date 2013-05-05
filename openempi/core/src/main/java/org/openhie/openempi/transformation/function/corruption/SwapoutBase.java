@@ -52,23 +52,58 @@ public abstract class SwapoutBase
 	public static final String whitespace_charsregexsttr = "[" + whitespace_chars + "]";
 	public static final String non_whitespace_charsregexsttr = "[^" + whitespace_chars + "]";
 
-	protected static String swapoutCore(List<String> swapouts, Random rnd) {
+	public enum CaseEnum {
+		UpperCase,
+		LowerCase,
+		CamelCase,
+		Unknown
+	}
+
+	protected static String swapoutCore(List<StringTriple> swapouts, CaseEnum caseType, Random rnd) {
 		if (swapouts.size() == 1) {
-			return swapouts.get(0);
+			return swapouts.get(0).getCase(caseType);
 		} else {
 			int index = rnd.nextInt(swapouts.size());
-			return swapouts.get(index);
+			return swapouts.get(index).getCase(caseType);
 		}		
 	}
 	
-	protected static String swapoutCore(String input, int pos, String word, List<String> swapouts, Random rnd) {
+	protected static String swapoutCore(String input, int pos, CaseEnum caseType, String word, List<StringTriple> swapouts, Random rnd) {
 		StringBuilder sb = new StringBuilder(input);
 		int index = input.indexOf(word, pos);
 		if (index > 0) {
-			String after = swapoutCore(swapouts, rnd);
+			String after = swapoutCore(swapouts, caseType, rnd);
 			sb.replace(index, index + word.length(), after);
 		}
 		return sb.toString();
 	}
 	
+	public static CaseEnum determineCaseType(String input) {
+		if (input == null || input.length() == 0)
+			return CaseEnum.Unknown;
+		boolean startsWithUpperCase = Character.isUpperCase(input.charAt(0));
+		boolean endsWithUpperCase = Character.isUpperCase(input.charAt(input.length() - 1));
+		if (startsWithUpperCase && endsWithUpperCase)
+			return CaseEnum.UpperCase;
+		if (!startsWithUpperCase && !endsWithUpperCase)
+			return CaseEnum.LowerCase;
+		if (startsWithUpperCase && !endsWithUpperCase)
+			return CaseEnum.CamelCase;
+		return CaseEnum.Unknown;
+	}
+	
+	public static String convertStringToCaseType(String input, CaseEnum caseType) {
+		StringBuilder sb = null;
+		switch (caseType) {
+		case UpperCase: sb = new StringBuilder(input.toUpperCase()); break;
+		case LowerCase: sb = new StringBuilder(input.toLowerCase()); break;
+		case CamelCase: {
+				sb = new StringBuilder(input.toLowerCase());
+				sb.setCharAt(0, Character.toUpperCase(input.charAt(0)));
+			}
+			break;
+		case Unknown: sb = new StringBuilder(input); break;
+		}
+		return sb.toString();
+	}
 }

@@ -21,9 +21,8 @@ import java.util.Random;
 
 public class TypographicError
 {
-	public static String insert(String input, char minChar, char maxChar, Random rnd) {
+	public static String insert(String input, char minChar, char maxChar, int insertionPoint, Random rnd) {
 		StringBuilder sb = new StringBuilder(input);
-		int insertionPoint = rnd.nextInt(input.length() + 1);
 		sb.insert(insertionPoint, getCharacterFromRange(minChar, maxChar, rnd));
 		return sb.toString();
 	}
@@ -35,18 +34,28 @@ public class TypographicError
 	}
 	
 	public static String insertNumber(String input, Random rnd) {
-		return insert(input, '0', '9', rnd);
+		return insert(input, '0', '9', rnd.nextInt(input.length() + 1), rnd);
 	}
 
-	public static String insertLetter(String input, boolean lowerCase, Random rnd) {
-		if (lowerCase)
-			return insert(input, 'a', 'z', rnd);
-		else
-			return insert(input, 'A', 'Z', rnd);
+	public static boolean judgeUpperCase(String input, int point) {
+		int judgePosition = point;
+		if (judgePosition >= input.length())
+			judgePosition = input.length() - 1;
+		if (!Character.isLetter(input.charAt(judgePosition))) {
+			if (judgePosition >= input.length() - 1) {
+				if (judgePosition > 0)
+					judgePosition--;
+			} else {
+				judgePosition++;
+			}
+		}
+		return Character.isUpperCase(input.charAt(judgePosition));
 	}
-
+	
 	public static String insertLetter(String input, Random rnd) {
-		return insertLetter(input, rnd.nextBoolean(), rnd);
+		int insertionPoint = rnd.nextInt(input.length() + 1);
+		boolean upperCase = judgeUpperCase(input, insertionPoint);
+		return insert(input, upperCase ? 'A' : 'a', upperCase ? 'Z' : 'z', insertionPoint, rnd);
 	}
 
 	public static String delete(String input, Random rnd) {
@@ -58,28 +67,26 @@ public class TypographicError
 		return sb.toString();
 	}
 
-	public static String substitute(String input, char minChar, char maxChar, Random rnd) {
+	public static String substitute(String input, char minChar, char maxChar, int substitutionPoint, Random rnd) {
 		if (input.length() == 0)
 			return "";
 		StringBuilder sb = new StringBuilder(input);
-		int substPoint = rnd.nextInt(input.length());
-		sb.setCharAt(substPoint, getCharacterFromRange(minChar, maxChar, rnd));
+		sb.setCharAt(substitutionPoint, getCharacterFromRange(minChar, maxChar, rnd));
 		return sb.toString();
 	}
 
 	public static String substituteNumber(String input, Random rnd) {
-		return substitute(input, '0', '9', rnd);
-	}
-
-	public static String substituteLetter(String input, boolean lowerCase, Random rnd) {
-		if (lowerCase)
-			return substitute(input, 'a', 'z', rnd);
-		else
-			return substitute(input, 'A', 'Z', rnd);
+		if (input.length() == 0)
+			return "";
+		return substitute(input, '0', '9', rnd.nextInt(input.length()), rnd);
 	}
 
 	public static String substituteLetter(String input, Random rnd) {
-		return substituteLetter(input, rnd.nextBoolean(), rnd);
+		if (input.length() == 0)
+			return "";
+		int substitutionPoint = rnd.nextInt(input.length());
+		boolean upperCase = judgeUpperCase(input, substitutionPoint);
+		return substitute(input, upperCase ? 'A' : 'a', upperCase ? 'Z' : 'z', substitutionPoint, rnd);
 	}
 
 	public static String transpose(String input, Random rnd) {	// Only neighbors

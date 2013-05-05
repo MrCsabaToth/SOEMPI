@@ -25,43 +25,65 @@ public class TypographicErrortestTest extends TestCase
 {
 	public void testInsertWithEmptyInput() {
 		Random rnd = new Random();
-		String output = TypographicError.insert("", 'b', 'b', rnd);
+		String output = TypographicError.insert("", 'b', 'b', 0, rnd);
 		assertEquals(output.length(), 1);
 		assertEquals(output, "b");
 	}
 
-	public void testInsertWithOneCharInput() {
+	public void testInsertWithOneCharInputBeginning() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.insert("a", 'b', 'b', rnd);
+			String output = TypographicError.insert("a", 'b', 'b', 0, rnd);
 			assertEquals(output.length(), 2);
 			assertEquals(output.contains("b"), true);
-			if (output.startsWith("a"))
-				assertEquals(output, "ab");
-			if (output.startsWith("b"))
-				assertEquals(output, "ba");
+			assertEquals(output, "ab");
 		}
 	}
 	
-	public void testInsertWithTwoCharInput() {
+	public void testInsertWithOneCharInputEnd() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.insert("aa", 'b', 'b', rnd);
+			String output = TypographicError.insert("a", 'b', 'b', 1, rnd);
+			assertEquals(output.length(), 2);
+			assertEquals(output.contains("b"), true);
+			assertEquals(output, "ba");
+		}
+	}
+	
+	public void testInsertWithTwoCharInputBeginning() {
+		Random rnd = new Random();
+		for (int i = 0; i < 100; i++) {
+			String output = TypographicError.insert("aa", 'b', 'b', 0, rnd);
 			assertEquals(output.length(), 3);
 			assertEquals(output.contains("b"), true);
-			if (output.startsWith("aa"))
-				assertEquals(output, "aab");
-			else if (output.startsWith("a"))
-				assertEquals(output, "aba");
-			else
-				assertEquals(output, "baa");
+			assertEquals(output, "baa");
+		}
+	}
+	
+	public void testInsertWithTwoCharInputMiddle() {
+		Random rnd = new Random();
+		for (int i = 0; i < 100; i++) {
+			String output = TypographicError.insert("aa", 'b', 'b', 1, rnd);
+			assertEquals(output.length(), 3);
+			assertEquals(output.contains("b"), true);
+			assertEquals(output, "aba");
+		}
+	}
+	
+	public void testInsertWithTwoCharInputEnd() {
+		Random rnd = new Random();
+		for (int i = 0; i < 100; i++) {
+			String output = TypographicError.insert("aa", 'b', 'b', 2, rnd);
+			assertEquals(output.length(), 3);
+			assertEquals(output.contains("b"), true);
+			assertEquals(output, "aab");
 		}
 	}
 	
 	public void testInsertWithOneCharInput2() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.insert("a", 'b', 'z', rnd);
+			String output = TypographicError.insert("a", 'b', 'z', rnd.nextInt(1), rnd);
 			assertEquals(output.length(), 2);
 			assertTrue(output.contains("a"));
 		}
@@ -71,7 +93,7 @@ public class TypographicErrortestTest extends TestCase
 		Random rnd = new Random();
 		String input = "aaaaaaaaaaaaaaaaaaaa";
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.insert(input, 'A', 'Z', rnd);
+			String output = TypographicError.insert(input, 'A', 'Z', rnd.nextInt(input.length()), rnd);
 			assertEquals(output.length(), input.length() + 1);
 		}
 	}
@@ -79,7 +101,7 @@ public class TypographicErrortestTest extends TestCase
 	public void testInsertWithEmptyInputForProperCharacterInsertion1() {
 		Random rnd = new Random();
 		for (int i = 0; i < 1000; i++) {
-		String output = TypographicError.insert("", 'b', 'z', rnd);
+		String output = TypographicError.insert("", 'b', 'z', 0, rnd);
 			assertEquals(output.length(), 1);
 			assertFalse(output.contains("a"));
 		}
@@ -88,7 +110,7 @@ public class TypographicErrortestTest extends TestCase
 	public void testInsertWithEmptyInputForProperCharacterInsertion2() {
 		Random rnd = new Random();
 		for (int i = 0; i < 1000; i++) {
-		String output = TypographicError.insert("", 'a', 'y', rnd);
+		String output = TypographicError.insert("", 'a', 'y', 0, rnd);
 			assertEquals(output.length(), 1);
 			assertFalse(output.contains("z"));
 		}
@@ -131,7 +153,7 @@ public class TypographicErrortestTest extends TestCase
 	public void testInsertLowercaseLetter() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.insertLetter("", true, rnd);
+			String output = TypographicError.insertLetter("", rnd);
 			assertEquals(output.length(), 1);
 			assertTrue(Character.isLetter(output.charAt(0)));
 			assertTrue(Character.isLowerCase(output.charAt(0)));
@@ -141,7 +163,7 @@ public class TypographicErrortestTest extends TestCase
 	public void testInsertUppercaseLetter() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.insertLetter("", false, rnd);
+			String output = TypographicError.insertLetter("", rnd);
 			assertEquals(output.length(), 1);
 			assertTrue(Character.isLetter(output.charAt(0)));
 			assertTrue(Character.isUpperCase(output.charAt(0)));
@@ -175,43 +197,65 @@ public class TypographicErrortestTest extends TestCase
 
 	public void testSubstituteWithEmptyString() {
 		Random rnd = new Random();
-		String output = TypographicError.substitute("", 'a', 'z', rnd);
+		String output = TypographicError.substitute("", 'a', 'z', 0, rnd);
 		assertEquals(output.length(), 0);
 		assertEquals("", output);
 	}
 
 	public void testSubstituteWithOneCharString() {
 		Random rnd = new Random();
-		String output = TypographicError.substitute("a", 'b', 'b', rnd);
+		String output = TypographicError.substitute("a", 'b', 'b', 0, rnd);
 		assertEquals(output.length(), 1);
 		assertEquals("b", output);
 	}
 
-	public void testSubstituteWithTwoCharInput() {
+	public void testSubstituteWithTwoCharInputFirst() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.substitute("aa", 'b', 'b', rnd);
+			String output = TypographicError.substitute("aa", 'b', 'b', 0, rnd);
 			assertEquals(output.length(), 2);
 			assertEquals(output.contains("b"), true);
-			if (output.startsWith("a"))
-				assertEquals(output, "ab");
-			if (output.startsWith("b"))
-				assertEquals(output, "ba");
+			assertEquals(output, "ba");
 		}
 	}
 	
-	public void testSubstituteWithThreeCharInput() {
+	public void testSubstituteWithTwoCharInputSecond() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.substitute("aaa", 'b', 'b', rnd);
+			String output = TypographicError.substitute("aa", 'b', 'b', 1, rnd);
+			assertEquals(output.length(), 2);
+			assertEquals(output.contains("b"), true);
+			assertEquals(output, "ab");
+		}
+	}
+	
+	public void testSubstituteWithThreeCharInputFirst() {
+		Random rnd = new Random();
+		for (int i = 0; i < 100; i++) {
+			String output = TypographicError.substitute("aaa", 'b', 'b', 0, rnd);
 			assertEquals(output.length(), 3);
 			assertEquals(output.contains("b"), true);
-			if (output.startsWith("aa"))
-				assertEquals(output, "aab");
-			else if (output.startsWith("a"))
-				assertEquals(output, "aba");
-			else
-				assertEquals(output, "baa");
+			assertEquals(output, "baa");
+		}
+	}
+	
+	public void testSubstituteWithThreeCharInputSecond() {
+		Random rnd = new Random();
+		for (int i = 0; i < 100; i++) {
+			String output = TypographicError.substitute("aaa", 'b', 'b', 1, rnd);
+			assertEquals(output.length(), 3);
+			assertEquals(output.contains("b"), true);
+			assertEquals(output, "aba");
+		}
+	}
+	
+	public void testSubstituteWithThreeCharInputThird() {
+		Random rnd = new Random();
+		for (int i = 0; i < 100; i++) {
+			String output = TypographicError.substitute("aaa", 'b', 'b', 2, rnd);
+			assertEquals(output.length(), 3);
+			assertEquals(output.contains("b"), true);
+			assertEquals(output, "aab");
 		}
 	}
 	
@@ -227,7 +271,7 @@ public class TypographicErrortestTest extends TestCase
 	public void testSubstituteLowercaseLetter() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.substituteLetter("1", true, rnd);
+			String output = TypographicError.substituteLetter("l", rnd);
 			assertEquals(output.length(), 1);
 			assertTrue(Character.isLetter(output.charAt(0)));
 			assertTrue(Character.isLowerCase(output.charAt(0)));
@@ -237,7 +281,7 @@ public class TypographicErrortestTest extends TestCase
 	public void testSubstituteUppercaseLetter() {
 		Random rnd = new Random();
 		for (int i = 0; i < 100; i++) {
-			String output = TypographicError.substituteLetter("1", false, rnd);
+			String output = TypographicError.substituteLetter("L", rnd);
 			assertEquals(output.length(), 1);
 			assertTrue(Character.isLetter(output.charAt(0)));
 			assertTrue(Character.isUpperCase(output.charAt(0)));

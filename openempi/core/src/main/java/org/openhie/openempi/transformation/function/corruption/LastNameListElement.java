@@ -19,12 +19,13 @@ package org.openhie.openempi.transformation.function.corruption;
 
 public class LastNameListElement
 {
-	public String name;
+	public StringTriple name;
 	public double lowerBound;
 	public double higherBound;
 	
-	public LastNameListElement(String n, double lb, double hb) {
-		this.name = n;
+	public LastNameListElement(String nameUpperCase, double lb, double hb) {
+		if (nameUpperCase != null)
+			this.name = new StringTriple(nameUpperCase, true);
 		this.lowerBound = lb;
 		this.higherBound = hb;
 	}

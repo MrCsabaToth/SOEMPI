@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +32,10 @@ import org.openhie.openempi.context.Context;
 
 public class NicknameSwapout extends SwapoutBase
 {
-	private static final Map<String, List<String>> NAME_TO_NICK = new HashMap<String, List<String>>();
-	private static final Map<String, List<String>> NICK_TO_NAME = new HashMap<String, List<String>>();
+	private static final Map<String, List<StringTriple>> NAME_TO_NICK = new HashMap<String, List<StringTriple>>();
+	private static final Map<String, List<StringTriple>> NICK_TO_NAME = new HashMap<String, List<StringTriple>>();
 
-	private static void initMap(Map<String, List<String>> map, String filePath) {
+	private static void initMap(Map<String, List<StringTriple>> map, String filePath) {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(filePath));
@@ -55,7 +56,12 @@ public class NicknameSwapout extends SwapoutBase
 					int firstComma = line.indexOf(',');
 					String tail = line.substring(firstComma + 1);
 					String head = line.substring(0, firstComma);
-					map.put(head, Arrays.asList(tail.split(",")));
+					List<String> swapStringList = Arrays.asList(tail.split(","));
+					List<StringTriple> swapStringTriples = new ArrayList<StringTriple>();
+					for (String s : swapStringList) {
+						swapStringTriples.add(new StringTriple(s, true));
+					}
+					map.put(head, swapStringTriples);
 				}
 				lineIndex++;
 			}
@@ -85,20 +91,24 @@ public class NicknameSwapout extends SwapoutBase
 				}
 			}
 		}
-		if (NAME_TO_NICK.containsKey(input))
-			return swapoutCore(NAME_TO_NICK.get(input), rnd);
-		if (NICK_TO_NAME.containsKey(input))
-			return swapoutCore(NICK_TO_NAME.get(input), rnd);
+		CaseEnum caseType = SwapoutBase.determineCaseType(input);
+		String upperCaseInput = input;
+		if (caseType != CaseEnum.UpperCase)
+			upperCaseInput = input.toUpperCase();
+		if (NAME_TO_NICK.containsKey(upperCaseInput))
+			return swapoutCore(NAME_TO_NICK.get(upperCaseInput), caseType, rnd);
+		if (NICK_TO_NAME.containsKey(upperCaseInput))
+			return swapoutCore(NICK_TO_NAME.get(upperCaseInput), caseType, rnd);
 		String[] words = input.split(whitespace_charsregexsttr + "+");
-		int maxTries = 100;
 		int pos = 0;
 		for (int i = 0; i < words.length; i++) {
-			for(int j = 0; j < maxTries; j++) {
-				if (NAME_TO_NICK.containsKey(words[i]))
-					return swapoutCore(input, pos, words[i], NAME_TO_NICK.get(words[i]), rnd);
-				if (NICK_TO_NAME.containsKey(words[i]))
-					return swapoutCore(input, pos, words[i], NICK_TO_NAME.get(words[i]), rnd);
-			}
+			upperCaseInput = words[i];
+			if (caseType != CaseEnum.UpperCase)
+				upperCaseInput = words[i].toUpperCase();
+			if (NAME_TO_NICK.containsKey(upperCaseInput))
+				return swapoutCore(input, pos, caseType, words[i], NAME_TO_NICK.get(upperCaseInput), rnd);
+			if (NICK_TO_NAME.containsKey(upperCaseInput))
+				return swapoutCore(input, pos, caseType, words[i], NICK_TO_NAME.get(upperCaseInput), rnd);
 			pos += (words[i].length() + 1);
 		}
 		return input;

@@ -45,12 +45,12 @@ public class SlidingWindowSwapoutCorruptor extends AbstractStringTransformationF
 		this.defaultSwapoutProbability = probability;
 	}
 
-	public double getDefaultSlidingWindowSize() {
+	public int getDefaultSlidingWindowSize() {
 		return defaultSlidingWindowSize;
 	}
 
-	public void setDefaultSlidingWindowSize(int probability) {
-		this.defaultSlidingWindowSize = probability;
+	public void setDefaultSlidingWindowSize(int size) {
+		this.defaultSlidingWindowSize = size;
 	}
 
 	protected Object stringTransformCore(String field, java.util.Map<String, Object> parameters) {

@@ -19,6 +19,8 @@ package org.openhie.openempi.transformation.function.corruption;
 
 import java.util.Random;
 
+import org.openhie.openempi.transformation.function.corruption.SwapoutBase.CaseEnum;
+
 public class LastnameCorruptor extends StringCorruptor
 {
 	public static final String LASTNAME_CORRUPTOR_NAME = "LastnameCorruptor";
@@ -78,8 +80,9 @@ public class LastnameCorruptor extends StringCorruptor
 		}
 		if (parameters.containsKey(HYPHENATE_PROBABILITY_TAG))
 			hyphenateProbability = (Double)parameters.get(HYPHENATE_PROBABILITY_TAG);
+		CaseEnum caseType = SwapoutBase.determineCaseType(field);
 		if (gender == 2 && rnd.nextDouble() < hyphenateProbability) {
-			corrupted = corrupted + "-" + LastnameSwapout.swapout(rnd);
+			corrupted = corrupted + "-" + LastnameSwapout.swapout(caseType, rnd);
 		} else {
 			if (parameters.containsKey(FEMALE_REPLACE_PROBABILITY_TAG))
 				femaleReplaceProbability = (Double)parameters.get(FEMALE_REPLACE_PROBABILITY_TAG);
@@ -94,7 +97,7 @@ public class LastnameCorruptor extends StringCorruptor
 			case 0: replaceProbability = (femaleReplaceProbability + maleReplaceProbability) / 2; break;
 			}
 			if (rnd.nextDouble() < replaceProbability)
-				corrupted = LastnameSwapout.swapout(rnd);
+				corrupted = LastnameSwapout.swapout(caseType, rnd);
 		}
 
 		return super.stringTransformCore(corrupted, parameters);

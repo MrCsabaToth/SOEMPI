@@ -83,7 +83,7 @@ public class LastnameSwapout extends SwapoutBase
 		}
 	}
 
-	public static String swapoutCore(Double d, Random rnd) {
+	public static String swapoutCore(Double d, CaseEnum caseType, Random rnd) {
 		if (LASTNAMES.size() == 0) {
 			synchronized(LASTNAMES) {
 				if (LASTNAMES.size() == 0) {
@@ -95,11 +95,11 @@ public class LastnameSwapout extends SwapoutBase
 		int index = Collections.binarySearch(LASTNAMES, searchElement, new LastNameListElementComparator());
 		if (index < 0 || index >= LASTNAMES.size())
 			index = rnd.nextInt(LASTNAMES.size());
-		return LASTNAMES.get(index).name;
+		return LASTNAMES.get(index).name.getCase(caseType);
 	}
 
-	public static String swapout(Random rnd) {
-		return swapoutCore(rnd.nextDouble(), rnd);
+	public static String swapout(CaseEnum caseType, Random rnd) {
+		return swapoutCore(rnd.nextDouble(), caseType, rnd);
 	}
 
 }

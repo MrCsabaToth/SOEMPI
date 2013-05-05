@@ -36,6 +36,7 @@ import org.openhie.openempi.transformation.TransformationFunctionType;
 import org.openhie.openempi.transformation.TransformationService;
 import org.openhie.openempi.transformation.function.corruption.LastnameCorruptor;
 import org.openhie.openempi.transformation.function.corruption.NicknameCorruptor;
+import org.openhie.openempi.transformation.function.corruption.StringCorruptor;
 import org.springframework.context.ApplicationContext;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -146,8 +147,14 @@ public class ReferenceDataServiceImpl extends RemoteServiceServlet implements Re
 					transformationService.getTransformationFunctionType(NicknameCorruptor.NICKNAME_CORRUPTOR_NAME);
 			// A dummy trafo will cause the cache to populate
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put(NicknameCorruptor.REPLACE_PROBABILITY_TAG, (double)1.0);
-			transformationFunctionType.getTransformationFunction().transform("dummy", params);
+			params.put(NicknameCorruptor.REPLACE_PROBABILITY_TAG, 1.0d);	// Name 2 Nick and Nick 2 Name creation
+			params.put(StringCorruptor.OCR_ERROR_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.PHONETIC_ERROR_PROBABILITY_TAG, 1.0d);	// key ArrayList population
+			params.put(StringCorruptor.DELETION_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.INSERTION_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.SUBSTITUTION_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.TRANSPOSITION_PROBABILITY_TAG, 0.0d);
+			transformationFunctionType.getTransformationFunction().transform("DUMMY", params);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);
@@ -162,10 +169,16 @@ public class ReferenceDataServiceImpl extends RemoteServiceServlet implements Re
 					transformationService.getTransformationFunctionType(LastnameCorruptor.LASTNAME_CORRUPTOR_NAME);
 			// A dummy trafo will cause the cache to populate
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put(LastnameCorruptor.HYPHENATE_PROBABILITY_TAG, (double)0.0);
-			params.put(LastnameCorruptor.MALE_REPLACE_PROBABILITY_TAG, (double)1.0);
+			params.put(LastnameCorruptor.HYPHENATE_PROBABILITY_TAG, 0.0d);
+			params.put(LastnameCorruptor.MALE_REPLACE_PROBABILITY_TAG, 1.0d);
 			params.put(LastnameCorruptor.GENDER_TAG, "M");
-			transformationFunctionType.getTransformationFunction().transform("dummy", params);
+			params.put(StringCorruptor.OCR_ERROR_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.PHONETIC_ERROR_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.DELETION_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.INSERTION_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.SUBSTITUTION_PROBABILITY_TAG, 0.0d);
+			params.put(StringCorruptor.TRANSPOSITION_PROBABILITY_TAG, 0.0d);
+			transformationFunctionType.getTransformationFunction().transform("DUMMY", params);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);

@@ -57,49 +57,49 @@ public class PhoneticErrorDefinition
 		DOESNT_CONTAIN_DANGER_RANGER_MANGER
 	}
 	
-	public String after;
-	ErrorLocation errorLocation = ErrorLocation.ANYWHERE;
-	PrecededByConstraint preConstr = PrecededByConstraint.NOTHING;
-	FollowedByConstraint postConstr = FollowedByConstraint.NOTHING;
-	SpecialConstraint specConstr = SpecialConstraint.NOTHING;
+	public StringTriple after;
+	public ErrorLocation errorLocation = ErrorLocation.ANYWHERE;
+	public PrecededByConstraint preConstr = PrecededByConstraint.NOTHING;
+	public FollowedByConstraint postConstr = FollowedByConstraint.NOTHING;
+	public SpecialConstraint specConstr = SpecialConstraint.NOTHING;
 	
 	public PhoneticErrorDefinition(String after) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 	}
 
 	public PhoneticErrorDefinition(String after, ErrorLocation errorLocation) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 		this.errorLocation = errorLocation;
 	}
 
 	public PhoneticErrorDefinition(String after, ErrorLocation errorLocation, SpecialConstraint specConstr) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 		this.errorLocation = errorLocation;
 		this.specConstr = specConstr;
 	}
 
 	public PhoneticErrorDefinition(String after, ErrorLocation errorLocation, PrecededByConstraint preConstr) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 		this.errorLocation = errorLocation;
 		this.preConstr = preConstr;
 	}
 
 	public PhoneticErrorDefinition(String after, ErrorLocation errorLocation, PrecededByConstraint preConstr, SpecialConstraint specConstr) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 		this.errorLocation = errorLocation;
 		this.preConstr = preConstr;
 		this.specConstr = specConstr;
 	}
 
 	public PhoneticErrorDefinition(String after, ErrorLocation errorLocation, FollowedByConstraint postConstr) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 		this.errorLocation = errorLocation;
 		this.preConstr = PrecededByConstraint.NOTHING;
 		this.postConstr = postConstr;
 	}
 
 	public PhoneticErrorDefinition(String after, ErrorLocation errorLocation, PrecededByConstraint preConstr, FollowedByConstraint postConstr) {
-		this.after = after;
+		this.after = new StringTriple(after, true);
 		this.errorLocation = errorLocation;
 		this.preConstr = preConstr;
 		this.postConstr = postConstr;
