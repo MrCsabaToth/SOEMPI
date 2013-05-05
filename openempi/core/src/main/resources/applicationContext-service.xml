@@ -755,7 +755,8 @@
 		<property name="defaultMaleReplaceProbability" value="0.002"/>
 	</bean>
 	<bean id="SlidingWindowSwapoutCorruptor"
-		class="org.openhie.openempi.transformation.function.corruption.SlidingWindowSwapoutCorruptor">
+		class="org.openhie.openempi.transformation.function.corruption.SlidingWindowSwapoutCorruptor"
+		parent="StringCorruptor">
 		<property name="name" value="SlidingWindowSwapoutCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>

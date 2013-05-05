@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.openhie.openempi.transformation.function.AbstractStringTransformationFunction;
 
-public class SlidingWindowSwapoutCorruptor extends AbstractStringTransformationFunction
+public class SlidingWindowSwapoutCorruptor extends StringCorruptor
 {
 	public static final String SWAPOUT_PROBABILITY_TAG = "swapout_probability";
 	public static final String SLIDING_WINDOW_SIZE_TAG = "sliding_window_size";
@@ -67,6 +67,6 @@ public class SlidingWindowSwapoutCorruptor extends AbstractStringTransformationF
 		if (swapoutList.size() > defaultSlidingWindowSize)
 			swapoutList.remove(0);
 
-		return corrupted;
+		return super.stringTransformCore(corrupted, parameters);
 	}
 }
