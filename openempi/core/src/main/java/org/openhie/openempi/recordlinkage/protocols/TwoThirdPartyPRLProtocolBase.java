@@ -123,6 +123,11 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 		throw new ApplicationException("Nothing to test: there's no BF reencoding during two 3rd party protocols");
 	}
 
+	public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException
+	{
+		throw new ApplicationException("Nothing to test: there's no BF reencoding during simple send");
+	}
+
 	protected BloomFilterParameterAdvice personMatchRequestAcquired(PersonMatchRequest leftPersonMatchRequest,
 			PersonMatchRequest rightPersonMatchRequest, ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException
 	{

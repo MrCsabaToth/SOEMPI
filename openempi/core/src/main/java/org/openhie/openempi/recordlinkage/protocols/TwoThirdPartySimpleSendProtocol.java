@@ -162,6 +162,11 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 		throw new ApplicationException("Nothing to test: there's no BF reencoding during simple send");
 	}
 
+	public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException
+	{
+		throw new ApplicationException("Nothing to test: there's no BF reencoding during simple send");
+	}
+
 	public String getName() {
 		return name;
 	}

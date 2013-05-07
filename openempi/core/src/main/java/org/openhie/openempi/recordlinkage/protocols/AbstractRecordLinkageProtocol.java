@@ -475,6 +475,8 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 
 	abstract public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
 
+	abstract public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException;
+
 	protected BloomFilterParameterAdvice getBloomFilterParameterAdviceForRightSide(PersonMatchRequest leftPersonMatchRequest,
 			PersonMatchRequest rightPersonMatchRequest) {
 		// prepare the return information for the right side

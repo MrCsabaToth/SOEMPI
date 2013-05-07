@@ -18,6 +18,7 @@
 package org.openhie.openempi.recordlinkage.protocols;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,8 @@ import org.openhie.openempi.matching.fellegisunter.BloomFilterParameterAdvice;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.Dataset;
 import org.openhie.openempi.model.FieldType;
+import org.openhie.openempi.model.FieldMeaning.FieldMeaningEnum;
+import org.openhie.openempi.model.FieldType.FieldTypeEnum;
 import org.openhie.openempi.model.MatchPairStat;
 import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonMatchRequest;
@@ -97,9 +100,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		return isThereClearField;
 	}
 
-	protected void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames, List<ColumnInformation> matchColumnInformation,
-			List<ColumnInformation> noMatchColumnInformation, boolean isThereClearField, String defaultHmacFunctionName, String thirdPartyAddress,
-			Map<Long,Long> personPseudoIdsReverseLookup, RemotePersonService remotePersonService, String remoteTableName) throws NamingException, ApplicationException {
+	private List<Person> hmacEncodeSamplesForSend(Dataset dataset, long totalRecords, List<String> columnNames, List<ColumnInformation> matchColumnInformation,
+			List<ColumnInformation> noMatchColumnInformation, boolean isThereClearField, String defaultHmacFunctionName) {
 		Configuration config = Context.getConfiguration();
 		BlockingSettings blockingSettings = (BlockingSettings)
 				config.lookupConfigurationEntry(BasicBlockingConstants.BLOCKING_SETTINGS_REGISTRY_KEY);
@@ -132,11 +134,18 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				}
 			}
 		}
+		return persons;
+	}
+
+	protected void sendFirstPhaseData(Dataset dataset, long totalRecords, List<String> columnNames, List<ColumnInformation> matchColumnInformation,
+			List<ColumnInformation> noMatchColumnInformation, boolean isThereClearField, String defaultHmacFunctionName, String thirdPartyAddress,
+			Map<Long,Long> personPseudoIdsReverseLookup, RemotePersonService remotePersonService, String remoteTableName) throws NamingException, ApplicationException {
+		List<Person> persons = hmacEncodeSamplesForSend(dataset, totalRecords, columnNames, matchColumnInformation,
+				noMatchColumnInformation, isThereClearField, defaultHmacFunctionName);
 		// Don't use pseudoIds for local experiments
 		if (!thirdPartyAddress.equals(Constants.LOCALHOST_IP_ADDRESS) &&
 			!thirdPartyAddress.equals(Constants.LOCALHOST_NAME))
 		{
-			personPseudoIdsReverseLookup = new HashMap<Long,Long>();
 			long i = 0L;
 			for (Person person : persons) {
 				personPseudoIdsReverseLookup.put(i, person.getPersonId());
@@ -221,6 +230,26 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				null, rightPersonMatchRequest.getNonce(), leftPersonMatchRequest.getNonce(),
 				false, Constants.LOCALHOST_IP_ADDRESS);
 
+	}
+
+	public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException
+	{
+		PersonManagerService personManagerService = Context.getPersonManagerService();
+		Dataset dataset = personManagerService.getDatasetById(dataSetId);
+		List<ColumnInformation> allCiList = personManagerService.getDatasetColumnInformation(dataset.getTableName());
+		List<ColumnInformation> ciToEncode = new ArrayList<ColumnInformation>();
+		List<String> columnNamesToEncode = new ArrayList<String>();
+		for (ColumnInformation ci : allCiList) {
+			if (ci.getFieldType().getFieldTypeEnum() == FieldTypeEnum.String &&
+			    ci.getFieldTransformation() == null &&
+			    ci.getFieldMeaning().getFieldMeaningEnum() != FieldMeaningEnum.OriginalId)
+			{
+				ciToEncode.add(ci);
+				columnNamesToEncode.add(ci.getFieldName());
+			}
+		}
+		hmacEncodeSamplesForSend(dataset, totalRecords, columnNamesToEncode, ciToEncode,
+				new ArrayList<ColumnInformation>(), true, Constants.DEFAULT_HMAC_FUNCTION_NAME);
 	}
 
 	protected BloomFilterParameterAdvice personMatchRequestAcquired(PersonMatchRequest leftPersonMatchRequest,
