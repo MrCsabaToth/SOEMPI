@@ -208,12 +208,12 @@ public class ComponentLoginDialog extends Dialog {
 		boolean keyServerPartOk = true;
 		boolean dataIntegratorPartOk = true;
 		boolean parameterManagerPartOk = true;
-		boolean needsKeyServerLogin = (mode != LoginDialogMode.DataIntegratorLogin || needsKeyServerAuth);
+		boolean needsKeyServerLogin = (mode != LoginDialogMode.DataIntegratorLogin || getNeedsKeyServerAuth());
 		if (needsKeyServerLogin)
 			keyServerPartOk = (hasValue(keyServerUserName) &&
 								hasValue(keyServerPassword) &&
 								keyServerPassword.getValue().length() > 3);
-		if (!needsKeyServerAuth) {
+		if (!getNeedsKeyServerAuth()) {
 			if (mode != LoginDialogMode.KeyServerOnly)
 				dataIntegratorPartOk = (hasValue(dataIntegratorUserName) &&
 										hasValue(dataIntegratorPassword) &&
@@ -280,19 +280,19 @@ public class ComponentLoginDialog extends Dialog {
 		dataIntegratorPassword.setEnabled(diStatus);
 		parameterManagerUserName.setEnabled(mode == LoginDialogMode.PRL2Login);
 		parameterManagerPassword.setEnabled(mode == LoginDialogMode.PRL3Login);
-		if (mode != LoginDialogMode.Inactive || needsKeyServerAuth) {
+		if (mode == LoginDialogMode.Inactive || (!getNeedsKeyServerAuth() && mode == LoginDialogMode.KeyServerOnly)) {
+			keyServerUserName.setEnabled(false);
+			keyServerPassword.setEnabled(false);
+			status.show();
+			getButtonBar().disable();
+			ComponentLoginDialog.this.hide();
+		} else {
 			keyServerUserName.setEnabled(mode != LoginDialogMode.DataIntegratorLogin);
 			keyServerPassword.setEnabled(mode != LoginDialogMode.DataIntegratorLogin);
 			status.hide();
 			getButtonBar().enable();
 			setFocusWidget(login);
 			ComponentLoginDialog.this.show();
-		} else {
-			keyServerUserName.setEnabled(false);
-			keyServerPassword.setEnabled(false);
-			status.show();
-			getButtonBar().disable();
-			ComponentLoginDialog.this.hide();
 		}
 	}
 
