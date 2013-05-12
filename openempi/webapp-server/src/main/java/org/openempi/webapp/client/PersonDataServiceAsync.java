@@ -57,7 +57,7 @@ public interface PersonDataServiceAsync
 
 	public void doesCurrentLoaderConfigurationNeedKeyServer(AsyncCallback<Boolean> callback);
 
-	public void saveToFileDataset(String fileName, DatasetWeb dataset, AsyncCallback<Void> callback);
+	public void saveToFileDataset(DatasetWeb dataset, AsyncCallback<Void> callback);
 
 	public void deleteDataset(Integer datasetId, AsyncCallback<Void> callback);
 

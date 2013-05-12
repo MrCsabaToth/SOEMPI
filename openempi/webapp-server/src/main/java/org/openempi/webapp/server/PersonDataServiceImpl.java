@@ -302,8 +302,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		personService.updateDataset(datasetFound);
 	}
 
-	public void saveToFileDataset(String fileName, DatasetWeb dataset) {
-		log.debug("Received request to save dataset entry " + dataset.getDatasetId() + " to file: " + fileName);
+	public void saveToFileDataset(DatasetWeb dataset) {
+		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
 			// TODO
 		} catch (Throwable t) {
