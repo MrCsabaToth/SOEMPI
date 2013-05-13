@@ -305,7 +305,9 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 	public void saveToFileDataset(DatasetWeb dataset) {
 		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
-			// TODO
+			PersonManagerService personManagerService = Context.getPersonManagerService();
+			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
+			personManagerService.saveDatasetToFile(datasetFound);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);

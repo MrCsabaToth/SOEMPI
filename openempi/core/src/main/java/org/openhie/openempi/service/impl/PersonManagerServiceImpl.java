@@ -17,7 +17,12 @@
  */
 package org.openhie.openempi.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,7 @@ import org.openhie.openempi.model.PersonMatch;
 import org.openhie.openempi.model.User;
 import org.openhie.openempi.service.KeyServerService;
 import org.openhie.openempi.service.PersonManagerService;
+import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.service.ValidationService;
 import org.openhie.openempi.transformation.TransformationService;
 import org.openhie.openempi.transformation.function.corruption.LastnameCorruptor;
@@ -427,5 +433,85 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		// Nothing else left, return currentUser whether it's null or not
 		return this.currentUser;
 	}
+
+    public void saveDatasetToFile(Dataset dataset)
+    {
+		log.debug("Saving a dataset entry: " + dataset);
+		if (dataset.getDatasetId() == null) {
+			return;
+		}
+		Dataset datasetEntry = datasetDao.getDataset(dataset.getDatasetId());
+		if (datasetEntry == null) {
+			return;
+		}
+		String fileName = datasetEntry.getFileName();
+		if (fileName != null && fileName.length() > 0 && !fileName.equals(Constants.NOT_AVAILABLE)) {
+			StringBuilder newFileNameBuilder = new StringBuilder(fileName);
+			SecureRandom rnd = new SecureRandom();
+			String uniqeIdStr = Integer.toString(rnd.nextInt());
+			int fileExtensionDotIndex = newFileNameBuilder.lastIndexOf(".");
+			if (fileExtensionDotIndex > 0)
+				newFileNameBuilder.insert(fileExtensionDotIndex, uniqeIdStr);
+			else
+				newFileNameBuilder.append(uniqeIdStr);
+			BufferedWriter writer = null;
+			try {
+				File newFile = new File(newFileNameBuilder.toString());
+				log.debug("Saving physical upload file, stored at: " + newFile.getAbsolutePath());
+				writer = new BufferedWriter(new FileWriter(newFile));
+				List<ColumnInformation> columnInformation = dataset.getColumnInformation();
+				List<String> fieldNames = new ArrayList<String>();
+				ColumnInformation lastCi = columnInformation.get(columnInformation.size() - 1);
+				for(ColumnInformation ci : columnInformation) {
+					fieldNames.add(ci.getFieldName());
+					writer.append(ci.getFieldName());
+					if (!ci.getFieldName().equals(lastCi.getFieldName()))
+						writer.append(",");
+					else
+						writer.newLine();
+				}
+
+				PersonQueryService personQueryService = Context.getPersonQueryService();
+				String lastFn = fieldNames.get(fieldNames.size() - 1);;
+				int pageSize = Constants.PAGE_SIZE;
+				Long pageStart = 0L;
+				int numPersons = 0;
+				do {
+					List<Person> personList = personQueryService.getPersonsPaged(dataset.getTableName(), fieldNames, pageStart, pageSize);
+					numPersons = personList.size();
+					if (numPersons > 0) {
+						for (Person person : personList) {
+							for (String fn: fieldNames) {
+								String value = person.getStringAttribute(fn);
+								if (value != null)
+									writer.append(value);
+								if (!fn.equals(lastFn))
+									writer.append(",");
+								else
+									writer.newLine();
+							}
+						}
+					}
+					pageStart += pageSize;
+				} while (numPersons > 0);
+
+			}
+			catch(IOException e) {
+				log.error("Failed while saving file. Error: " + e);
+				throw new RuntimeException("Failed while saving file.");
+			}
+			finally {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					log.error("Failed to close output file. Error: " + e);
+					throw new RuntimeException("Failed to close output file.");
+				}
+			}
+
+		} else {
+			log.debug("Cannot find the upload location to save to");
+		}
+    }
 
 }

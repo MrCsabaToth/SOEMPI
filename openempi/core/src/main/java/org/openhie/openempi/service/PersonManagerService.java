@@ -195,8 +195,8 @@ public interface PersonManagerService extends PersonServiceBase
 	 * Deletes a person from the EMPI. The system locates the person record using the person identifiers as search criteria. If the record is not
 	 * found an unchecked exception is thrown to notify the caller that this record does not exist in the system. If the record is found, the record
 	 * is voided from the system rather than deleted to preserve a history.
-	 *  
-	 *  @param personIdentifier
+	 * 
+	 * @param personIdentifier
 	 */
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public void deletePerson(String tableName, long personIdentifier) throws ApplicationException;
@@ -207,4 +207,11 @@ public interface PersonManagerService extends PersonServiceBase
 	 */
 	public User getCurrentUser();
 	public User getCurrentUser(User userHint);
+
+    /**
+     * Save a dataset to file in CSV format
+     * 
+     * @param dataset dataset to be save din CSV format, right next to the input file location
+     */
+    public void saveDatasetToFile(Dataset dataset);
 }

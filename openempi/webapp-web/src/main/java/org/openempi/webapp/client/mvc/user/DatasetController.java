@@ -66,8 +66,7 @@ public class DatasetController extends AbstractController
 		} else if (type == AppEvents.DatasetListUpdateForImport) {
 			updateDatasetData(true);
 		} else if (type == AppEvents.DatasetListSaveToFile) {
-			List<Object> params = event.getData();
-			DatasetWeb dataset = (DatasetWeb)params.get(0);
+			DatasetWeb dataset = (DatasetWeb)event.getData();
 			saveToFileDatasetData(dataset);
 		} else if (type == AppEvents.DatasetListShowColumnsRequest) {
 			String tableName = (String)event.getData();
