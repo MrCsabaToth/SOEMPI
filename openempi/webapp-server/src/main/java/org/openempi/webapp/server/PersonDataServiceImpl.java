@@ -130,6 +130,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 	}
 	
 	public List<LinkedPersonWeb> getLinkedPersons(String tableName, PersonWeb personParam) {
+		// TODO
 		return new ArrayList<LinkedPersonWeb>();
 	}
 	
@@ -175,26 +176,24 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		}
 	}
 
-	public void removeDataset(Integer datasetId) {
-		log.debug("Received request to remove dataset entry: " + datasetId);
+	public void deleteDatasetFile(DatasetWeb dataset) {
+		log.debug("Received request to delete dataset's file from the upload directory, dataset entry: " + dataset.getDatasetId());
 		try {
-			PersonManagerService personService = Context.getPersonManagerService();
-			org.openhie.openempi.model.Dataset dataset = new org.openhie.openempi.model.Dataset();
-			dataset.setDatasetId(datasetId);
-			personService.removeDataset(dataset);
+			PersonManagerService personManagerService = Context.getPersonManagerService();
+			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
+			personManagerService.deleteDatasetFile(datasetFound);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);
 		}
 	}
 	
-	public void deleteDataset(Integer datasetId) {
-		log.debug("Received request to delete dataset entry: " + datasetId);
+	public void removeDataset(DatasetWeb dataset) {
+		log.debug("Received request to remove dataset entry: " + dataset.getDatasetId());
 		try {
-			PersonManagerService personService = Context.getPersonManagerService();
-			org.openhie.openempi.model.Dataset dataset = new org.openhie.openempi.model.Dataset();
-			dataset.setDatasetId(datasetId);
-			personService.deleteDataset(dataset);
+			PersonManagerService personManagerService = Context.getPersonManagerService();
+			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
+			personManagerService.removeDataset(datasetFound);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);
@@ -302,7 +301,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		personService.updateDataset(datasetFound);
 	}
 
-	public void saveToFileDataset(DatasetWeb dataset) {
+	public void saveDatasetToFile(DatasetWeb dataset) {
 		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
 			PersonManagerService personManagerService = Context.getPersonManagerService();

@@ -125,7 +125,7 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 
 				// 9. Drop primary key constraint
 				String sqlDropPKConstraint = "ALTER TABLE " + tableFullName +
-						" DROP CONSTRAINT " + tableFullName + "_" + PERSON_ID_COLUMN_NAME + PK_CONSTNRAINT_NAME_POSTFIX + ";";
+						" DROP CONSTRAINT " + tableFullName + "_" + PK_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropPKConstraint);
 				num = query.executeUpdate();
 

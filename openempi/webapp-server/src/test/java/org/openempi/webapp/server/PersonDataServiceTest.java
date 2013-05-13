@@ -77,7 +77,7 @@ public class PersonDataServiceTest extends BaseServiceTestCase
 		List<DatasetWeb> datasets = personService.getDatasets(Constants.DEFAULT_ADMIN_USERNAME);
 		for (DatasetWeb aDataset : datasets) {
 			System.out.println(aDataset);
-			personService.removeDataset(aDataset.getDatasetId());
+			personService.removeDataset(aDataset);
 			System.out.println("Removed dataset entry");
 		}		
 	}

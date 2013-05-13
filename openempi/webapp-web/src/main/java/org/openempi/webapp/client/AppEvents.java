@@ -63,15 +63,17 @@ public class AppEvents
 
 	public static final EventType Error = new EventType();
 
-	public static final EventType FileEntryRemove = new EventType();
-
 	public static final EventType FileEntryPreImport = new EventType();
 
 	public static final EventType FileEntryImport = new EventType();
 
 	public static final EventType FileEntryPostImport = new EventType();
 
-	public static final EventType FileEntryDelete = new EventType();
+	public static final EventType DatasetRemove = new EventType();
+
+	public static final EventType DatasetDeleteFile = new EventType();
+
+	public static final EventType DatasetSaveToFile = new EventType();
 
 	public static final EventType DatasetSend = new EventType();
 
@@ -82,8 +84,6 @@ public class AppEvents
 	public static final EventType DatasetListRender = new EventType();
 
 	public static final EventType DatasetListUpdateForImport = new EventType();
-
-	public static final EventType DatasetListSaveToFile = new EventType();
 
 	public static final EventType DatasetListShowColumnsRequest = new EventType();
 

@@ -102,8 +102,8 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		return datasetDao.updateDataset(dataset);
 	}
 
-	public void deleteDataset(Dataset dataset) {
-		log.debug("Deleting a dataset entry: " + dataset);
+	public void deleteDatasetFile(Dataset dataset) {
+		log.debug("Deleting a file for dataset entry: " + dataset);
 		if (dataset.getDatasetId() == null) {
 			return;
 		}
@@ -122,7 +122,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 	}
 
 	public void removeDataset(Dataset dataset) {
-		deleteDataset(dataset);
+		deleteDatasetFile(dataset);
 		List<PersonMatch> personMatches = personMatchDao.getPersonMatches(dataset);
 		for (PersonMatch pm : personMatches) {
 			String matchName = pm.getMatchTitle();

@@ -74,11 +74,11 @@ public interface PersonManagerService extends PersonServiceBase
     public Dataset updateDataset(Dataset dataset);
     
     /**
-     * Deletes the dataset from the physical upload file store
+     * Deletes a file for a dataset from the physical upload file store
      *
      * @param dataset entry
      */
-    void deleteDataset(Dataset dataset);
+    void deleteDatasetFile(Dataset dataset);
 
     /**
      * Removes a dataset entry from the database by its id

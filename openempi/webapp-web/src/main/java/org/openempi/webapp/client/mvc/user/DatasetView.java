@@ -312,7 +312,7 @@ public class DatasetView extends View
 					b = new Button("", IconHelper.create("images/disk.png"), new SelectionListener<ButtonEvent>() {
 						@Override
 						public void componentSelected(ButtonEvent ce) {
-							controller.handleEvent(new AppEvent(AppEvents.DatasetListSaveToFile, selectedDatasetParam));
+							controller.handleEvent(new AppEvent(AppEvents.DatasetSaveToFile, selectedDatasetParam));
 						}
 					});
 					b.setToolTip("Save dataset to a file");
@@ -328,7 +328,7 @@ public class DatasetView extends View
 					b = new Button("", IconHelper.create("images/database_delete.png"), new SelectionListener<ButtonEvent>() {
 						@Override
 						public void componentSelected(ButtonEvent ce) {
-							controller.handleEvent(new AppEvent(AppEvents.FileEntryRemove, selectedDatasetParam));
+							controller.handleEvent(new AppEvent(AppEvents.DatasetRemove, selectedDatasetParam));
 						}
 					});
 					b.setToolTip("Delete dataset including every dependency, cascaded");

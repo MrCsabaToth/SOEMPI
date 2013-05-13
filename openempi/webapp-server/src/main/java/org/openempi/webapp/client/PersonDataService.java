@@ -58,11 +58,11 @@ public interface PersonDataService extends RemoteService
 
 	public boolean doesCurrentLoaderConfigurationNeedKeyServer();
 
-	public void saveToFileDataset(DatasetWeb dataset);
+	public void saveDatasetToFile(DatasetWeb dataset);
 
-	public void deleteDataset(Integer datasetId);
+	public void deleteDatasetFile(DatasetWeb dataset);
 
-	public void removeDataset(Integer datasetId);
+	public void removeDataset(DatasetWeb dataset);
 
 	public List<ColumnInformationWeb> getColumnInformation(String tableName);
 

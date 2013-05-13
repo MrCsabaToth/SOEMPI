@@ -57,11 +57,11 @@ public interface PersonDataServiceAsync
 
 	public void doesCurrentLoaderConfigurationNeedKeyServer(AsyncCallback<Boolean> callback);
 
-	public void saveToFileDataset(DatasetWeb dataset, AsyncCallback<Void> callback);
+	public void saveDatasetToFile(DatasetWeb dataset, AsyncCallback<Void> callback);
 
-	public void deleteDataset(Integer datasetId, AsyncCallback<Void> callback);
+	public void deleteDatasetFile(DatasetWeb dataset, AsyncCallback<Void> callback);
 
-	public void removeDataset(Integer datasetId, AsyncCallback<Void> callback);
+	public void removeDataset(DatasetWeb dataset, AsyncCallback<Void> callback);
 
 	public void getColumnInformation(String tableName, AsyncCallback<List<ColumnInformationWeb>> callback);
 

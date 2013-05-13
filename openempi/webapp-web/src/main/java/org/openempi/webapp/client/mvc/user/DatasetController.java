@@ -40,10 +40,10 @@ public class DatasetController extends AbstractController
 	public DatasetController() {
 		this.registerEventTypes(AppEvents.DatasetListView);
 		this.registerEventTypes(AppEvents.DatasetListUpdateForImport);
-		this.registerEventTypes(AppEvents.DatasetListSaveToFile);
+		this.registerEventTypes(AppEvents.DatasetSaveToFile);
 		this.registerEventTypes(AppEvents.DatasetListShowColumnsRequest);
-		this.registerEventTypes(AppEvents.FileEntryRemove);
-		this.registerEventTypes(AppEvents.FileEntryDelete);
+		this.registerEventTypes(AppEvents.DatasetRemove);
+		this.registerEventTypes(AppEvents.DatasetDeleteFile);
 		this.registerEventTypes(AppEvents.FileEntryPreImport);
 		this.registerEventTypes(AppEvents.FileEntryImport);
 		this.registerEventTypes(AppEvents.FileEntryPostImport);
@@ -65,18 +65,18 @@ public class DatasetController extends AbstractController
 			forwardToView(datasetView, event);
 		} else if (type == AppEvents.DatasetListUpdateForImport) {
 			updateDatasetData(true);
-		} else if (type == AppEvents.DatasetListSaveToFile) {
+		} else if (type == AppEvents.DatasetSaveToFile) {
 			DatasetWeb dataset = (DatasetWeb)event.getData();
 			saveToFileDatasetData(dataset);
 		} else if (type == AppEvents.DatasetListShowColumnsRequest) {
 			String tableName = (String)event.getData();
 			getColumnInformationForDataset(tableName);
-		} else if (type == AppEvents.FileEntryRemove) {
-			List<DatasetWeb> fileList = event.getData();
-			removeDatasetEntries(fileList);
-		} else if (type == AppEvents.FileEntryDelete) {
-			List<DatasetWeb> fileList = event.getData();
-			deleteDatasetEntries(fileList);
+		} else if (type == AppEvents.DatasetRemove) {
+			DatasetWeb dataset = (DatasetWeb)event.getData();
+			removeDatasetEntry(dataset);
+		} else if (type == AppEvents.DatasetDeleteFile) {
+			DatasetWeb dataset = (DatasetWeb)event.getData();
+			deleteDatasetEntry(dataset);
 		} else if (type == AppEvents.FileEntryImport) {
 			List<Object> params = event.getData();
 			String tableName = (String)params.get(0);
@@ -103,7 +103,7 @@ public class DatasetController extends AbstractController
 	}
 	
 	private void saveToFileDatasetData(DatasetWeb dataset) {
-		getPersonDataService().saveToFileDataset(dataset, new AsyncCallback<Void>() {
+		getPersonDataService().saveDatasetToFile(dataset, new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Dispatcher.forwardEvent(AppEvents.Error, caught);
 			}
@@ -127,27 +127,20 @@ public class DatasetController extends AbstractController
 	}
 	
 
-	private void removeDatasetEntries(List<DatasetWeb> datasetEntries) {
-		for (DatasetWeb dataset : datasetEntries) {
-			getPersonDataService().removeDataset(dataset.getDatasetId(), new AsyncCallback<Void>() {
-				public void onFailure(Throwable caught) {
-					Dispatcher.forwardEvent(AppEvents.Error, caught);
-				}
+	private void removeDatasetEntry(DatasetWeb datasetEntry) {
+		getPersonDataService().removeDataset(datasetEntry, new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				Dispatcher.forwardEvent(AppEvents.Error, caught);
+			}
 
-				public void onSuccess(Void value) {
-				}
-			});
-		}
-		updateDatasetData(false);
+			public void onSuccess(Void value) {
+				updateDatasetData(false);
+			}
+		});
 	}
 
-	private void deleteDatasetEntries(List<DatasetWeb> datasetEntries) {
-		for (DatasetWeb dataset : datasetEntries)
-			deleteDatasetEntry(dataset);
-	}
-	
 	private void deleteDatasetEntry(DatasetWeb datasetEntry) {
-		getPersonDataService().deleteDataset(datasetEntry.getDatasetId(), new AsyncCallback<Void>() {
+		getPersonDataService().deleteDatasetFile(datasetEntry, new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Dispatcher.forwardEvent(AppEvents.Error, caught);
 			}
