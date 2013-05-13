@@ -88,7 +88,7 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 				String tableFullName = getTableFullName(tableName);
 				// 1. Remove foreign key constraint for creator_id
 				/*String sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
-						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + CREATOR_ID_COLUMN_NAME;";
+						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + CREATOR_ID_COLUMN_NAME + ";";
 				query = session.createSQLQuery(sqlDropFKConstraint);
 				num = query.executeUpdate();*/
 

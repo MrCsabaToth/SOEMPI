@@ -47,6 +47,15 @@ public class PersonMatchDaoHibernate extends UniversalDaoHibernate implements Pe
 		return personMatch;
 	}
 
+    public void removePersonMatch(PersonMatch personMatch) {
+		if (personMatch == null || personMatch.getPersonMatchId() == null) {
+			return;
+		}
+		PersonMatch thePersonMatch = (PersonMatch) getHibernateTemplate().get(PersonMatch.class, personMatch.getPersonMatchId());
+		getHibernateTemplate().delete(thePersonMatch);
+		getHibernateTemplate().flush();
+    }
+
 	public PersonMatch updatePersonMatch(final PersonMatch personMatch) {
 		log.debug("Updating a person match.");
 		PersonMatch updatedPersonMatch = (PersonMatch) getHibernateTemplate().execute(new HibernateCallback() {

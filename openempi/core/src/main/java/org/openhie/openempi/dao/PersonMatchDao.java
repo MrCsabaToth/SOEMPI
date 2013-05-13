@@ -34,7 +34,15 @@ public interface PersonMatchDao extends UniversalDao
 	 */
     @Transactional
 	public PersonMatch addPersonMatch(PersonMatch personMatch);
-	
+
+	/**
+	 * Remove/delete a PersonMatch from to the table.
+	 * 
+	 * @param personMatch: the PersonMatch entity to be removed
+	 */
+    @Transactional
+    public void removePersonMatch(PersonMatch personMatch);
+
 	/**
 	 * Update an existing PersonMatch entity in the table.
 	 * 

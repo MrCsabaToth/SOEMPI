@@ -37,6 +37,15 @@ public class PersonMatchRequestDaoHibernate extends UniversalDaoHibernate implem
 		return personMatchRequest;
 	}
 
+    public void removePersonMatchRequest(PersonMatchRequest personMatchRequest) {
+		if (personMatchRequest == null || personMatchRequest.getPersonMatchRequestId() == null) {
+			return;
+		}
+		PersonMatchRequest thePersonMatchRequest = (PersonMatchRequest) getHibernateTemplate().get(PersonMatchRequest.class, personMatchRequest.getPersonMatchRequestId());
+		getHibernateTemplate().delete(thePersonMatchRequest);
+		getHibernateTemplate().flush();
+    }
+
 	public PersonMatchRequest updatePersonMatchRequest(final PersonMatchRequest personMatchRequest) {
 		log.debug("Updating a person matchRequest.");
 		getHibernateTemplate().merge(personMatchRequest);
@@ -55,7 +64,8 @@ public class PersonMatchRequestDaoHibernate extends UniversalDaoHibernate implem
 				}
 				log.debug("Found match requests " + pmr + " to id " + personMatchRequestId);
 				return pmr;
-			}});
+			}
+		});
 	}
 	
 	// TODO: remove when the match will be done by the match name
@@ -74,7 +84,8 @@ public class PersonMatchRequestDaoHibernate extends UniversalDaoHibernate implem
 				}
 				log.debug("Found " + pmrs.size() + " match requests for match name " + matchName);
 				return pmrs;
-			}});
+			}
+		});
 	}
 	
 }

@@ -192,6 +192,9 @@
 		<property name="datasetDao" ref="datasetDao" />
 		<property name="personMatchDao" ref="personMatchDao" />
 		<property name="personLinkDao" ref="personLinkDao" />
+		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+		<property name="matchPairStatDao" ref="matchPairStatDao" />
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
 	</bean>
 
 	<bean id="personQueryService"

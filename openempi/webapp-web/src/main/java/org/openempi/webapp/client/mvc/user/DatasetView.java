@@ -269,13 +269,13 @@ public class DatasetView extends View
 		column = new ColumnConfig();
 		column.setId(DatasetWeb.TABLE_NAME);
 		column.setHeader("Table Name");
-		column.setWidth(100);
+		column.setWidth(160);
 		configs.add(column);
 
 		column = new ColumnConfig();
 		column.setId(DatasetWeb.FILE_NAME);
 		column.setHeader("File Name");
-		column.setWidth(200);
+		column.setWidth(365);
 		configs.add(column);
 
 		column = new ColumnConfig(DatasetWeb.DATE_CREATED, "Date Created", 170);
@@ -283,7 +283,7 @@ public class DatasetView extends View
 		column.setDateTimeFormat(DateTimeFormat.getFullDateTimeFormat());
 		configs.add(column);
 		
-		column = new ColumnConfig(DatasetWeb.IMPORTED, "Imported?", 60);
+		column = new ColumnConfig(DatasetWeb.IMPORTED, "Imported?", 35);
 		column.setAlignment(HorizontalAlignment.RIGHT);
 		configs.add(column);
 
@@ -324,6 +324,14 @@ public class DatasetView extends View
 						}
 					});
 					b.setToolTip("View column properties of the dataset");
+				} else if (property.equals(DatasetWeb.DELETE_BUTTON)) {
+					b = new Button("", IconHelper.create("images/database_delete.png"), new SelectionListener<ButtonEvent>() {
+						@Override
+						public void componentSelected(ButtonEvent ce) {
+							controller.handleEvent(new AppEvent(AppEvents.FileEntryRemove, selectedDatasetParam));
+						}
+					});
+					b.setToolTip("Delete dataset including every dependency, cascaded");
 				}
 
 				b.setWidth(gridParam.getColumnModel().getColumnWidth(colIndex) - 10);
@@ -346,6 +354,13 @@ public class DatasetView extends View
 		column.setRenderer(buttonRenderer);
 		configs.add(column);
 
+		column = new ColumnConfig();
+		column.setId(DatasetWeb.DELETE_BUTTON);
+		column.setHeader("Delete");
+		column.setWidth(35);
+		column.setRenderer(buttonRenderer);
+		configs.add(column);
+
 		ColumnModel cm = new ColumnModel(configs);
 
 		container = new LayoutContainer();
@@ -356,7 +371,7 @@ public class DatasetView extends View
 		cp.setFrame(true);
 		cp.setIcon(IconHelper.create("images/folder.png"));
 		cp.setLayout(new FillLayout());
-		cp.setSize(1000, 500);
+		cp.setSize(1100, 600);
 
 		toolBar = new ToolBar();
 		wizardButton =

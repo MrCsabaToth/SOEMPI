@@ -34,6 +34,14 @@ public interface PersonMatchRequestDao extends UniversalDao
 	public PersonMatchRequest addPersonMatchRequest(PersonMatchRequest personMatchRequest);
 	
 	/**
+	 * Remove/delete a PersonMatchRequest from to the table.
+	 * 
+	 * @param personMatchRequest: the PersonMatchRequest entity to be removed
+	 */
+    @Transactional
+    public void removePersonMatchRequest(PersonMatchRequest personMatchRequest);
+
+	/**
 	 * Update an existing PersonMatchRequest entity in the table.
 	 * 
 	 * @param personMatchRequest: the PersonMatchRequest entity to be updated
@@ -58,6 +66,6 @@ public interface PersonMatchRequestDao extends UniversalDao
 	 * 
 	 * @return PersonMatchRequest entities related to the given match, empty list if no related items found
 	 */
-	public List<PersonMatchRequest> getPersonMatchRequestsForMatchName(String  matchName);
+	public List<PersonMatchRequest> getPersonMatchRequestsForMatchName(String matchName);
 
 }

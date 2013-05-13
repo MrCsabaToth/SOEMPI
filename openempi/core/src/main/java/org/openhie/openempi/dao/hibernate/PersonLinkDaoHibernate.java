@@ -74,6 +74,76 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		});
 	}
 
+	public void removeTable(final String tableName) {
+		log.trace("Removing table " + tableName);
+		getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				String tableFullName = getTableFullName(tableName);
+				// 1. Remove foreign key constraint for creator_id
+				String sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
+						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + CREATOR_ID_COLUMN_NAME + ";";
+				Query query = session.createSQLQuery(sqlDropFKConstraint);
+				int num = query.executeUpdate();
+
+				// 2. Remove foreign key constraint for person_match_id
+				sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
+						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + PERSON_MATCH_ID_COLUMN_NAME + ";";
+				query = session.createSQLQuery(sqlDropFKConstraint);
+				num = query.executeUpdate();
+
+				// 3. Remove foreign key constraint for left_person_id
+				sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
+						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME + ";";
+				query = session.createSQLQuery(sqlDropFKConstraint);
+				num = query.executeUpdate();
+
+				// 4. Remove foreign key constraint for right_person_id
+				sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
+						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + RIGHT_PERSON_ID_COLUMN_NAME + ";";
+				query = session.createSQLQuery(sqlDropFKConstraint);
+				num = query.executeUpdate();
+
+				// 5. Drop weight index
+				String sqlDropIndex = "DROP INDEX " + tableFullName + "_" + WEIGHT_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
+				query = session.createSQLQuery(sqlDropIndex);
+				num = query.executeUpdate();
+
+				// 6. Drop right_person_id index
+				sqlDropIndex = "DROP INDEX " + tableFullName + "_" + RIGHT_PERSON_ID_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
+				query = session.createSQLQuery(sqlDropIndex);
+				num = query.executeUpdate();
+
+				// 7. Drop right_person_id index
+				sqlDropIndex = "DROP INDEX " + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
+				query = session.createSQLQuery(sqlDropIndex);
+				num = query.executeUpdate();
+
+				// 8. Drop primary index
+				sqlDropIndex = "DROP INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
+				query = session.createSQLQuery(sqlDropIndex);
+				num = query.executeUpdate();
+
+				// 9. Drop primary key constraint
+				String sqlDropPKConstraint = "ALTER TABLE " + tableFullName +
+						" DROP CONSTRAINT " + tableFullName + "_" + PERSON_ID_COLUMN_NAME + PK_CONSTNRAINT_NAME_POSTFIX + ";";
+				query = session.createSQLQuery(sqlDropPKConstraint);
+				num = query.executeUpdate();
+
+				// 10. Drop Sequence
+				String sqlDropSequence = "DROP SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + ";";
+				query = session.createSQLQuery(sqlDropSequence);
+				num = query.executeUpdate();
+
+				// 11. Create Table
+				String sqlDropTable = "DROP TABLE public." + tableFullName + ";";
+				query = session.createSQLQuery(sqlDropTable);
+				num = query.executeUpdate();
+				session.flush();
+				return num;
+			}
+		});
+	}
+
 	private Long addPersonLinkInHibernate(Session session, String tableName, PersonLink personLink) {
 		log.debug("Storing a person link.");
 		String tableFullName = getTableFullName(tableName);

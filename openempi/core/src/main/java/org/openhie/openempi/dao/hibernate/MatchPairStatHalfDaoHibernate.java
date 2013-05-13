@@ -88,15 +88,15 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 				String sqlDropIndex = "DROP INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
-				// 3. Drop Index
+				// 4. Drop Index
 				sqlDropIndex = "DROP INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX + "2;";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
-				// 4. Drop Sequence
+				// 5. Drop Sequence
 				String sqlDropSequence = "DROP SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropSequence);
 				num = query.executeUpdate();
-				// 5. Create Table
+				// 6. Create Table
 				String sqlDropTable = "DROP TABLE public." + tableFullName + ";";
 				query = session.createSQLQuery(sqlDropTable);
 				num = query.executeUpdate();
@@ -166,18 +166,18 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 		Query query = session.createSQLQuery(sqlCreateIndex);
 		@SuppressWarnings("unused")
 		int num = query.executeUpdate();
-		// 3. Create Index
+		// 4. Create Index
 		sqlCreateIndex = "CREATE INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX + "2" + " ON " +
 				tableFullName + " USING btree (" + PERSON_PSEUDO_ID_COLUMN_NAME + ");";
 		query = session.createSQLQuery(sqlCreateIndex);
 		num = query.executeUpdate();
-		// 4. Create primary key constraint
+		// 5. Create primary key constraint
 		String sqlAddPKConstraint = "ALTER TABLE ONLY " + tableFullName +
 				" ADD CONSTRAINT " + tableFullName + PK_CONSTNRAINT_NAME_POSTFIX +
 				" PRIMARY KEY (" + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ");";
 		query = session.createSQLQuery(sqlAddPKConstraint);
 		num = query.executeUpdate();
-		// 5. Create foreign key constraint for person_pseudo_id
+		// 6. Create foreign key constraint for person_pseudo_id
 		String datasetTableFullName = DATASET_TABLE_NAME_PREFIX + datasetTableName;
 		String sqlAddFKConstraint = "ALTER TABLE ONLY " + tableFullName +
 				" ADD CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + PERSON_PSEUDO_ID_COLUMN_NAME +

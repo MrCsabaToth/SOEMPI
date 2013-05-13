@@ -40,6 +40,14 @@ public interface PersonLinkDao extends UniversalDao
 			final String rightDatasetTableName, final boolean withIndexesAndConstraints);
 
 	/**
+	 * Deletes a table including all constraints, indexes and keys.
+	 * The tableName will get a "tbl_link_" prefix.
+	 * 
+	 * @param tableName: name of the table, will get "tbl_link_" prefix
+	 */
+    public void removeTable(final String tableName);
+    
+	/**
 	 * Add a PersonLink entity to the table.
 	 * 
 	 * @param tableName: name of the table, will get "tbl_link_" prefix

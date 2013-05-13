@@ -31,11 +31,13 @@ public class DatasetWeb extends BaseModelData
 	public static final String DATE_CREATED = "dateCreated";
 	public static final String SAVE_BUTTON = "saveButton";
 	public static final String COLUMNS_BUTTON = "columnsButton";
+	public static final String DELETE_BUTTON = "deleteButton";
 
 	public DatasetWeb() {
 		setImported("N");
 		setSaveButton("S");
 		setColumnsButton("C");
+		setDeleteButton("D");
 	}
 
 	public Integer getDatasetId() {
@@ -100,6 +102,14 @@ public class DatasetWeb extends BaseModelData
 
 	public void setColumnsButton(String columnsButton) {
 		set(COLUMNS_BUTTON, columnsButton);
+	}
+
+	public String getDeleteButton() {
+		return get(DELETE_BUTTON);
+	}
+
+	public void setDeleteButton(String deleteButton) {
+		set(DELETE_BUTTON, deleteButton);
 	}
 
 }

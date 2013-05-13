@@ -32,6 +32,9 @@ import org.openhie.openempi.Constants;
 import org.openhie.openempi.configuration.ConfigurationRegistry;
 import org.openhie.openempi.configuration.FunctionField;
 import org.openhie.openempi.context.Context;
+import org.openhie.openempi.dao.MatchPairStatDao;
+import org.openhie.openempi.dao.MatchPairStatHalfDao;
+import org.openhie.openempi.dao.PersonMatchRequestDao;
 import org.openhie.openempi.loader.configuration.LoaderConfig;
 import org.openhie.openempi.loader.configuration.LoaderDataField;
 import org.openhie.openempi.model.ColumnInformation;
@@ -43,6 +46,7 @@ import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.PersonLink;
 import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonMatch;
+import org.openhie.openempi.model.PersonMatchRequest;
 import org.openhie.openempi.model.User;
 import org.openhie.openempi.service.KeyServerService;
 import org.openhie.openempi.service.PersonManagerService;
@@ -56,6 +60,10 @@ import org.openhie.openempi.util.ValidationUtil;
 
 public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements PersonManagerService
 {
+	protected PersonMatchRequestDao personMatchRequestDao;
+	protected MatchPairStatDao matchPairStatDao;
+	protected MatchPairStatHalfDao matchPairStatHalfDao;
+
 	protected User currentUser;
 
 	public Dataset createDatasetTable(String tableName, List<ColumnInformation> columnInformation,
@@ -115,9 +123,26 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 
 	public void removeDataset(Dataset dataset) {
 		deleteDataset(dataset);
+		List<PersonMatch> personMatches = personMatchDao.getPersonMatches(dataset);
+		for (PersonMatch pm : personMatches) {
+			String matchName = pm.getMatchTitle();
+			List<PersonMatchRequest> personMatchRequests = personMatchRequestDao.getPersonMatchRequestsForMatchName(matchName);
+			if (personMatchRequests != null) {
+				for (PersonMatchRequest pmr : personMatchRequests) {
+					String pmshTableName = pmr.getMatchPairStatHalfTableName();
+					if (pmshTableName != null && !pmshTableName.isEmpty()) {
+						matchPairStatDao.removeTable(pmshTableName);
+						matchPairStatHalfDao.removeTable(pmshTableName);
+					}
+					personMatchRequestDao.removePersonMatchRequest(pmr);
+				}
+			}
+			personLinkDao.removeTable(pm.getMatchTitle());
+			personMatchDao.removePersonMatch(pm);
+		}
 		log.debug("Removing a dataset entry: " + dataset);
-		personDao.removeTable(dataset.getTableName());
 		datasetDao.removeDataset(dataset);
+		personDao.removeTable(dataset.getTableName());
 	}
 
 	public List<ColumnInformation> updateColumnInformation(Dataset dataset)
@@ -513,5 +538,29 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 			log.debug("Cannot find the upload location to save to");
 		}
     }
+
+	public PersonMatchRequestDao getPersonMatchRequestDao() {
+		return personMatchRequestDao;
+	}
+
+	public void setPersonMatchRequestDao(PersonMatchRequestDao personMatchRequestDao) {
+		this.personMatchRequestDao = personMatchRequestDao;
+	}
+
+	public MatchPairStatDao getMatchPairStatDao() {
+		return matchPairStatDao;
+	}
+
+	public void setMatchPairStatDao(MatchPairStatDao matchPairStatDao) {
+		this.matchPairStatDao = matchPairStatDao;
+	}
+
+	public MatchPairStatHalfDao getMatchPairStatHalfDao() {
+		return matchPairStatHalfDao;
+	}
+
+	public void setMatchPairStatHalfDao(MatchPairStatHalfDao matchPairStatHalfDao) {
+		this.matchPairStatHalfDao = matchPairStatHalfDao;
+	}
 
 }

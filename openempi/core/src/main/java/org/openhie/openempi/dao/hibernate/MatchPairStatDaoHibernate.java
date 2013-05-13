@@ -86,20 +86,20 @@ public class MatchPairStatDaoHibernate extends UniversalDaoHibernate implements 
 						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + LEFT_PERSON_PSEUDO_ID_COLUMN_NAME;
 				query = session.createSQLQuery(sqlDropFKConstraint);
 				num = query.executeUpdate();
-				// 2. Drop primary key constraint
+				// 3. Drop primary key constraint
 				String sqlDropPKConstraint = "ALTER TABLE " + tableFullName +
 						" DROP CONSTRAINT " + tableFullName + PK_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropPKConstraint);
 				num = query.executeUpdate();
-				// 3. Drop Index
+				// 4. Drop Index
 				String sqlDropIndex = "DROP INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX +";";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
-				// 4. Drop Sequence
+				// 5. Drop Sequence
 				String sqlDropSequence = "DROP SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropSequence);
 				num = query.executeUpdate();
-				// 5. Create Table
+				// 6. Drop Table
 				String sqlDropTable = "DROP TABLE public." + tableFullName + ";";
 				query = session.createSQLQuery(sqlDropTable);
 				num = query.executeUpdate();
