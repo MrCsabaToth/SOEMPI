@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.openhie.openempi.configuration.FunctionField;
 import org.openhie.openempi.loader.configuration.FieldCompositionComparator;
@@ -38,9 +39,11 @@ public class ConfigurableFileLoader extends AbstractFileLoader
 {
 	public static final String LOADER_ALIAS = "configurableFileLoader";
 	protected LoaderConfig loaderConfiguration;
+	protected Pattern pattern;
 
 	public void loadFile(String fileName, String tableName, LoaderConfig loaderConfiguration, boolean applyFieldTransformations) {
 		this.loaderConfiguration = loaderConfiguration;
+		pattern = Pattern.compile(loaderConfiguration.getDelimiterRegex());
 		super.loadFile(fileName, tableName, loaderConfiguration, applyFieldTransformations);
 	}
 
@@ -73,7 +76,7 @@ public class ConfigurableFileLoader extends AbstractFileLoader
 	 */
 	private boolean getPerson(String line, Person person) throws ParseException {
 		Map<String,List<LoaderFieldComposition>> fieldCompositions = new HashMap<String,List<LoaderFieldComposition>>();
-		String[] fields = line.split(loaderConfiguration.getDelimiterRegex());
+		String[] fields = pattern.split(line);
 		List<LoaderDataField> loaderDataFields = loaderConfiguration.getDataFields();
 		for (LoaderDataField loaderDataField : loaderDataFields) {
 			int sourceColumnIndex = loaderDataField.getSourceColumnIndex();
@@ -81,12 +84,10 @@ public class ConfigurableFileLoader extends AbstractFileLoader
 				log.error("Source column index (" + sourceColumnIndex + ") is smaller than 0");
 				return false;
 			}
-			if (sourceColumnIndex >= fields.length) {
-				log.error("Source column index (" + sourceColumnIndex + ") is bigger than the number of fields in the source file: " + fields.length);
-				return false;
+			if (sourceColumnIndex < fields.length) {	// Just the fact that sourceColumnIndex >= fields.length could mean that the last fields are empty
+				if (!processLoaderDataField(loaderDataField, fields[sourceColumnIndex], person, fieldCompositions))
+					return false;
 			}
-			if (!processLoaderDataField(loaderDataField, fields[sourceColumnIndex], person, fieldCompositions))
-				return false;
 		}
 		return processFieldCompositions(fieldCompositions, person);
 	}

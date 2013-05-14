@@ -292,9 +292,11 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			ks.authenticate(keyServerUserName, keyServerPassword);
 		}
 
+		log.warn("Import start");	// This is warning in order to get through into the log even if we deal with a non-debug version
 		DataLoaderServiceSelector dataLoaderServiceSelector = Context.getDataLoaderServiceSelector();
 		DataLoaderService dataLoaderService = dataLoaderServiceSelector.getDataLoaderServiceType(ConfigurableFileLoader.LOADER_ALIAS).getDataServiceService();
 		dataLoaderService.loadFile(dataset.getFileName(), tableName, loaderConfiguration, applyFieldTransformations);
+		log.warn("Import end");	// This is warning in order to get through into the log even if we deal with a non-debug version
 		PersonManagerService personService = Context.getPersonManagerService();
 		org.openhie.openempi.model.Dataset datasetFound = personService.getDatasetByTableName(dataset.getTableName());
 		datasetFound.setImported("Y");
