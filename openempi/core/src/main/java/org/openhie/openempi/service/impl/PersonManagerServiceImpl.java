@@ -482,6 +482,8 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 			BufferedWriter writer = null;
 			try {
 				File newFile = new File(newFileNameBuilder.toString());
+				LoaderConfig currentLoaderConfiguration =
+					(LoaderConfig)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.DATA_LOADER_CONFIGURATION);
 				log.debug("Saving physical upload file, stored at: " + newFile.getAbsolutePath());
 				writer = new BufferedWriter(new FileWriter(newFile));
 				List<ColumnInformation> columnInformation = dataset.getColumnInformation();
@@ -489,11 +491,13 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 				ColumnInformation lastCi = columnInformation.get(columnInformation.size() - 1);
 				for(ColumnInformation ci : columnInformation) {
 					fieldNames.add(ci.getFieldName());
-					writer.append(ci.getFieldName());
-					if (!ci.getFieldName().equals(lastCi.getFieldName()))
-						writer.append(",");
-					else
-						writer.newLine();
+					if (currentLoaderConfiguration.getHeaderLinePresent()) {
+						writer.append(ci.getFieldName());
+						if (!ci.getFieldName().equals(lastCi.getFieldName()))
+							writer.append(",");
+						else
+							writer.newLine();
+					}
 				}
 
 				PersonQueryService personQueryService = Context.getPersonQueryService();
