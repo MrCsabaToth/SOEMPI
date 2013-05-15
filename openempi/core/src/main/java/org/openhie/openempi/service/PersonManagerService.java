@@ -211,7 +211,8 @@ public interface PersonManagerService extends PersonServiceBase
     /**
      * Save a dataset to file in CSV format
      * 
-     * @param dataset dataset to be save din CSV format, right next to the input file location
+     * @param dataset dataset to be saved in CSV format, right next to the input file location
+     * @param tableName the full pat of the file is created by stripping the filename off of the upload directory full path and adding the tableName and then a csv extension
      */
-    public void saveDatasetToFile(Dataset dataset);
+    public void saveDatasetToFile(Dataset dataset, String tableName);
 }

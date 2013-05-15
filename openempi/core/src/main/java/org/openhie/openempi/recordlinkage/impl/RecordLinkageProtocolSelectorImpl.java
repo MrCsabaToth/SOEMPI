@@ -152,10 +152,10 @@ public class RecordLinkageProtocolSelectorImpl extends BaseServiceImpl implement
 		recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
 	}
 
-	public void testHMACEncoding(String protocolTypeName, int dataSetId, long totalRecords) throws ApplicationException
+	public void testHMACEncoding(String protocolTypeName, int dataSetId,String tableName) throws ApplicationException
 	{
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
-		recordLinkageProtocol.testHMACEncoding(dataSetId, totalRecords);
+		recordLinkageProtocol.testHMACEncoding(dataSetId, tableName);
 	}
 
 }

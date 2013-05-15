@@ -74,5 +74,5 @@ public interface RecordLinkageProtocolSelector
 	public void testPMLinkRecords(String protocolTypeName, int leftDatasetId, int rightDatasetId, String blockingServiceName, String matchingServiceName) throws ApplicationException;
 	public void testCBFLinkRecords(String protocolTypeName, int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
 	public void testBFReencoding(String protocolTypeName, int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
-	public void testHMACEncoding(String protocolTypeName, int dataSetId, long totalRecords) throws ApplicationException;
+	public void testHMACEncoding(String protocolTypeName, int dataSetId, String tableName) throws ApplicationException;
 }

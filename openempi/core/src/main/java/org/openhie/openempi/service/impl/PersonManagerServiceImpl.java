@@ -21,7 +21,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -459,9 +458,9 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		return this.currentUser;
 	}
 
-    public void saveDatasetToFile(Dataset dataset)
+    public void saveDatasetToFile(Dataset dataset, String tableName)
     {
-		log.debug("Saving a dataset entry: " + dataset);
+		log.debug("Saving a dataset entry " + dataset + " to file " + tableName);
 		if (dataset.getDatasetId() == null) {
 			return;
 		}
@@ -472,13 +471,11 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		String fileName = datasetEntry.getFileName();
 		if (fileName != null && fileName.length() > 0 && !fileName.equals(Constants.NOT_AVAILABLE)) {
 			StringBuilder newFileNameBuilder = new StringBuilder(fileName);
-			SecureRandom rnd = new SecureRandom();
-			String uniqeIdStr = Integer.toString(rnd.nextInt());
-			int fileExtensionDotIndex = newFileNameBuilder.lastIndexOf(".");
+			int fileExtensionDotIndex = newFileNameBuilder.lastIndexOf("/");
 			if (fileExtensionDotIndex > 0)
-				newFileNameBuilder.insert(fileExtensionDotIndex, uniqeIdStr);
+				newFileNameBuilder.insert(fileExtensionDotIndex, tableName + ".csv");
 			else
-				newFileNameBuilder.append(uniqeIdStr);
+				newFileNameBuilder.append(tableName + ".csv");
 			BufferedWriter writer = null;
 			try {
 				File newFile = new File(newFileNameBuilder.toString());

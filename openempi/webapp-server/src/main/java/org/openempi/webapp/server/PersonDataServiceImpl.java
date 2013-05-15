@@ -227,6 +227,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			String dataIntegratorUserName, String dataIntegratorPassword)
 	{
 		try {
+			log.warn("Send preparation Start");
 			RemotePersonService remotePersonService = Context.getRemotePersonService();
 			PrivacySettings privacySettings =
 					(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
@@ -236,6 +237,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			PersonQueryService personQueryService = Context.getPersonQueryService();
 			String localTableName = dataset.getTableName();
 			List<ColumnInformation> columnInformation = personQueryService.getDatasetColumnInformation(localTableName);
+			log.warn("Send preparation End");
+			log.warn("Send Start");
 			remotePersonService.createDatasetTable(remoteTableName, columnInformation, dataset.getTotalRecords(), false);
 			int pageSize = Constants.PAGE_SIZE;
 			Long firstResult = 0L;
@@ -249,6 +252,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			} while (morePatients);
 			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName);
 			remotePersonService.close();
+			log.warn("Send End");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Failed to send to Data Integrator due to " + e.getMessage());
@@ -303,12 +307,20 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		personService.updateDataset(datasetFound);
 	}
 
-	public void saveDatasetToFile(DatasetWeb dataset) {
+	public void saveDatasetToFile(DatasetWeb dataset, String tableName) {
 		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
-			PersonManagerService personManagerService = Context.getPersonManagerService();
-			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
-			personManagerService.saveDatasetToFile(datasetFound);
+//			PersonManagerService personManagerService = Context.getPersonManagerService();
+//			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
+//			personManagerService.saveDatasetToFile(datasetFound, tableName);
+
+			// For HMAC Encode Test
+			KeyServerService ks = Context.getKeyServerService();
+			ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
+			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
+			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_PROTOCOL_NAME);
+			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
+			recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);

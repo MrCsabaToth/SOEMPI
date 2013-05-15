@@ -66,8 +66,10 @@ public class DatasetController extends AbstractController
 		} else if (type == AppEvents.DatasetListUpdateForImport) {
 			updateDatasetData(true);
 		} else if (type == AppEvents.DatasetSaveToFile) {
-			DatasetWeb dataset = (DatasetWeb)event.getData();
-			saveToFileDatasetData(dataset);
+			List<Object> params = event.getData();
+			DatasetWeb selectedDataset = (DatasetWeb)params.get(0);
+			String tableName = (String)params.get(1);
+			saveToFileDatasetData(selectedDataset, tableName);
 		} else if (type == AppEvents.DatasetListShowColumnsRequest) {
 			String tableName = (String)event.getData();
 			getColumnInformationForDataset(tableName);
@@ -102,8 +104,8 @@ public class DatasetController extends AbstractController
 		}
 	}
 	
-	private void saveToFileDatasetData(DatasetWeb dataset) {
-		getPersonDataService().saveDatasetToFile(dataset, new AsyncCallback<Void>() {
+	private void saveToFileDatasetData(DatasetWeb dataset, String tableName) {
+		getPersonDataService().saveDatasetToFile(dataset, tableName, new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Dispatcher.forwardEvent(AppEvents.Error, caught);
 			}

@@ -123,7 +123,7 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 		throw new ApplicationException("Nothing to test: there's no BF reencoding during two 3rd party protocols");
 	}
 
-	public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException
+	public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException
 	{
 		throw new ApplicationException("Nothing to test: there's no BF reencoding during simple send");
 	}

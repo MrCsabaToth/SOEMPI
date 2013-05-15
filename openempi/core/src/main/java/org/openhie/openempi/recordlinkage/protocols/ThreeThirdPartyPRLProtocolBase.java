@@ -52,6 +52,7 @@ import org.openhie.openempi.service.PersonManagerService;
 import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.service.RemotePersonService;
 import org.openhie.openempi.transformation.TransformationService;
+import org.openhie.openempi.util.GeneralUtil;
 
 public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtocolBase
 {
@@ -109,8 +110,10 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		int numRecordsToSend = Math.min(numRecordsToSend1, ((Long)totalRecords).intValue());
 		// Do not break down random sampling by PAGE_SIZE, because that could cause id collision
 		PersonQueryService personQueryService = Context.getPersonQueryService();
+		log.warn("Random sampling for HMAC encode begin");
 		List<Person> persons = personQueryService.getRandomNotNullPersons(dataset.getTableName(),
 				fillNoMatchColumnNames(noMatchColumnInformation, columnNames), numRecordsToSend);
+		log.warn("Random sampling for HMAC encode end");
 		// HMAC transform the needed fields
 		if (isThereClearField) {
 			TransformationService transformationService = Context.getTransformationService();
@@ -119,6 +122,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 			byte[] signingKey = ks.getSalts(1).get(0);
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, signingKey);
+			log.warn("HMAC encode begin");
 			for (Person person : persons) {
 				for (ColumnInformation ci : matchColumnInformation) {
 					if (isClearTextField(ci)) {
@@ -133,6 +137,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 					}
 				}
 			}
+			log.warn("HMAC encode end");
 		}
 		return persons;
 	}
@@ -232,24 +237,44 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 
 	}
 
-	public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException
+	public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException
 	{
 		PersonManagerService personManagerService = Context.getPersonManagerService();
 		Dataset dataset = personManagerService.getDatasetById(dataSetId);
 		List<ColumnInformation> allCiList = personManagerService.getDatasetColumnInformation(dataset.getTableName());
 		List<ColumnInformation> ciToEncode = new ArrayList<ColumnInformation>();
+		List<ColumnInformation> ciNotToEncode = new ArrayList<ColumnInformation>();
 		List<String> columnNamesToEncode = new ArrayList<String>();
 		for (ColumnInformation ci : allCiList) {
 			if (ci.getFieldType().getFieldTypeEnum() == FieldTypeEnum.String &&
-			    ci.getFieldTransformation() == null &&
-			    ci.getFieldMeaning().getFieldMeaningEnum() != FieldMeaningEnum.OriginalId)
+			    ci.getFieldTransformation() == null)
 			{
-				ciToEncode.add(ci);
-				columnNamesToEncode.add(ci.getFieldName());
+				if (ci.getFieldMeaning().getFieldMeaningEnum() != FieldMeaningEnum.OriginalId) {
+					ciToEncode.add(ci);
+					columnNamesToEncode.add(ci.getFieldName());
+				} else if (tableName != null && !tableName.isEmpty()) {
+					ciNotToEncode.add(ci);
+				}
 			}
 		}
-		hmacEncodeSamplesForSend(dataset, totalRecords, columnNamesToEncode, ciToEncode,
-				new ArrayList<ColumnInformation>(), true, Constants.DEFAULT_HMAC_FUNCTION_NAME);
+		List<Person> persons = hmacEncodeSamplesForSend(dataset, dataset.getTotalRecords(), columnNamesToEncode, ciToEncode,
+				ciNotToEncode, true, Constants.DEFAULT_HMAC_FUNCTION_NAME);
+		for (ColumnInformation ci : ciNotToEncode) {
+			ciToEncode.add(0, ci);	// insert
+		}
+		if (tableName != null && !tableName.isEmpty()) {
+			List<ColumnInformation> ciClone = GeneralUtil.cloneColumnInformationList(ciToEncode);
+			for (ColumnInformation ci : ciClone) {
+				if (ci.getFieldMeaning().getFieldMeaningEnum() != FieldMeaningEnum.OriginalId) {
+					ci.setFieldType(FieldTypeEnum.Blob);
+					ci.setFieldTransformation(Constants.DEFAULT_HMAC_FUNCTION_NAME);
+					ci.setFieldTypeModifier(null);
+				}
+			}
+			personManagerService.createDatasetTable(tableName, ciClone, persons.size(), false, false);
+			personManagerService.addPersons(tableName, persons, false, false);
+			personManagerService.addIndexesAndConstraintsToDatasetTable(tableName);
+		}
 	}
 
 	protected BloomFilterParameterAdvice personMatchRequestAcquired(PersonMatchRequest leftPersonMatchRequest,

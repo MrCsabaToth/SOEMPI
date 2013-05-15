@@ -58,7 +58,7 @@ public interface PersonDataService extends RemoteService
 
 	public boolean doesCurrentLoaderConfigurationNeedKeyServer();
 
-	public void saveDatasetToFile(DatasetWeb dataset);
+	public void saveDatasetToFile(DatasetWeb dataset, String tableName);
 
 	public void deleteDatasetFile(DatasetWeb dataset);
 

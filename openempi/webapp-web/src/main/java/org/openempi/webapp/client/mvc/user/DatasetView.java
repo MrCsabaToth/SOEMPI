@@ -312,7 +312,15 @@ public class DatasetView extends View
 					b = new Button("", IconHelper.create("images/disk.png"), new SelectionListener<ButtonEvent>() {
 						@Override
 						public void componentSelected(ButtonEvent ce) {
-							controller.handleEvent(new AppEvent(AppEvents.DatasetSaveToFile, selectedDatasetParam));
+							List<Object> params = new ArrayList<Object>();
+							params.add(selectedDatasetParam);
+							String tableName = getTableName();
+							if (tableName == null || tableName.length() <= 0) {
+								Info.display("Information", "Please specify table name for the new dataset.");
+								tableName = "";	// GWT doesn't survive null parameters :P
+							}
+							params.add(tableName);
+							controller.handleEvent(new AppEvent(AppEvents.DatasetSaveToFile, params));
 						}
 					});
 					b.setToolTip("Save dataset to a file");

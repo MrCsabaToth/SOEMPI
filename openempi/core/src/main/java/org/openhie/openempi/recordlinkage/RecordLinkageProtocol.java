@@ -58,7 +58,7 @@ public interface RecordLinkageProtocol
 	public void testPMLinkRecords(int leftDatasetId, int rightDatasetId, String blockingServiceName, String matchingServiceName) throws ApplicationException;
 	public void testPRLLinkRecords(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
 	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
-	public void testHMACEncoding(int dataSetId, long totalRecords) throws ApplicationException;
+	public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException;
 
 	public String getName();
 	
