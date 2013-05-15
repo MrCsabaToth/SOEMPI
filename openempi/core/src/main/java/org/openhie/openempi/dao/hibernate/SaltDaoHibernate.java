@@ -54,14 +54,14 @@ public class SaltDaoHibernate extends UniversalDaoHibernate implements SaltDao
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				Criteria criteria = session.createCriteria(Salt.class)
 					.add(Restrictions.isNull("dateVoided"))
-					.add(Restrictions.ge("saltId", startId))
-					.add(Restrictions.le("saltId", endId));
+					.add(Restrictions.ge("id", startId))
+					.add(Restrictions.le("id", endId));
 
 				List<Salt> list = criteria.list();
 				log.debug("Query by partial identifier returned: " + list.size() + " elements.");
 				if (list == null || list.size() <= 0)
 					return null;
-				return list.get(0);
+				return list;
 			}
 		});
 	}

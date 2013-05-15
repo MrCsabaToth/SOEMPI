@@ -301,7 +301,7 @@ public class Constants {
      * Default HMAC function name
      * TODO: make it configurable?
      */
-	public static final String DEFAULT_HMAC_FUNCTION_NAME = "HmacSHA256Function";
+	public static final String DEFAULT_HMAC_FUNCTION_NAME = "HMACSHA256Function";
 
     /**
      * name of the signing key extra parameter needed for HMAC type transformation functions

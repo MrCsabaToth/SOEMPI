@@ -107,17 +107,21 @@ public class KeyServerServiceImpl implements KeyServerService {
 		
 				KeyServiceLocator keyServiceLocator = Context.getKeyServiceLocator();
 				try {
-					SaltManagerService saltManagerService = keyServiceLocator.getSaltManagerService();
-		
 					if (salts == null)
 						salts = new ArrayList<byte[]>();
-					Long saltId = Long.valueOf(keyServerSettings.getSaltIdStart());
-					for (Long saltIndex = 0L; saltIndex < keyServerSettings.getNumberOfSalts(); saltIndex++) {
-						Salt salt = saltManagerService.getSalt(sessionKey, saltId);
-						byte[] saltPart = salt.getSalt().clone();
-						salts.add(saltPart);
-						saltId += Long.valueOf(keyServerSettings.getSaltIdStride());
+					SaltManagerService saltManagerService = keyServiceLocator.getSaltManagerService();
+					List<Salt> slts = saltManagerService.getSalts(sessionKey, keyServerSettings.getSaltIdStart(),
+										keyServerSettings.getSaltIdStart() + keyServerSettings.getNumberOfSalts() - 1);
+					for (Salt s : slts) {
+						salts.add(s.getSalt());
 					}
+//					Long saltId = Long.valueOf(keyServerSettings.getSaltIdStart());
+//					for (Long saltIndex = 0L; saltIndex < keyServerSettings.getNumberOfSalts(); saltIndex++) {
+//						Salt salt = saltManagerService.getSalt(sessionKey, saltId);
+//						byte[] saltPart = salt.getSalt().clone();
+//						salts.add(saltPart);
+//						saltId += Long.valueOf(keyServerSettings.getSaltIdStride());
+//					}
 				} catch (NamingException e) {
 					e.printStackTrace();
 		            log.error(e.getMessage());
