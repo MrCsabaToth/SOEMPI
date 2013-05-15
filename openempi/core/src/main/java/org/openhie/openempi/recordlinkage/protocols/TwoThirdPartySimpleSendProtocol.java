@@ -86,6 +86,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword)
 	{
+		log.warn("Send preparation Start");
 		PrivacySettings privacySettings =
 				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
 		DataIntegratorSettings dataIntegratorSettings =
@@ -99,6 +100,8 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			remotePersonService.authenticate(serverAddress4DI, dataIntegratorUserName, dataIntegratorPassword,
 					keyServerUserName, keyServerPassword);
 
+			log.warn("Send preparation End");
+			log.warn("Send Start");
 			// Send all columns here, it's not PRL
 			// Maybe we could do some intelligent cherry picking analyzing the match configuration?
 			List<ColumnInformation> columnInformation = dataset.getColumnInformation();
@@ -130,6 +133,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			log.error("Error occured during creation, generation or loading of BF or CBF data");
 			e.printStackTrace();
 		}
+		log.warn("Send End");
 
 		return null;
 	}

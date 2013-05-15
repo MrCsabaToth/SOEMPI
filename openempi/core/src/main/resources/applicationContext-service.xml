@@ -307,6 +307,10 @@
 		</property>
 	</bean>
 
+	<bean id="TwoThirdPartySimpleSendProtocol"
+		class="org.openhie.openempi.recordlinkage.protocols.TwoThirdPartySimpleSendProtocol">
+		<property name="name" value="TwoThirdPartySimpleSendProtocol"/>
+	</bean>
 	<bean id="TwoThirdPartyFBFProtocol"
 		class="org.openhie.openempi.recordlinkage.protocols.TwoThirdPartyFBFProtocol">
 		<property name="name" value="TwoThirdPartyFBFProtocol"/>
@@ -340,6 +344,7 @@
 		class="org.openhie.openempi.recordlinkage.impl.RecordLinkageProtocolSelectorImpl">
 		<property name="recordLinkageProtocolTypeMap">
 			<map>
+				<entry key="TwoThirdPartySimpleSendProtocol" value-ref="TwoThirdPartySimpleSendProtocol"/>
 				<entry key="TwoThirdPartyFBFProtocol" value-ref="TwoThirdPartyFBFProtocol"/>
 				<entry key="TwoThirdPartyCBFProtocol" value-ref="TwoThirdPartyCBFProtocol"/>
 				<entry key="ThreeThirdPartyFBFProtocol" value-ref="ThreeThirdPartyFBFProtocol"/>
