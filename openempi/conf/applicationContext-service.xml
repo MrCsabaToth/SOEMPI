@@ -314,30 +314,47 @@
 	<bean id="TwoThirdPartyFBFProtocol"
 		class="org.openhie.openempi.recordlinkage.protocols.TwoThirdPartyFBFProtocol">
 		<property name="name" value="TwoThirdPartyFBFProtocol"/>
-		<property name="matchPairStatDao" ref="matchPairStatDao" />
-		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
-		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+		<property name="matchPairStatDao" ref="matchPairStatDao"/>
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
+		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
+		<property name="usePseudoIds" value="true"/>
+		<property name="isLshBlocking" value="false"/>
 	</bean>
 	<bean id="TwoThirdPartyCBFProtocol"
 		class="org.openhie.openempi.recordlinkage.protocols.TwoThirdPartyCBFProtocol">
 		<property name="name" value="TwoThirdPartyCBFProtocol"/>
-		<property name="matchPairStatDao" ref="matchPairStatDao" />
-		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
-		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+		<property name="matchPairStatDao" ref="matchPairStatDao"/>
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
+		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
+		<property name="usePseudoIds" value="true"/>
+		<property name="isLshBlocking" value="false"/>
 	</bean>
 	<bean id="ThreeThirdPartyFBFProtocol"
 		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyFBFProtocol">
 		<property name="name" value="ThreeThirdPartyFBFProtocol"/>
-		<property name="matchPairStatDao" ref="matchPairStatDao" />
-		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
-		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+		<property name="matchPairStatDao" ref="matchPairStatDao"/>
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
+		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
+		<property name="usePseudoIds" value="true"/>
+		<property name="isLshBlocking" value="false"/>
 	</bean>
-	<bean id="ThreeThirdPartyCBFProtocol"
+	<bean id="ThreeThirdPartyCBFWithRndBlocking"
 		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyCBFProtocol">
 		<property name="name" value="ThreeThirdPartyCBFProtocol"/>
-		<property name="matchPairStatDao" ref="matchPairStatDao" />
-		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao" />
-		<property name="personMatchRequestDao" ref="personMatchRequestDao" />
+		<property name="matchPairStatDao" ref="matchPairStatDao"/>
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
+		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
+		<property name="usePseudoIds" value="true"/>
+		<property name="isLshBlocking" value="false"/>
+	</bean>
+	<bean id="ThreeThirdPartyCBFWithLshBlocking"
+		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyCBFProtocol">
+		<property name="name" value="ThreeThirdPartyCBFProtocol"/>
+		<property name="matchPairStatDao" ref="matchPairStatDao"/>
+		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
+		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
+		<property name="usePseudoIds" value="true"/>
+		<property name="isLshBlocking" value="true"/>
 	</bean>
 
 	<bean id="recordLinkageProtocolSelector"
@@ -348,7 +365,8 @@
 				<entry key="TwoThirdPartyFBFProtocol" value-ref="TwoThirdPartyFBFProtocol"/>
 				<entry key="TwoThirdPartyCBFProtocol" value-ref="TwoThirdPartyCBFProtocol"/>
 				<entry key="ThreeThirdPartyFBFProtocol" value-ref="ThreeThirdPartyFBFProtocol"/>
-				<entry key="ThreeThirdPartyCBFProtocol" value-ref="ThreeThirdPartyCBFProtocol"/>
+				<entry key="ThreeThirdPartyCBFWithRndBlocking" value-ref="ThreeThirdPartyCBFWithRndBlocking"/>
+				<entry key="ThreeThirdPartyCBFWithLshBlocking" value-ref="ThreeThirdPartyCBFWithLshBlocking"/>
 			</map>
 		</property>
 	</bean>

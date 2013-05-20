@@ -77,7 +77,7 @@ import org.openhie.openempi.util.ValidationUtil;
 public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkageProtocol
 {
 	protected final Log log = LogFactory.getLog(getClass());
-	
+
 	public MultiPartyPRLProtocolBase() {
 	}
 
@@ -127,6 +127,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		ValidationUtil.sanityCheckFieldName(matchName);
 
 		String thirdPartyAddress = getThirdPartyAddress();
+		setIsLocalThirdParty(isLocalAddress(thirdPartyAddress));
 		String thirdPartyUserName = getThirdPartyCredential(dataIntegratorUserName, parameterManagerUserName);
 		String thirdPartyPassword = getThirdPartyCredential(dataIntegratorPassword, parameterManagerPassword);
 
@@ -151,12 +152,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			remotePersonService.createDatasetTable(remoteTableName, allColumnInformation, totalRecords, false);
 
 			Map<Long,Long> personPseudoIdsReverseLookup = null;
-			// Don't use pseudoIds for local experiments
-			if (!thirdPartyAddress.equals(Constants.LOCALHOST_IP_ADDRESS) &&
-				!thirdPartyAddress.equals(Constants.LOCALHOST_NAME))
-			{
+			if (getUsePseudoIds())
 				personPseudoIdsReverseLookup = new HashMap<Long,Long>();
-			}
 			sendFirstPhaseData(dataset, totalRecords, matchColumnNames, matchColumnInformation,
 					noMatchColumnInformation, isThereClearField, defaultHmacFunctionName,
 					thirdPartyAddress, personPseudoIdsReverseLookup, remotePersonService, remoteTableName);
@@ -173,9 +170,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			remotePersonService.close();	// Need to close the context, so the PersonMatchRequest and other data
 											// waiting in the Hibernate 2nd level cache will be flushed after the EJB call returns
 
-			if (thirdPartyAddress.equals(Constants.LOCALHOST_IP_ADDRESS) ||
-				thirdPartyAddress.equals(Constants.LOCALHOST_NAME))
-			{	// Update dataset with the source file name in case of local experiment
+			// Update dataset with the source file name in case of local experiment
+			if (getIsLocalThirdParty()) {
 				PersonQueryService personQueryService = Context.getPersonQueryService();
 				Dataset newlySentDataset = personQueryService.getDatasetByTableName(remoteTableName);
 				newlySentDataset.setFileName(dataset.getFileName());
@@ -210,8 +206,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		int defaultK = privacySettings.getBloomfilterSettings().getDefaultK();
 		// Reencode from original cleartext file or from DB?
 		File originalFile = new File(leftLocalDataset.getFileName());
+		// 1. Try to perform the BF encodings from the Dataset in DB
 		if (!originalFile.exists() || true) {
-			// 1. Try to perform the BF encodings from the Dataset in DB
 			List<LoaderDataField> loaderDataForBFReencode = new ArrayList<LoaderDataField>();
 			List<String> columnNames = new ArrayList<String>();
 			List<String> noMatchColumnNames = new ArrayList<String>();
@@ -281,6 +277,10 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				firstResult += clearTextPersons.size();
 			} while (morePersons);
 			personManagerService.addIndexesAndConstraintsToDatasetTable(newBFTableName);
+
+			Dataset reencodedDataset = personQueryService.getDatasetByTableName(newBFTableName);
+			reencodedDataset.setFileName(leftLocalDataset.getFileName());
+			personManagerService.updateDataset(reencodedDataset);
 		} else if (originalFile.exists()) {
 			// 2. Try to reload the dataset from file with the new BF encodings
 			// TODO: Problem: assuming that the current FileLoaderConfiguration relates to our Dataset
@@ -326,12 +326,6 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			newBFDataset.setFileName(leftLocalDataset.getFileName());
 			personManagerService.updateDataset(newBFDataset);
 
-			if (personPseudoIdsReverseLookup == null) {
-				Dataset reencodedDataset = personQueryService.getDatasetByTableName(newBFTableName);
-				reencodedDataset.setFileName(leftLocalDataset.getFileName());
-				personManagerService.updateDataset(reencodedDataset);
-			}
-
 			Context.getConfiguration().registerConfigurationEntry(ConfigurationRegistry.DATA_LOADER_CONFIGURATION, loaderConfigurationBackup);
 		}
 		return newBFDataset;
@@ -355,26 +349,24 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				privacySettings.getComponentSettings().getDataIntegratorSettings();
 		String serverAddress4DI = dataIntegratorSettings.getServerAddress();
 
-		if (personPseudoIdsReverseLookup != null) {	// Only send remotely in case of non debug
+		if (!isLocalAddress(serverAddress4DI)) {
 			remotePersonService.close();
 			remotePersonService.authenticate(serverAddress4DI, dataIntegratorUserName, dataIntegratorPassword,
 					keyServerUserName, keyServerPassword);
 			remotePersonService.createDatasetTable(newBFTableName, bfColumnInformation,
 					newBFDataset.getTotalRecords(), false);
-		}
 
-		long firstResult = 0L;
-		boolean morePatients = true;
-		do {
-			List<Person> persons = personQueryService.getPersonsPaged(newBFTableName, firstResult, Constants.PAGE_SIZE);
-			morePatients = (persons != null && persons.size() > 0);
-			if (morePatients) {
-				if (personPseudoIdsReverseLookup != null)	// Only send remotely in case of non debug
+			long firstResult = 0L;
+			boolean morePatients = true;
+			do {
+				List<Person> persons = personQueryService.getPersonsPaged(newBFTableName, firstResult, Constants.PAGE_SIZE);
+				morePatients = (persons != null && persons.size() > 0);
+				if (morePatients)
 					remotePersonService.addPersons(newBFTableName, persons, false, false);
-			}
-			firstResult += persons.size();
-		} while (morePatients);
-		remotePersonService.addIndexesAndConstraintsToDatasetTable(newBFTableName);
+				firstResult += persons.size();
+			} while (morePatients);
+			remotePersonService.addIndexesAndConstraintsToDatasetTable(newBFTableName);
+		}
 		return newBFTableName;
 	}
 
@@ -434,7 +426,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				privacySettings.getComponentSettings().getDataIntegratorSettings();
 		String serverAddress4DI = dataIntegratorSettings.getServerAddress();
 		try {
-			if (personPseudoIdsReverseLookup != null) {	// Only send remotely in case of non debug
+			if (!isLocalAddress(serverAddress4DI)) {
 				remotePersonService.close();
 				remotePersonService.authenticate(serverAddress4DI, dataIntegratorUserName, dataIntegratorPassword,
 						keyServerUserName, keyServerPassword);
@@ -461,7 +453,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					}
 					personManagerService.addPersons(newCBFTableName, cbfPersons, false, false);
 					// Submit the new Dataset to the DataIntegrator at the same time of the local persistence
-					if (personPseudoIdsReverseLookup != null)	// Only send remotely in case of non debug
+					if (!isLocalAddress(serverAddress4DI))
 						remotePersonService.addPersons(newCBFTableName, cbfPersons, false, false);
 				}
 				firstResult += persons.size();
@@ -470,13 +462,16 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 			String matchPairStatHalfTableName = null;
 			// We don't use pseudoIds for local experiments, so no need to resolve them
-			if (personPseudoIdsReverseLookup != null) {
+			if (!isLocalAddress(serverAddress4DI)) {
 				remotePersonService.addIndexesAndConstraintsToDatasetTable(newCBFTableName);
+
 				// No point in sending matchPairStatHalves in case there's a random bit selection blocking at DI => matchPairStatHalves == null
 				if (matchPairStatHalves != null) {
-					// Resolve pseudo Ids before sending it to DI
+					// Resolve pseudo Ids if appicable before sending it to DI
 					for (MatchPairStatHalf matchPairStatHalf : matchPairStatHalves) {
-						matchPairStatHalf.setPersonPseudoId(personPseudoIdsReverseLookup.get(matchPairStatHalf.getPersonPseudoId()));
+						Long id = matchPairStatHalf.getPersonPseudoId();
+						Long id2 = personPseudoIdsReverseLookup != null ? personPseudoIdsReverseLookup.get(id) : id;
+						matchPairStatHalf.setPersonPseudoId(id2);
 					}
 	
 					// Submit the match pair stat half information separately from the match request
@@ -740,7 +735,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 	abstract protected String getMatchingServiceTypeName(ComponentType componentType);
 
-	abstract protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats);
+	abstract protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException;
 
 	protected BloomFilterParameterAdvice linkRecords(PersonMatchRequest leftPersonMatchRequest, PersonMatchRequest rightPersonMatchRequest,
 			ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException {

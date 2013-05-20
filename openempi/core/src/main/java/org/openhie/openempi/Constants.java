@@ -210,9 +210,9 @@ public class Constants {
 	public static final String THREE_THIRD_PARTY_FBF_PROTOCOL_NAME = "ThreeThirdPartyFBFProtocol";
 
 	/**
-	 * Three third party CBF protocol's name
+	 * Three third party CBF with random bits blocking protocol's name
 	 */
-	public static final String THREE_THIRD_PARTY_CBF_PROTOCOL_NAME = "ThreeThirdPartyCBFProtocol";
+	public static final String THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME = "ThreeThirdPartyCBFProtocolWithRndBlocking";
 
 	/**
 	 * Distance in case of the left or right (or both) attribute is null

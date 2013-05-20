@@ -59,7 +59,7 @@ public class TwoThirdPartyFBFProtocol extends TwoThirdPartyPRLProtocolBase
 
 	protected String getMatchPairStatHalfTableName(String remoteTableName)
 	{
-		return null;
+		return null;	// No LSH blocking at all right now.
 	}
 
 	protected BloomFilterParameterAdvice linkPRLRecords(PersonMatchRequest leftPersonMatchRequest,

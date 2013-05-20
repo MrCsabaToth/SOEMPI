@@ -69,6 +69,10 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 	protected MatchPairStatHalfDao matchPairStatHalfDao;
 	protected PersonMatchRequestDao personMatchRequestDao;
 
+	private boolean usePseudoIds = true;
+	private boolean isLshBlocking = false;
+	private boolean isLocalThirdParty = false;
+
 	public AbstractRecordLinkageProtocol() {
 	}
 	
@@ -504,6 +508,11 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 	abstract protected BloomFilterParameterAdvice personMatchRequestAcquired(PersonMatchRequest leftPersonMatchRequest,
 			PersonMatchRequest rightPersonMatchRequest, ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException;
 
+	protected boolean isLocalAddress(String address) {
+		return address.equals(Constants.LOCALHOST_IP_ADDRESS) ||
+			   address.equals(Constants.LOCALHOST_NAME);
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -538,6 +547,30 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 
 	public void setPersonMatchRequestDao(PersonMatchRequestDao personMatchRequestDao) {
 		this.personMatchRequestDao = personMatchRequestDao;
+	}
+
+	public boolean getUsePseudoIds() {
+		return usePseudoIds;
+	}
+	
+	public void setUsePseudoIds(boolean usePseudoIds) {
+		this.usePseudoIds = usePseudoIds;
+	}
+
+	public boolean getIsLshBlocking() {
+		return isLshBlocking;
+	}
+	
+	public void setIsLshBlocking(boolean isLshBlocking) {
+		this.isLshBlocking = isLshBlocking;
+	}
+
+	public boolean getIsLocalThirdParty() {
+		return isLocalThirdParty;
+	}
+	
+	public void setIsLocalThirdParty(boolean isLocalThirdParty) {
+		this.isLocalThirdParty = isLocalThirdParty;
 	}
 
 }

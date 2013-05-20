@@ -29,7 +29,7 @@ public class PMLinkRecordsWithRandomBitSelectionAtDITest extends BaseServiceTest
 			Integer rightDatasetId = 3101;	// change that
 
 			RecordLinkageProtocol recordLinkageProtocol = (RecordLinkageProtocol)
-					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_PROTOCOL_NAME);
+					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			recordLinkageProtocol.testPMLinkRecords(leftDatasetId, rightDatasetId, Constants.PPB_WITH_CRYPTO_RANDOM_BITS_SERVICE_NAME,
 					Constants.CBF_SCORING_SERVICE_NAME);
 		} catch (Exception e) {

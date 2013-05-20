@@ -29,7 +29,7 @@ public class PMLinkRecordsWithLSHBitSelectionAtDITest extends BaseServiceTestCas
 			Integer rightDatasetId = 2301;	// 1951
 
 			RecordLinkageProtocol recordLinkageProtocol = (RecordLinkageProtocol)
-					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_PROTOCOL_NAME);
+					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			recordLinkageProtocol.testPMLinkRecords(leftDatasetId, rightDatasetId, Constants.LSH_WITH_CBF_MULTI_PARTY_SERVICE_NAME,
 					Constants.CBF_SCORING_SERVICE_NAME);
 		} catch (Exception e) {

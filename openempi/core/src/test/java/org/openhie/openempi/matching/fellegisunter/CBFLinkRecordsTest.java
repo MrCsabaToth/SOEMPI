@@ -29,7 +29,7 @@ public class CBFLinkRecordsTest extends BaseServiceTestCase
 			Integer rightPersonMatchRequestId = 2901;	// 2751;
 
 			RecordLinkageProtocol recordLinkageProtocol = (RecordLinkageProtocol)
-					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_PROTOCOL_NAME);
+					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			recordLinkageProtocol.testPRLLinkRecords(leftPersonMatchRequestId, rightPersonMatchRequestId);
 		} catch (Exception e) {
 			e.printStackTrace();

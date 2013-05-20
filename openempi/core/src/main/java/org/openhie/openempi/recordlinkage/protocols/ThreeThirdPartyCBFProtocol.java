@@ -32,7 +32,6 @@ import org.openhie.openempi.matching.fellegisunter.BloomFilterParameterAdvice;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.ColumnMatchInformation;
 import org.openhie.openempi.model.Dataset;
-import org.openhie.openempi.model.MatchPairStat;
 import org.openhie.openempi.model.MatchPairStatHalf;
 import org.openhie.openempi.model.PersonMatchRequest;
 
@@ -61,6 +60,8 @@ public class ThreeThirdPartyCBFProtocol extends ThreeThirdPartyPRLProtocolBase
 
 	protected String getMatchPairStatHalfTableName(String remoteTableName)
 	{
+		if (!getIsLshBlocking())
+			return null;
 		return remoteTableName + "_" + /*UniversalDaoHibernate.MATCHPAIRSTAT_TABLE_NAME_EXTRA_PREFIX + "_" +*/ getNowString();	// including timestamp to avoid collision
 	}
 
@@ -72,15 +73,6 @@ public class ThreeThirdPartyCBFProtocol extends ThreeThirdPartyPRLProtocolBase
 	protected String getMatchingServiceTypeName(ComponentType componentType) {
 		return componentType == ComponentType.DATA_INTEGRATOR_MODE ?
 				Constants.CBF_SCORING_SERVICE_NAME : Constants.PROBABILISTIC_MATCHING_SERVICE_WITH_SCALED_SCORES_NAME;
-	}
-
-	protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats) {
-		if (componentType == ComponentType.DATA_INTEGRATOR_MODE) {
-			return matchPairStats == null ? Constants.PPB_WITH_CRYPTO_RANDOM_BITS_SERVICE_NAME : Constants.LSH_WITH_CBF_MULTI_PARTY_SERVICE_NAME;
-		} else if (componentType == ComponentType.PARAMETER_MANAGER_MODE) {
-			return Constants.BLOCKING_BYPASS_SERVICE_NAME;
-		}
-		return null;
 	}
 
 }

@@ -87,12 +87,11 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 			morePatients = (persons != null && persons.size() > 0);
 			if (morePatients) {
 				// Don't use pseudoIds for local experiments
-				if (!thirdPartyAddress.equals(Constants.LOCALHOST_IP_ADDRESS) &&
-					!thirdPartyAddress.equals(Constants.LOCALHOST_NAME))
-				{
+				if (isLocalAddress(thirdPartyAddress)) {
 					long i = 0L;
 					for (Person person : persons) {
-						personPseudoIdsReverseLookup.put(firstResult + i, person.getPersonId());
+						if (personPseudoIdsReverseLookup != null)
+							personPseudoIdsReverseLookup.put(firstResult + i, person.getPersonId());
 						person.setPersonId(firstResult + i);
 						i++;
 					}

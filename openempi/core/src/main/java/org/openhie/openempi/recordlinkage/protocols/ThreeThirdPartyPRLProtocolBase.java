@@ -289,4 +289,18 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		return null;
 	}
 
+	protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException {
+		if (componentType == ComponentType.DATA_INTEGRATOR_MODE) {
+			if (getIsLshBlocking()) {
+				if (matchPairStats == null)
+					throw new ApplicationException("LSH blocking helping is specified but MatchPairStats is null");
+				return Constants.LSH_WITH_CBF_MULTI_PARTY_SERVICE_NAME;
+			}
+			return Constants.PPB_WITH_CRYPTO_RANDOM_BITS_SERVICE_NAME;
+		} else if (componentType == ComponentType.PARAMETER_MANAGER_MODE) {
+			return Constants.BLOCKING_BYPASS_SERVICE_NAME;
+		}
+		throw new ApplicationException("Unkown Component Type: " + componentType);
+	}
+
 }

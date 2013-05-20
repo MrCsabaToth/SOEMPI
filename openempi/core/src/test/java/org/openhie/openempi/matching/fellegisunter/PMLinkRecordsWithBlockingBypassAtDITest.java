@@ -29,7 +29,7 @@ public class PMLinkRecordsWithBlockingBypassAtDITest extends BaseServiceTestCase
 			Integer rightDatasetId = 3101;	// change that
 
 			RecordLinkageProtocol recordLinkageProtocol = (RecordLinkageProtocol)
-					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_PROTOCOL_NAME);
+					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			recordLinkageProtocol.testPMLinkRecords(leftDatasetId, rightDatasetId,
 					Constants.BLOCKING_BYPASS_SERVICE_NAME, Constants.PROBABILISTIC_MATCHING_SERVICE_WITH_SCALED_SCORES_NAME);
 		} catch (Exception e) {

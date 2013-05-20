@@ -61,6 +61,8 @@ public class TwoThirdPartyCBFProtocol extends TwoThirdPartyPRLProtocolBase
 
 	protected String getMatchPairStatHalfTableName(String remoteTableName)
 	{
+		if (!getIsLshBlocking())
+			return null;
 		return remoteTableName + "_" + /*UniversalDaoHibernate.MATCHPAIRSTAT_TABLE_NAME_EXTRA_PREFIX + "_" +*/ getNowString();	// including timestamp to avoid collision
 	}
 

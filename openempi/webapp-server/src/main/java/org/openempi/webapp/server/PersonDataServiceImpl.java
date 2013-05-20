@@ -318,7 +318,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			KeyServerService ks = Context.getKeyServerService();
 			ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
 			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
-			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_PROTOCOL_NAME);
+			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
 			recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
 		} catch (Throwable t) {
