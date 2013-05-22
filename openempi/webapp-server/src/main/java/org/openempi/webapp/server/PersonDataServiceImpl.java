@@ -315,12 +315,20 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 //			personManagerService.saveDatasetToFile(datasetFound, tableName);
 
 			// For HMAC Encode Test
-			KeyServerService ks = Context.getKeyServerService();
-			ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
+//			KeyServerService ks = Context.getKeyServerService();
+//			ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
+//			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
+//			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
+//			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
+			// HMAC encoding test
+			//recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
+			// EM link test
+			PersonManagerService personManagerService = Context.getPersonManagerService();
+			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(tableName);
 			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
-			recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
+			recordLinkageProtocol.testPMLinkRecords(dataset.getDatasetId(), datasetFound.getDatasetId(), Constants.BLOCKING_BYPASS_SERVICE_NAME, Constants.CBF_SCORING_SERVICE_NAME);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);

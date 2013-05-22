@@ -212,7 +212,7 @@ public class Constants {
 	/**
 	 * Three third party CBF with random bits blocking protocol's name
 	 */
-	public static final String THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME = "ThreeThirdPartyCBFProtocolWithRndBlocking";
+	public static final String THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME = "ThreeThirdPartyCBFWithRndBlocking";
 
 	/**
 	 * Distance in case of the left or right (or both) attribute is null

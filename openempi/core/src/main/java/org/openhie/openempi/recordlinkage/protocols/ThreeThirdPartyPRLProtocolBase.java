@@ -194,6 +194,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 
 	public void testPMLinkRecords(int leftDatasetId, int rightDatasetId, String blockingServiceName,
 			String matchingServiceName) throws ApplicationException {
+		log.warn("PAM EM calculation Start");
 		SecureRandom rnd = new SecureRandom();
 		PersonManagerService personManagerService = Context.getPersonManagerService();
 		Dataset leftDataset = personManagerService.getDatasetById(leftDatasetId);
@@ -209,6 +210,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		rightPersonMatchRequest = personMatchRequestDao.addPersonMatchRequest(rightPersonMatchRequest);
 
 		linkRecords(leftPersonMatchRequest, rightPersonMatchRequest, ComponentType.PARAMETER_MANAGER_MODE, null);
+		log.warn("PAM EM calculation End");
 	}
 
 	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException {
