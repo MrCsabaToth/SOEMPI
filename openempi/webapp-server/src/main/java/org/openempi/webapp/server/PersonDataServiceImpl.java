@@ -320,8 +320,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 //			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 //			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 //			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
-			// HMAC encoding test
-			//recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
+//			recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
+
 			// EM link test
 			PersonManagerService personManagerService = Context.getPersonManagerService();
 			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(tableName);

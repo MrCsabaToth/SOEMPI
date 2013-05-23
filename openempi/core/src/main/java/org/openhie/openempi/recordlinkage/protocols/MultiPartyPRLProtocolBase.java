@@ -774,30 +774,29 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			matchConfig.setEmSettings(matchConfigurationBackup.getEmSettings());
 			List<MatchField> matchFields = new ArrayList<MatchField>();
 			for (ColumnInformation leftCi : leftDataset.getColumnInformation()) {
-				if (leftCi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob) {
+				if (leftCi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
+					!leftCi.getFieldTransformation().contains("Bloom"))
+				{
 					for (ColumnInformation rightCi : rightDataset.getColumnInformation()) {
 						if (rightCi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
-							leftCi.getFieldMeaning() == rightCi.getFieldMeaning())
+							!rightCi.getFieldTransformation().contains("Bloom") &&
+							leftCi.getFieldMeaning().getFieldMeaningEnum() == rightCi.getFieldMeaning().getFieldMeaningEnum())
 						{
-							if (!leftCi.getFieldTransformation().contains("Bloom") &&
-								!rightCi.getFieldTransformation().contains("Bloom"))
-							{
-								// Assuming SHA or other hash Encoded fields:
-								// distances other than 0.0 and 1.0 doesn't make sense
-								// So go with exact match tailored to blobs
-								MatchField mf = new MatchField();
-								mf.setLeftFieldName(leftCi.getFieldName());
-								mf.setRightFieldName(rightCi.getFieldName());
-								// TODO: where to get the other values from?
-								// Right now we inherit the values from Parameter Manager's config
-								mf.setAgreementProbability(firstOriginalMatchField.getAgreementProbability());
-								mf.setDisagreementProbability(firstOriginalMatchField.getDisagreementProbability());
-								mf.setMatchThreshold(firstOriginalMatchField.getMatchThreshold());
-								FunctionField functionField = new FunctionField("ExactBinary");
-								mf.setComparatorFunction(functionField);
-								matchFields.add(mf);
-								break;
-							}
+							// Assuming SHA or other hash Encoded fields:
+							// distances other than 0.0 and 1.0 doesn't make sense
+							// So go with exact match tailored to blobs
+							MatchField mf = new MatchField();
+							mf.setLeftFieldName(leftCi.getFieldName());
+							mf.setRightFieldName(rightCi.getFieldName());
+							// TODO: where to get the other values from?
+							// Right now we inherit the values from Parameter Manager's config
+							mf.setAgreementProbability(firstOriginalMatchField.getAgreementProbability());
+							mf.setDisagreementProbability(firstOriginalMatchField.getDisagreementProbability());
+							mf.setMatchThreshold(firstOriginalMatchField.getMatchThreshold());
+							FunctionField functionField = new FunctionField("ExactBinary");
+							mf.setComparatorFunction(functionField);
+							matchFields.add(mf);
+							break;
 						}
 					}
 				}

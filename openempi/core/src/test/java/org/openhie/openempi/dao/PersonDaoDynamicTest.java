@@ -133,7 +133,7 @@ public class PersonDaoDynamicTest extends BaseDaoTestCase
 			ColumnInformation ci1 = it1.next();
 			ColumnInformation ci2 = it2.next();
 			assertTrue(ci1.getFieldName().equals(ci2.getFieldName()));
-			assertTrue(ci1.getFieldType() == ci2.getFieldType());
+			assertTrue(ci1.getFieldType().getFieldTypeEnum() == ci2.getFieldType().getFieldTypeEnum());
 			if (ci1.getFieldTypeModifier() == null)
 				assertTrue(ci2.getFieldTypeModifier() == null);
 			else
