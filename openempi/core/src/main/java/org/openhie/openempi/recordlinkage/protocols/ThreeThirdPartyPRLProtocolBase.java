@@ -88,6 +88,9 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				break;
 			}
 		}
+		PrivacySettings privacySettings =
+				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
+		int defaultK = privacySettings.getBloomfilterSettings().getDefaultK();
 		for (ColumnInformation ci : matchColumnInformation) {
 			columnNames.add(ci.getFieldName());
 			ColumnInformation ciClone = ci.getClone();
@@ -95,6 +98,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				isThereClearField = true;
 				ciClone.setFieldTransformation(defaultHmacFunctionName);	// Data sent will be all HMAC
 				ciClone.setFieldType(FieldType.FieldTypeEnum.Blob);
+				ciClone.setBloomFilterKParameter(defaultK);
 			}
 			columnInformation.add(ciClone);
 		}
