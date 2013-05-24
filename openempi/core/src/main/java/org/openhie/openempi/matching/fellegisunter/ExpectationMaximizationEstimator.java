@@ -60,17 +60,17 @@ public class ExpectationMaximizationEstimator
 				estimateProbability(params.getVectorCount(), params.getVectorFrequencies(), convergenceError);
 				error = Math.abs(pPrevious - p);
 				log.trace("Error at iteration " + iteration + " is " + error);
-				System.out.println("Iteration no " + iteration + ": p=" + p);
+				log.trace("Iteration no " + iteration + ": p=" + p);
 				isnan = isnan || Double.isNaN(p);
-				System.out.print("mOfI: ");
+				log.trace("mOfI: ");
 				for(int i = 0; i < mOfI.length; i++) {
 					isnan = isnan || Double.isNaN(mOfI[i]);
-					System.out.print(mOfI[i] + ",");
+					log.trace(mOfI[i] + ",");
 				}
-				System.out.print("uOfI: ");
+				log.trace("uOfI: ");
 				for(int i = 0; i < uOfI.length; i++) {
 					isnan = isnan || Double.isNaN(uOfI[i]);
-					System.out.println(uOfI[i] + ",");
+					log.trace(uOfI[i] + ",");
 				}
 				iteration++;
 			} while (error > convergenceError && iteration < maxIterations);

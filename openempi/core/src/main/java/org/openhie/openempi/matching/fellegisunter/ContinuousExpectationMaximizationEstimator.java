@@ -56,7 +56,7 @@ public class ContinuousExpectationMaximizationEstimator
 			log.trace("Error at iteration " + iteration + " is " + error);			
 			iteration++;
 		} while (error > ems.getConvergenceError() && iteration < ems.getMaxIterations());
-		System.out.println("EM converged after " + iteration + " iterations");
+		log.trace("EM converged after " + iteration + " iterations");
 
 		params.setMValues(mOfI);
 		params.setUValues(uOfI);

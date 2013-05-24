@@ -131,11 +131,11 @@ public class ConfigurationDataServiceImpl extends RemoteServiceServlet implement
 		List<StringComparatorFunctionWeb> functionList = new ArrayList<StringComparatorFunctionWeb>();
 		String[] functionNames = 
 			Context.getApplicationContext().getBeanNamesForType(org.openhie.openempi.stringcomparison.metrics.AbstractDistanceMetric.class);
-		System.out.println("String Comparator Function Names:");
+		log.trace("String Comparator Function Names:");
 		for (String functionName: functionNames) {
 			StringComparatorFunctionWeb compFunc = new StringComparatorFunctionWeb();
 			compFunc.setClassName(functionName);
-			System.out.println(" " + functionName);
+			log.trace(" " + functionName);
 			functionList.add(compFunc);
 		}
 		return functionList;
@@ -147,11 +147,11 @@ public class ConfigurationDataServiceImpl extends RemoteServiceServlet implement
 			List<TransformationFunctionWeb> functionList = new ArrayList<TransformationFunctionWeb>();
 			String[] functionNames = 
 				Context.getApplicationContext().getBeanNamesForType(org.openhie.openempi.transformation.function.AbstractTransformationFunctionBase.class);
-			System.out.println("Transormation Function Names:");
+			log.trace("Transormation Function Names:");
 			for (String functionName: functionNames) {
 				TransformationFunctionWeb compFunc = new TransformationFunctionWeb();
 				compFunc.setClassName(functionName);
-				System.out.println(" " + functionName);
+				log.trace(" " + functionName);
 				functionList.add(compFunc);
 			}
 			return functionList;

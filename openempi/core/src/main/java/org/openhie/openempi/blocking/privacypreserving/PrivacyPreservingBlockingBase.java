@@ -274,22 +274,22 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		savePersonBuckets(fileRepositoryDirectory, buckets);
 		savePersonOtherBuckets(fileRepositoryDirectory, otherBuckets);
 		// Debug print [
-		System.out.println("Selected bits:");
+		log.trace("Selected bits:");
 		for(BloomFilterBitStat bloomFilterBit : bits) {
-			System.out.println(bloomFilterBit.getCompositeFieldIndex() +
+			log.trace(bloomFilterBit.getCompositeFieldIndex() +
 					"(" + ppbFields.get(bloomFilterBit.getCompositeFieldIndex()).getLeftFieldName() +
 					"," + ppbFields.get(bloomFilterBit.getCompositeFieldIndex()).getRightFieldName() +
 					"), " + bloomFilterBit.getBloomFilterBitIndex());
 		}
-		System.out.println("Bucket no., size1, size2, true mathes:");
+		log.trace("Bucket no., size1, size2, true mathes:");
 		for (int i = 0; i < numberOfBuckets; i++) {
 			List<Long> bucket = buckets.get(i).getIds();
 			List<Long> otherBucket = otherBuckets.get(i).getIds();
-			System.out.println(i + ".: " + bucket.size() + ", " + otherBucket.size() + ", " +
+			log.trace(i + ".: " + bucket.size() + ", " + otherBucket.size() + ", " +
 					buckets.get(i).getTrueMatchCounter() + " - " + otherBuckets.get(i).getTrueMatchCounter());
 		}
 		// ] Debug print
-		System.out.println("Number of pairs: " + pairs.size());
+		log.trace("Number of pairs: " + pairs.size());
 	}
 
 	public void calculateBitStatistics(String matchingServiceTypeName, String leftTableName, String rightTableName) {
@@ -363,7 +363,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 //		scoreRecordPairs(pairs, fellegiSunterParams, true);
 		matchingService.calculateVectorFrequencies(pairs, fellegiSunterParams);
 		matchingService.estimateMarginalProbabilities(fellegiSunterParams, matchConfiguration, pairs.size());
-		System.out.println("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
+		log.trace("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
 		matchingService.calculateRecordPairWeights(pairs, fellegiSunterParams);
 		matchingService.calculateMarginalProbabilities(pairs, fellegiSunterParams, false, null);
 		matchingService.orderRecordPairsByWeight(pairs, false, null);
@@ -418,7 +418,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 					if (trueMatch)
 						countTrueMatchMatch++;
 				}
-				System.out.println("Pair " + pair.getLeftRecordId() +
+				log.trace("Pair " + pair.getLeftRecordId() +
 						(canCountTrueMatches ? (" (" + leftOriginalId + ")") : "") + ", " + 
 						pair.getRightRecordId() +
 						(canCountTrueMatches ? (" (" + rightOriginalId + ")") : "") + ", " +
@@ -487,8 +487,8 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 					bloomFilterIndex++;
 				}
 			}
-			System.out.println("We automatically matched " + countMatched + " out of " + pairs.size());
-			System.out.println("True matches: " + countTrueMatch + ", true matches out of our matches: " + countTrueMatchMatch);
+			log.trace("We automatically matched " + countMatched + " out of " + pairs.size());
+			log.trace("True matches: " + countTrueMatch + ", true matches out of our matches: " + countTrueMatchMatch);
 
 			// P(A|B) = P(A and B)/P(B)
 			// P(bit n matches | M) = P(bit n matches and M)/P(M) =

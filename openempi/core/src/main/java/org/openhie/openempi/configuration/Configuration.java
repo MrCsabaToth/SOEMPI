@@ -597,7 +597,7 @@ public class Configuration extends BaseServiceImpl implements ConfigurationRegis
 
 	private File getDefaultConfigurationFile() {
 		File dir = new File(Context.getOpenEmpiHome() + "/conf");
-		System.out.println("OPENEMPI_HOME property value: " + System.getProperty("OPENEMPI_HOME"));
+		log.info("OPENEMPI_HOME property value: " + System.getProperty("OPENEMPI_HOME"));
 		File file = new File(dir, configFile);
 		return file;
 	}

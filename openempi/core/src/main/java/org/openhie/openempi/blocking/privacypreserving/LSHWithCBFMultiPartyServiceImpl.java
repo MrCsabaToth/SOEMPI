@@ -235,7 +235,7 @@ public class LSHWithCBFMultiPartyServiceImpl extends PrivacyPreservingBlockingBa
 					}
 				}
 			}
-			System.out.println("We automatically matched " + countMatched + " out of " + matchPairStats.size());
+			log.trace("We automatically matched " + countMatched + " out of " + matchPairStats.size());
 
 			// P(A|B) = P(A and B)/P(B)
 			// P(bit n matches | M) = P(bit n matches and M)/P(M) =

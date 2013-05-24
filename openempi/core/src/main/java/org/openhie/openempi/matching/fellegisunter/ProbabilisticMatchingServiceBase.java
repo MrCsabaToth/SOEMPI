@@ -116,7 +116,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		estimateMarginalProbabilities(fellegiSunterParams, matchConfig, pairs.size());
 		long blockNfsTime = System.nanoTime();
 		long fileOutTime = 0L;
-		System.out.println("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
+		log.trace("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
 		String fileRepoDir = Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
 		if (!emOnly) {
 			calculateRecordPairWeights(pairs, fellegiSunterParams);
@@ -296,11 +296,11 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			personManagerService.addIndexesAndConstraintsToLinkTable(linkTableName, leftTableName, rightTableName);
 		}
 		long linkPersistEndTime = System.nanoTime();
-		System.out.println("ns of blocking + EM / FS: " + (blockNfsTime - startTime));
-		System.out.println("ns of file out + blocking + EM / FS: " + (fileOutTime - startTime));
-		System.out.println("ns from start to link persist: " + (linkPersistStartTime - startTime));
-		System.out.println("ns of link persist: " + (linkPersistEndTime - linkPersistStartTime));
-		System.out.println("ns total: " + (linkPersistEndTime - startTime));
+		log.trace("ns of blocking + EM / FS: " + (blockNfsTime - startTime));
+		log.trace("ns of file out + blocking + EM / FS: " + (fileOutTime - startTime));
+		log.trace("ns from start to link persist: " + (linkPersistStartTime - startTime));
+		log.trace("ns of link persist: " + (linkPersistEndTime - linkPersistStartTime));
+		log.trace("ns total: " + (linkPersistEndTime - startTime));
 
 		return personMatch;
 	}
@@ -421,7 +421,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			}
 			try {
 				for (LeanRecordPair pair : pairs) {
-//					System.out.println("Pair: " + getRecordPairMatchFields(pair));
+//					log.trace("Pair: " + getRecordPairMatchFields(pair));
 					String marginalProbs = "";
 					ComparisonVector vector = pair.getComparisonVector();
 					vector.calculateProbabilityGivenMatch(fellegiSunterParams.getMValues(), useBinaryScores());
@@ -443,7 +443,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("mpsum: " + mpsum + " upsum: " + upsum);
+		log.trace("mpsum: " + mpsum + " upsum: " + upsum);
 	}
 	
 	public abstract void estimateMarginalProbabilities(FellegiSunterParameters fellegiSunterParams,
