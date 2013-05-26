@@ -385,8 +385,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return matchPairStatHalves;
 	}
 
-	protected String persistMatchPairStatHalves(String datasetTableName, List<MatchPairStatHalf> matchPairStatHalves) {
-		String matchPairStatHalfTableName = /*datasetTableName + "_" + UniversalDaoHibernate.MATCHPAIRSTAT_TABLE_NAME_EXTRA_PREFIX + "_" +*/ getNowString();	// including timestamp to avoid collision
+	protected void persistMatchPairStatHalves(String matchPairStatHalfTableName, String datasetTableName, List<MatchPairStatHalf> matchPairStatHalves) {
 		matchPairStatHalfDao.createTable(matchPairStatHalfTableName, datasetTableName, false);
 		Long start = 0L;
 		int toIndex = 0;
@@ -400,7 +399,6 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 			start += matchPairStatHalvesPart.size();
 		} while (toIndex < matchPairStatHalves.size());
 		matchPairStatHalfDao.addIndexesAndConstraints(matchPairStatHalfTableName, datasetTableName);
-		return matchPairStatHalfTableName;
 	}
 
 	protected String getNowString() {

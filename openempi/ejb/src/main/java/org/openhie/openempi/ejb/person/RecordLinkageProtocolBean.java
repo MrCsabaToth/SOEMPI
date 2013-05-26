@@ -50,7 +50,8 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 	}
 	
 	public void addMatchPairStatHalf(String sessionKey, String protocolTypeName, String statTableName,
-			MatchPairStatHalf matchPairStatHalf) throws ApplicationException {
+			MatchPairStatHalf matchPairStatHalf) throws ApplicationException
+	{
 		log.trace("In addMatchPairStatHalf method.");
 		Context.authenticate(sessionKey);
 		org.openhie.openempi.recordlinkage.RecordLinkageProtocolSelector recordLinkageProtocolSelector =
@@ -61,7 +62,8 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 	}
 	
 	public void addMatchPairStatHalves(String sessionKey, String protocolTypeName, String statTableName,
-			List<MatchPairStatHalf> matchPairStatHalves) throws ApplicationException {
+			List<MatchPairStatHalf> matchPairStatHalves) throws ApplicationException
+	{
 		log.trace("In addMatchPairStatHalves method.");
 		Context.authenticate(sessionKey);
 		org.openhie.openempi.recordlinkage.RecordLinkageProtocolSelector recordLinkageProtocolSelector =
@@ -87,7 +89,8 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName,
 			String matchName, String blockingServiceName, String matchingServiceName,
-			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException {
+			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
+	{
 		log.trace("In addPersonMatchRequest method.");
 		Context.authenticate(sessionKey);
 		org.openhie.openempi.recordlinkage.RecordLinkageProtocolSelector recordLinkageProtocolSelector =

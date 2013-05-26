@@ -166,7 +166,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			personMatchRequest = createPersonMatchRequest(dataset, myNonce, matchName, blockingServiceName, matchingServiceName);
 			personMatchRequest = personMatchRequestDao.addPersonMatchRequest(personMatchRequest);
 			int personMatchRequestId = remotePersonService.addPersonMatchRequest(getName(), remoteTableName, matchName,
-					blockingServiceName, matchingServiceName, myNonce, null);
+					blockingServiceName, matchingServiceName, myNonce, getMatchPairStatHalfTableName(remoteTableName));
 			remotePersonService.close();	// Need to close the context, so the PersonMatchRequest and other data
 											// waiting in the Hibernate 2nd level cache will be flushed after the EJB call returns
 
@@ -775,11 +775,11 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			List<MatchField> matchFields = new ArrayList<MatchField>();
 			for (ColumnInformation leftCi : leftDataset.getColumnInformation()) {
 				if (leftCi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
-					!leftCi.getFieldTransformation().contains("Bloom"))
+					leftCi.getFieldTransformation().startsWith("HMAC"))
 				{
 					for (ColumnInformation rightCi : rightDataset.getColumnInformation()) {
 						if (rightCi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
-							!rightCi.getFieldTransformation().contains("Bloom") &&
+							rightCi.getFieldTransformation().startsWith("HMAC") &&
 							leftCi.getFieldMeaning().getFieldMeaningEnum() == rightCi.getFieldMeaning().getFieldMeaningEnum())
 						{
 							// Assuming SHA or other hash Encoded fields:
@@ -816,7 +816,11 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			//persistLinkResults(pairs, fellegiSunterParams, personMatch);	// Uncomment this for persistence and/or debug
 
 			List<MatchPairStatHalf> matchPairStatHalfLeft = null;
-			if (!leftPersonMatchRequest.getBlockingServiceName().equals(Constants.PPB_WITH_CRYPTO_RANDOM_BITS_SERVICE_NAME)) {
+			String leftMatchPairStatHalfTableName = leftPersonMatchRequest.getMatchPairStatHalfTableName();
+			String rightMatchPairStatHalfTableName = rightPersonMatchRequest.getMatchPairStatHalfTableName();
+			if (leftMatchPairStatHalfTableName != null && leftMatchPairStatHalfTableName.length() > 0 &&
+				rightMatchPairStatHalfTableName != null && rightMatchPairStatHalfTableName.length() > 0)
+			{
 				matchPairStatHalfLeft = new ArrayList<MatchPairStatHalf>();
 				List<MatchPairStatHalf> matchPairStatHalfRight = new ArrayList<MatchPairStatHalf>();
 				for (LeanRecordPair pair : pairs) {
@@ -827,10 +831,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					matchPairStatHalfRight.add(matchPairStatRight);
 				}
 				// And persist stat halves
-				String leftMatchPairStatHalfTableName = persistMatchPairStatHalves(leftTableName, matchPairStatHalfLeft);	// Uncomment this for persistence and/or debug
-				leftPersonMatchRequest.setMatchPairStatHalfTableName(leftMatchPairStatHalfTableName);	// Uncomment this for persistence and/or debug
-				String rightMatchPairStatHalfTableName = persistMatchPairStatHalves(rightTableName, matchPairStatHalfRight);
-				rightPersonMatchRequest.setMatchPairStatHalfTableName(rightMatchPairStatHalfTableName);
+				persistMatchPairStatHalves(leftMatchPairStatHalfTableName, leftTableName, matchPairStatHalfLeft);	// Uncomment this for persistence and/or debug
+				persistMatchPairStatHalves(rightMatchPairStatHalfTableName, rightTableName, matchPairStatHalfRight);
 			}
 
 			List<ColumnMatchInformation> columnMatchInformation = personMatch.getColumnMatchInformation();
