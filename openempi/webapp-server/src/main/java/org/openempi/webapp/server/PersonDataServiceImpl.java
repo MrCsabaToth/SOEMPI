@@ -271,8 +271,6 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		PersonManagerService personManagerService = Context.getPersonManagerService();
 		org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
 		recordLinkageProtocol.sendPersonMatchRequest(datasetFound, remoteTableName, matchName,
-				Constants.PPB_WITH_CRYPTO_RANDOM_BITS_SERVICE_NAME,	// TODO
-				Constants.PROBABILISTIC_MATCHING_SERVICE_WITH_SCALED_SCORES_NAME,	// TODO
 				keyServerUserName, keyServerPassword, dataIntegratorUserName, dataIntegratorPassword,
 				parameterManagerUserName, parameterManagerPassword);
 		return "DB sent successfully";

@@ -49,22 +49,18 @@ public interface RecordLinkageProtocolSelector
 	public void createMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName,
 			boolean withIndexesAndConstraints);
 	
-	public void addMatchPairStatHalf(String protocolTypeName, String statTableName, MatchPairStatHalf matchPairStatHalf);
-	
 	public void addMatchPairStatHalves(String protocolTypeName, String statTableName, List<MatchPairStatHalf> matchPairStatHalves);
 
 	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName);
 
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public PersonMatchRequest sendPersonMatchRequest(String protocolTypeName, Dataset dataset, String remoteTableName,
-			String matchName, String blockingServiceName, String matchingServiceName,
+	public PersonMatchRequest sendPersonMatchRequest(String protocolTypeName, Dataset dataset, String remoteTableName, String matchName,
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword);
 
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public Integer handlePersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			String blockingServiceName, String matchingServiceName,
 			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException;
 
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)

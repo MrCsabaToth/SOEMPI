@@ -49,18 +49,6 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 				datasetTableName, withIndexesAndConstraints);
 	}
 	
-	public void addMatchPairStatHalf(String sessionKey, String protocolTypeName, String statTableName,
-			MatchPairStatHalf matchPairStatHalf) throws ApplicationException
-	{
-		log.trace("In addMatchPairStatHalf method.");
-		Context.authenticate(sessionKey);
-		org.openhie.openempi.recordlinkage.RecordLinkageProtocolSelector recordLinkageProtocolSelector =
-				Context.getRecordLinkageProtocolSelector();
-		org.openhie.openempi.recordlinkage.RecordLinkageProtocolType recordLinkageProtocolType =
-				recordLinkageProtocolSelector.getRecordLinkageProtocolType(protocolTypeName);
-		recordLinkageProtocolType.getRecordLinkageProtocol().addMatchPairStatHalf(statTableName, matchPairStatHalf);
-	}
-	
 	public void addMatchPairStatHalves(String sessionKey, String protocolTypeName, String statTableName,
 			List<MatchPairStatHalf> matchPairStatHalves) throws ApplicationException
 	{
@@ -88,8 +76,7 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 	}
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName,
-			String matchName, String blockingServiceName, String matchingServiceName,
-			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
+			String matchName, Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
 	{
 		log.trace("In addPersonMatchRequest method.");
 		Context.authenticate(sessionKey);
@@ -98,7 +85,7 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 		org.openhie.openempi.recordlinkage.RecordLinkageProtocolType recordLinkageProtocolType =
 				recordLinkageProtocolSelector.getRecordLinkageProtocolType(protocolTypeName);
 		return recordLinkageProtocolType.getRecordLinkageProtocol().handlePersonMatchRequest(tableName, matchName,
-				blockingServiceName, matchingServiceName, nonce, matchPairStatHalfTableName);
+				nonce, matchPairStatHalfTableName);
 	}
 	
 	public BloomFilterParameterAdvice acquireMatchRequests(String sessionKey, String protocolTypeName,

@@ -117,8 +117,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		return allColumnNames;
 	}
 
-	public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName,
-			String matchName, String blockingServiceName, String matchingServiceName,
+	public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName, String matchName,
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword)
@@ -163,10 +162,12 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			// Preliminary steps
 			int myNonce = getNonce();
 
-			personMatchRequest = createPersonMatchRequest(dataset, myNonce, matchName, blockingServiceName, matchingServiceName);
+			String blockingServiceName1 = getMatchingServiceTypeName(ComponentType.PARAMETER_MANAGER_MODE);
+			String matchingServiceName1 = getMatchingServiceTypeName(ComponentType.PARAMETER_MANAGER_MODE);
+			personMatchRequest = createPersonMatchRequest(dataset, myNonce, matchName, blockingServiceName1, matchingServiceName1);
 			personMatchRequest = personMatchRequestDao.addPersonMatchRequest(personMatchRequest);
 			int personMatchRequestId = remotePersonService.addPersonMatchRequest(getName(), remoteTableName, matchName,
-					blockingServiceName, matchingServiceName, myNonce, getMatchPairStatHalfTableName(remoteTableName));
+					myNonce, getMatchPairStatHalfTableName(remoteTableName));
 			remotePersonService.close();	// Need to close the context, so the PersonMatchRequest and other data
 											// waiting in the Hibernate 2nd level cache will be flushed after the EJB call returns
 
@@ -178,7 +179,9 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				Context.getPersonManagerService().updateDataset(newlySentDataset);
 			}
 
-			performSecondPhase(dataset, matchName, blockingServiceName, matchingServiceName,
+			String blockingServiceName2 = getMatchingServiceTypeName(ComponentType.DATA_INTEGRATOR_MODE);
+			String matchingServiceName2 = getMatchingServiceTypeName(ComponentType.DATA_INTEGRATOR_MODE);
+			performSecondPhase(dataset, matchName, blockingServiceName2, matchingServiceName2,
 					thirdPartyAddress, keyServerUserName, keyServerPassword,
 					dataIntegratorUserName, dataIntegratorPassword,
 					parameterManagerUserName, parameterManagerPassword,
@@ -537,7 +540,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 			// Sending MatchRequest after loading the data remotely
 			int personMatchRequestId = remotePersonService.addPersonMatchRequest(getName(), sentTableName,
-					matchName, blockingServiceName, matchingServiceName, null, getMatchPairStatHalfTableName(remoteTableName));
+					matchName, null, getMatchPairStatHalfTableName(remoteTableName));
 			remotePersonService.close();	// Needed to flush the PersonMatchRequest into the DB on the DI
 
 			// Start the actual computation on the Data Integrator (one of the threads will perform it, the other returns immediately)
@@ -732,10 +735,6 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 		return bfpa;
 	}
-
-	abstract protected String getMatchingServiceTypeName(ComponentType componentType);
-
-	abstract protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException;
 
 	protected BloomFilterParameterAdvice linkRecords(PersonMatchRequest leftPersonMatchRequest, PersonMatchRequest rightPersonMatchRequest,
 			ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException {

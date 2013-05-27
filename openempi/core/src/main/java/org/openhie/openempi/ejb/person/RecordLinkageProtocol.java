@@ -32,9 +32,6 @@ public interface RecordLinkageProtocol
 	public void createMatchPairStatHalfTable(String sessionKey, String protocolTypeName, String statTableName,
 			String datasetTableName, boolean withIndexesAndConstraints) throws ApplicationException;
 	
-	public void addMatchPairStatHalf(String sessionKey, String protocolTypeName, String statTableName,
-			MatchPairStatHalf matchPairStatHalf) throws ApplicationException;
-	
 	public void addMatchPairStatHalves(String sessionKey, String protocolTypeName, String statTableName,
 			List<MatchPairStatHalf> matchPairStatHalves) throws ApplicationException;
 
@@ -42,7 +39,7 @@ public interface RecordLinkageProtocol
 			String datasetTableName) throws ApplicationException;
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName, String address,
-			String blockingServiceName, String matchingServiceName, Integer nonce, String matchPairStatHalfTableName) throws ApplicationException;
+			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException;
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String sessionKey, String protocolTypeName,
 			int personMatchRequestId, ComponentType componentType) throws ApplicationException;

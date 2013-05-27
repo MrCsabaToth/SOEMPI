@@ -55,15 +55,12 @@ public interface RemotePersonService
 	public void createMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName,
 			boolean withIndexesAndConstraints) throws NamingException, ApplicationException;
 
-	public void addMatchPairStatHalf(String protocolTypeName, String statTableName, MatchPairStatHalf matchPairStatHalf) throws NamingException, ApplicationException;
-
 	public void addMatchPairStatHalves(String protocolTypeName, String statTableName, List<MatchPairStatHalf> matchPairStatHalves) throws NamingException, ApplicationException;
 
 	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName) throws NamingException, ApplicationException;
 
 	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			String blockingServiceName, String matchingServiceName, Integer nonce,
-			String matchPairStatHalfTableName) throws NamingException, ApplicationException;
+			Integer nonce, String matchPairStatHalfTableName) throws NamingException, ApplicationException;
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String protocolTypeName, int personMatchRequestId,
 			ComponentType componentType) throws NamingException, ApplicationException;

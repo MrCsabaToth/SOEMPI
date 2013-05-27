@@ -87,11 +87,6 @@ public class RecordLinkageProtocolSelectorImpl extends BaseServiceImpl implement
 		recordLinkageProtocol.createMatchPairStatHalfTable(statTableName, datasetTableName, withIndexesAndConstraints);
 	}
 
-	public void addMatchPairStatHalf(String protocolTypeName, String statTableName, MatchPairStatHalf matchPairStatHalf) {
-		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
-		recordLinkageProtocol.addMatchPairStatHalf(statTableName, matchPairStatHalf);
-	}
-	
 	public void addMatchPairStatHalves(String protocolTypeName, String statTableName, List<MatchPairStatHalf> matchPairStatHalves) {
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
 		recordLinkageProtocol.addMatchPairStatHalves(statTableName, matchPairStatHalves);
@@ -103,27 +98,23 @@ public class RecordLinkageProtocolSelectorImpl extends BaseServiceImpl implement
 		recordLinkageProtocol.addIndexesAndConstraintsToMatchPairStatHalfTable(statTableName, datasetTableName);
 	}
 
-	public PersonMatchRequest sendPersonMatchRequest(String protocolTypeName, Dataset dataset, String remoteTableName,
-			String matchName, String blockingServiceName, String matchingServiceName,
+	public PersonMatchRequest sendPersonMatchRequest(String protocolTypeName, Dataset dataset, String remoteTableName, String matchName,
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword)
 	{
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
-		return recordLinkageProtocol.sendPersonMatchRequest(dataset, remoteTableName,
-				matchName, blockingServiceName, matchingServiceName,
+		return recordLinkageProtocol.sendPersonMatchRequest(dataset, remoteTableName, matchName,
 				keyServerUserName, keyServerPassword,
 				dataIntegratorUserName, dataIntegratorPassword,
 				parameterManagerUserName, parameterManagerPassword);
 	}
 
 	public Integer handlePersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			String blockingServiceName, String matchingServiceName,
 			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
 	{
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
 		return recordLinkageProtocol.handlePersonMatchRequest(tableName, matchName,
-				blockingServiceName, matchingServiceName,
 				nonce, matchPairStatHalfTableName);
 	}
 

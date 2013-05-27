@@ -152,18 +152,6 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 				datasetTableName, withIndexesAndConstraints);
 	}
 
-	public void addMatchPairStatHalf(String protocolTypeName, String statTableName, MatchPairStatHalf matchPairStatHalf) throws NamingException, ApplicationException
-	{
-		if (!isAuthenticated) {
-			log.warn("Session is not authenticated while trying to load person paged from remote host.");
-			throw new ApplicationException("Session is not authenticated while trying to load person paged from remote host.");
-		}
-
-		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
-		RecordLinkageProtocol recordLinkageProtocol = remotePersonServiceLocator.getRecordLinkageProtocol();
-		recordLinkageProtocol.addMatchPairStatHalf(sessionKey, protocolTypeName, statTableName, matchPairStatHalf);
-	}
-
 	public void addMatchPairStatHalves(String protocolTypeName, String statTableName, List<MatchPairStatHalf> matchPairStatHalves) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
@@ -188,7 +176,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 		recordLinkageProtocol.addIndexesAndConstraints(sessionKey, protocolTypeName, statTableName, datasetTableName);
 	}
 
-	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName, String blockingServiceName, String matchingServiceName,
+	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName,
 			Integer nonce, String matchPairStatHalfTableName) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
@@ -198,8 +186,8 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 
 		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
 		RecordLinkageProtocol recordLinkageProtocol = remotePersonServiceLocator.getRecordLinkageProtocol();
-		return recordLinkageProtocol.addPersonMatchRequest(sessionKey, protocolTypeName, tableName, matchName, blockingServiceName,
-				matchingServiceName, nonce, matchPairStatHalfTableName);
+		return recordLinkageProtocol.addPersonMatchRequest(sessionKey, protocolTypeName, tableName, matchName,
+				nonce, matchPairStatHalfTableName);
 	}
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String protocolTypeName, int personMatchRequestId, ComponentType componentType)

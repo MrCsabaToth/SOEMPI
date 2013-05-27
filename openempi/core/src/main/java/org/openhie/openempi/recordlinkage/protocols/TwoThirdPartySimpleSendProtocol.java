@@ -62,13 +62,6 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 	}
 	
 	/**
-	 * Add a new match pair stat half to the system.
-	 */
-	public void addMatchPairStatHalf(String statTableName, MatchPairStatHalf matchPairStatHalf) {
-		log.error("addMatchPairStatHalf doesn't make sense during simple send");
-	}
-
-	/**
 	 * Add new match pair stat halves to the system.
 	 */
 	public void addMatchPairStatHalves(String statTableName, List<MatchPairStatHalf> matchPairStatHalves) {
@@ -80,8 +73,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 		log.error("addIndexesAndConstraintsToMatchPairStatHalfTable doesn't make sense during simple send");
 	}
 	
-	public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName,
-			String matchName, String blockingServiceName, String matchingServiceName,
+	public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName, String matchName,
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword)
@@ -139,7 +131,6 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 	}
 
 	public Integer handlePersonMatchRequest(String tableName, String matchName,
-			String blockingServiceName, String matchingServiceName,
 			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
 	{
 		throw new ApplicationException("handleBloomFilterParameterAdvice doesn't make sense during simple send");

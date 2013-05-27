@@ -282,11 +282,10 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return personMatchRequest;
 	}
 
-	abstract public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName,
-			String matchName, String blockingServiceName, String matchingServiceName,
-			String keyServerUserName, String keyServerPassword,
-			String dataIntegratorUserName, String dataIntegratorPassword,
-			String parameterManagerUserName, String parameterManagerPassword);
+	abstract public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName, String matchName,
+		String keyServerUserName, String keyServerPassword,
+		String dataIntegratorUserName, String dataIntegratorPassword,
+		String parameterManagerUserName, String parameterManagerPassword);
 
 	protected FunctionField getNewFunctionFieldForBFReencoding(int defaultK, ColumnMatchInformation cmi) {
 		FunctionField functionField = new FunctionField();
@@ -407,13 +406,19 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return dateFormat.format(dateNow);
 	}
 
-	public Integer handlePersonMatchRequest(String tableName, String matchName,
-			String blockingServiceName, String matchingServiceName, Integer nonce,
+	abstract protected String getMatchingServiceTypeName(ComponentType componentType);
+
+	abstract protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException;
+
+	public Integer handlePersonMatchRequest(String tableName, String matchName, Integer nonce,
 			String matchPairStatHalfTableName) throws ApplicationException {
 		Dataset localDataset = Context.getPersonManagerService().getDatasetByTableName(tableName);
 		if (localDataset == null)
 			throw new ApplicationException("Cannot find the local table with name: " + tableName);
 
+		ComponentType componentType = Context.getConfiguration().getAdminConfiguration().getComponentMode();;
+		String blockingServiceName = getBlockingServiceTypeName(componentType, null);
+		String matchingServiceName = getMatchingServiceTypeName(componentType);
 		PersonMatchRequest personMatchRequest = createPersonMatchRequest(localDataset, nonce, matchName, blockingServiceName, matchingServiceName);
 		if (matchPairStatHalfTableName != null && matchPairStatHalfTableName.length() > 0)
 			personMatchRequest.setMatchPairStatHalfTableName(matchPairStatHalfTableName);

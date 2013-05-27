@@ -99,8 +99,7 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 				remotePersonService.addPersons(remoteTableName, persons, false, false);
 			}
 			firstResult += persons.size();
-		} while (morePatients);			
-
+		} while (morePatients);
 	}
 
 	protected void performSecondPhase(Dataset dataset, String matchName,
