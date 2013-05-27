@@ -120,9 +120,9 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		String fileRepoDir = Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
 		if (!emOnly) {
 			calculateRecordPairWeights(pairs, fellegiSunterParams);
-			calculateMarginalProbabilities(pairs, fellegiSunterParams, true, fileRepoDir + "/" + linkTableName);
+			calculateMarginalProbabilities(pairs, fellegiSunterParams, false, fileRepoDir + "/" + linkTableName);
 			fileOutTime = System.nanoTime();
-			orderRecordPairsByWeight(pairs, true, fileRepoDir + "/" + linkTableName);
+			orderRecordPairsByWeight(pairs, false, fileRepoDir + "/" + linkTableName);
 			calculateLowerBound(pairs, fellegiSunterParams);
 			calculateUpperBound(pairs, fellegiSunterParams);
 		}
