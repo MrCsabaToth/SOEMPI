@@ -516,12 +516,15 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String matchName) throws ApplicationException {
 		String remoteTableName = leftRemoteDataset.getTableName();
 
+		log.warn("Reencode Start");
 		String newBFTableName = remoteTableName + UniversalDaoHibernate.BF_TABLE_NAME_POSTFIX + "_" + getNowString();	// include time into name to avoid collision
 		// Reencode from original cleartext file or from DB?
 		List<ColumnInformation> bfColumnInformation = new ArrayList<ColumnInformation>();
 		Dataset newBFDataset = bfReencodeDataset(leftLocalDataset, newBFTableName, columnMatchInformation,
 				keyServerUserName, keyServerPassword, leftOrRightSide, personPseudoIdsReverseLookup, bfColumnInformation);
+		log.warn("Reencode End");
 
+		log.warn("RBF Send Start");
 		PrivacySettings privacySettings =
 				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
 		DataIntegratorSettings dataIntegratorSettings =
@@ -555,6 +558,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			log.error("Error occured during creation, generation or loading of BF or CBF data");
 			e.printStackTrace();
 		}
+		log.warn("RBF Send End");
 	}
 
 	public void testPRLLinkRecords(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException {

@@ -321,12 +321,20 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 //			recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
 
 			// EM link test
-			PersonManagerService personManagerService = Context.getPersonManagerService();
-			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(tableName);
+//			PersonManagerService personManagerService = Context.getPersonManagerService();
+//			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(tableName);
+//			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
+//			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
+//			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
+//			recordLinkageProtocol.testPMLinkRecords(dataset.getDatasetId(), datasetFound.getDatasetId(), Constants.BLOCKING_BYPASS_SERVICE_NAME, Constants.CBF_SCORING_SERVICE_NAME);
+
+			// BF Recode test
 			RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 			RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 			RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
-			recordLinkageProtocol.testPMLinkRecords(dataset.getDatasetId(), datasetFound.getDatasetId(), Constants.BLOCKING_BYPASS_SERVICE_NAME, Constants.CBF_SCORING_SERVICE_NAME);
+			Integer leftPersonMatchRequestId = 1;
+			Integer rightPersonMatchRequestId = 2;
+			recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
 			throw new RuntimeException(t);
