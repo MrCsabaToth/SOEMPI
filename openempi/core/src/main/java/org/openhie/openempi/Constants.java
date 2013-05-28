@@ -295,7 +295,7 @@ public class Constants {
      * Default bloom filter function name
      * TODO: make it configurable?
      */
-	public static final String DEFAULT_BLOOM_FILTER_FUNCTION_NAME = "FastBloomFilterFunctionUnpaddedNgrams";
+	public static final String DEFAULT_BLOOM_FILTER_FUNCTION_NAME = "BloomFilterHybridHMACUnpaddedNgrams";
 
     /**
      * Default HMAC function name
