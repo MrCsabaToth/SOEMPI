@@ -453,18 +453,20 @@ public class ModelTransformer
 
 	public static List<PersonLinkWeb> convertToClientModel3(List<PersonLink> personLinks) {
 		List<PersonLinkWeb> personLinksWeb = new ArrayList<PersonLinkWeb>();
-		for (PersonLink personLink : personLinks) {
-			PersonLinkWeb personLinkWeb = new PersonLinkWeb();
-			personLinkWeb.setPersonLinkId(personLink.getPersonLinkId());
-			personLinkWeb.setPersonMatchId(personLink.getPersonMatchId());
-			personLinkWeb.setLeftPersonId(personLink.getLeftPersonId());
-			personLinkWeb.setRightPersonId(personLink.getRightPersonId());
-			personLinkWeb.setBinaryVector(personLink.getBinaryVector());
-			personLinkWeb.setContinousVector(personLink.getContinousVector());
-			personLinkWeb.setWeight(personLink.getWeight());
-			personLinkWeb.setLinkState(personLink.getLinkState());
-			personLinkWeb.setDateCreated(personLink.getDateCreated());
-			personLinksWeb.add(personLinkWeb);
+		if (personLinks != null) {
+			for (PersonLink personLink : personLinks) {
+				PersonLinkWeb personLinkWeb = new PersonLinkWeb();
+				personLinkWeb.setPersonLinkId(personLink.getPersonLinkId());
+				personLinkWeb.setPersonMatchId(personLink.getPersonMatchId());
+				personLinkWeb.setLeftPersonId(personLink.getLeftPersonId());
+				personLinkWeb.setRightPersonId(personLink.getRightPersonId());
+				personLinkWeb.setBinaryVector(personLink.getBinaryVector());
+				personLinkWeb.setContinousVector(personLink.getContinousVector());
+				personLinkWeb.setWeight(personLink.getWeight());
+				personLinkWeb.setLinkState(personLink.getLinkState());
+				personLinkWeb.setDateCreated(personLink.getDateCreated());
+				personLinksWeb.add(personLinkWeb);
+			}
 		}
 		return personLinksWeb;
 	}

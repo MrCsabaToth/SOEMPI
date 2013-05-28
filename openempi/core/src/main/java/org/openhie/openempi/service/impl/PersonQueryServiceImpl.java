@@ -137,8 +137,10 @@ public class PersonQueryServiceImpl extends PersonServiceBaseImpl implements Per
 		PersonMatch personMatch = getPersonMatch(personMatchId);
 		int stride = (int)(personMatch.getTotalRecords() / numberOfSamples);
 		List<PersonLink> samples = new ArrayList<PersonLink>();
-		for (long i = 0; i < personMatch.getTotalRecords(); i+= stride) {
-			samples.addAll(getPersonLinksPaged(personMatch.getMatchTitle(), i, 1));
+		for (long i = 0; i < personMatch.getTotalRecords(); i += stride) {
+			List<PersonLink> personLinks = getPersonLinksPaged(personMatch.getMatchTitle(), i, stride);
+			if (personLinks != null && personLinks.size() > 0)
+				samples.addAll(personLinks);
 		}
 		return samples;
 	}
