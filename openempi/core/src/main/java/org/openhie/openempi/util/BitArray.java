@@ -52,6 +52,14 @@ public class BitArray {
 		return 1 << (BITS_PER_UNIT - 1 - (idx % BITS_PER_UNIT));
 	}
 
+	private int getByteForBitwiseOperation(byte byteVal) {
+		return byteVal & 0xFF;
+	}
+
+	private int getByteForBitwiseOperation(int idx) {
+		return getByteForBitwiseOperation(repn[idx]);
+	}
+
 	/**
 	 * Creates a BitArray of the specified size, initialized to zeros.
 	 */
@@ -64,7 +72,7 @@ public class BitArray {
 
 		repn = new byte[(length + BITS_PER_UNIT - 1) / BITS_PER_UNIT];
 	}
-
+	
 	/**
 	 * Creates a BitArray of the specified size, initialized from the
 	 * specified byte array.  The most significant bit of a[0] gets
@@ -72,9 +80,7 @@ public class BitArray {
 	 * to specify a value for every bit in the BitArray.  In other words,
 	 * 8*a.length <= length.
 	 */
-	public BitArray(int length, byte[] a)
-			throws IllegalArgumentException {
-
+	public BitArray(int length, byte[] a) throws IllegalArgumentException {
 		if (length < 0) {
 			throw new IllegalArgumentException("Negative length for BitArray: " + length);
 		}
@@ -87,7 +93,7 @@ public class BitArray {
 
 		int repLength = ((length + BITS_PER_UNIT - 1) / BITS_PER_UNIT);
 		int unusedBits = repLength * BITS_PER_UNIT - length;
-		byte bitMask = (byte) (0xFF << unusedBits);
+		int bitMask = ((0xFF << unusedBits) & 0xFF);
 
 		/* 
 		 normalize the representation:
@@ -97,7 +103,7 @@ public class BitArray {
 		repn = new byte[repLength];
 		System.arraycopy(a, 0, repn, 0, repLength);
 		if (repLength > 0) {
-			repn[repLength - 1] &= bitMask;
+			repn[repLength - 1] = (byte)(getByteForBitwiseOperation(repLength - 1) & bitMask);
 		}
 	}
 
@@ -131,14 +137,13 @@ public class BitArray {
 					.toString(index));
 		}
 
-		return (repn[subscript(index)] & position(index)) != 0;
+		return (getByteForBitwiseOperation(subscript(index)) & position(index)) != 0;
 	}
 
 	/**
 	 *  Sets the indexed bit in this BitArray.
 	 */
-	public void set(int index, boolean value)
-			throws ArrayIndexOutOfBoundsException {
+	public void set(int index, boolean value) throws ArrayIndexOutOfBoundsException {
 		if (index < 0 || index >= length) {
 			throw new ArrayIndexOutOfBoundsException(Integer
 					.toString(index));
@@ -146,10 +151,11 @@ public class BitArray {
 		int idx = subscript(index);
 		int bit = position(index);
 
+		int byteForOp = getByteForBitwiseOperation(idx);
 		if (value) {
-			repn[idx] |= bit;
+			repn[idx] = (byte)(byteForOp | bit);
 		} else {
-			repn[idx] &= ~bit;
+			repn[idx] = (byte)((byteForOp & ~bit) & 0xFF);
 		}
 	}
 
@@ -226,13 +232,13 @@ public class BitArray {
 		int hashCode = 0;
 
 		for (int i = 0; i < repn.length; i++)
-			hashCode = 31 * hashCode + repn[i];
+			hashCode = 31 * hashCode + getByteForBitwiseOperation(i);
 
 		return hashCode ^ length;
 	}
 
 	public Object clone() {
-		return new BitArray(this );
+		return new BitArray(this);
 	}
 
 	private static final byte[][] NYBBLE = {
@@ -262,8 +268,8 @@ public class BitArray {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		for (int i = 0; i < repn.length - 1; i++) {
-			out.write(NYBBLE[(repn[i] >> 4) & 0x0F], 0, 4);
-			out.write(NYBBLE[repn[i] & 0x0F], 0, 4);
+			out.write(NYBBLE[(getByteForBitwiseOperation(i) >> 4) & 0x0F], 0, 4);
+			out.write(NYBBLE[getByteForBitwiseOperation(i) & 0x0F], 0, 4);
 
 			if (i % BYTES_PER_LINE == BYTES_PER_LINE - 1) {
 				out.write('\n');
@@ -297,7 +303,7 @@ public class BitArray {
 		byte[] baRep = ba.getByteArrayRep();
 		int operationLength = Math.min(repn.length, baRep.length);
 		for (int i = 0; i < operationLength; i++) {
-			repn[i] = (byte)(repn[i] & baRep[i]);
+			repn[i] = (byte)(getByteForBitwiseOperation(i) & getByteForBitwiseOperation(baRep[i]) & 0xFF);
 		}
 	}
 
@@ -308,7 +314,7 @@ public class BitArray {
 		byte[] baRep = ba.getByteArrayRep();
 		int operationLength = Math.min(repn.length, baRep.length);
 		for (int i = 0; i < operationLength; i++) {
-			repn[i] = (byte)(repn[i] | baRep[i]);
+			repn[i] = (byte)(getByteForBitwiseOperation(i) | getByteForBitwiseOperation(baRep[i]) & 0xFF);
 		}
 	}
 
@@ -321,7 +327,7 @@ public class BitArray {
 			return false;
 		for (int i = 0; i < baRep.length; i++) {
 			if (baRep[i] != 0) {
-				if ((byte)(repn[i] & baRep[i]) != baRep[i]) {
+				if ((byte)(getByteForBitwiseOperation(i) & getByteForBitwiseOperation(baRep[i]) & 0xFF) != baRep[i]) {
 					return false;
 				}
 			}
