@@ -39,7 +39,6 @@ import org.openhie.openempi.loader.configuration.LoaderDataField;
 import org.openhie.openempi.model.ColumnInformation;
 import org.openhie.openempi.model.Dataset;
 import org.openhie.openempi.model.FieldMeaning.FieldMeaningEnum;
-import org.openhie.openempi.model.FieldType.FieldTypeEnum;
 import org.openhie.openempi.model.FieldType;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.PersonLink;
