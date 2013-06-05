@@ -109,23 +109,26 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 	private long addMatchPairStatHalfInHibernate(Session session, String tableName, MatchPairStatHalf matchPairStatHalf) {
 		log.debug("Saving matchPairStatHalf record: " + matchPairStatHalf);
 		String tableFullName = getTableFullName(tableName);
-		StringBuilder sqlInsert = new StringBuilder("INSERT INTO public." + tableFullName + " (");
-		StringBuilder sqlInsert2ndPart = new StringBuilder(") VALUES (");
-		// adding the Id - it is auto generated
-		sqlInsert.append(MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ", ");
-		if (matchPairStatHalf.getMatchPairStatHalfId() != null)
-			sqlInsert2ndPart.append(matchPairStatHalf.getMatchPairStatHalfId() + ", ");
-		else
-			sqlInsert2ndPart.append("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "'), ");
-		// adding person pseudo id
-		sqlInsert.append(PERSON_PSEUDO_ID_COLUMN_NAME + ", ");
-		sqlInsert2ndPart.append(matchPairStatHalf.getPersonPseudoId() + ", ");
-		// adding match status
-		sqlInsert.append(MATCH_STATE_COLUMN_NAME);
-		sqlInsert2ndPart.append(matchPairStatHalf.getMatchStatus());
-		sqlInsert2ndPart.append(") RETURNING " + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ";");
-		sqlInsert.append(sqlInsert2ndPart.toString());
+
+		StringBuilder sqlInsert = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
+			MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ", " +
+			PERSON_PSEUDO_ID_COLUMN_NAME + ", " +
+			MATCH_STATE_COLUMN_NAME +
+			") VALUES (" +
+			(matchPairStatHalf.getMatchPairStatHalfId() != null ? "?" : "nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')" + ",") +
+			"?,?) RETURNING " + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ";");
+
 		Query query = session.createSQLQuery(sqlInsert.toString());
+
+		int position = 0;
+		if (matchPairStatHalf.getMatchPairStatHalfId() != null) {
+			query.setLong(position, matchPairStatHalf.getMatchPairStatHalfId());
+			position++;
+		}
+		query.setLong(position, matchPairStatHalf.getPersonPseudoId());
+		position++;
+		query.setBoolean(position, matchPairStatHalf.getMatchStatus());
+
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
 		long id = bigInt.longValue();
 		matchPairStatHalf.setMatchPairStatHalfId(id);

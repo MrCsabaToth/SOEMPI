@@ -112,24 +112,29 @@ public class MatchPairStatDaoHibernate extends UniversalDaoHibernate implements 
 	private long addMatchPairStatInHibernate(Session session, String tableName, MatchPairStat matchPairStat) {
 		log.debug("Saving matchPairStat record: " + matchPairStat);
 		String tableFullName = getTableFullName(tableName);
-		StringBuilder sqlInsert = new StringBuilder("INSERT INTO public." + tableFullName + " (");
-		StringBuilder sqlInsert2ndPart = new StringBuilder(") VALUES (");
-		// adding the Id - it is auto generated
-		sqlInsert.append(MATCH_PAIR_STAT_ID_COLUMN_NAME + ", ");
-		if (matchPairStat.getMatchPairStatId() != null)
-			sqlInsert2ndPart.append(matchPairStat.getMatchPairStatId() + ", ");
-		else
-			sqlInsert2ndPart.append("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "'), ");
-		// adding match status
-		sqlInsert.append(LEFT_PERSON_PSEUDO_ID_COLUMN_NAME + ", ");
-		sqlInsert2ndPart.append(matchPairStat.getLeftPersonPseudoId() + ", ");
-		sqlInsert.append(RIGHT_PERSON_PSEUDO_ID_COLUMN_NAME + ", ");
-		sqlInsert2ndPart.append(matchPairStat.getRightPersonPseudoId() + ", ");
-		sqlInsert.append(MATCH_STATE_COLUMN_NAME);
-		sqlInsert2ndPart.append(matchPairStat.getMatchStatus());
-		sqlInsert2ndPart.append(") RETURNING " + MATCH_PAIR_STAT_ID_COLUMN_NAME + ";");
-		sqlInsert.append(sqlInsert2ndPart.toString());
+
+		StringBuilder sqlInsert = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
+			MATCH_PAIR_STAT_ID_COLUMN_NAME + ", " +
+			LEFT_PERSON_PSEUDO_ID_COLUMN_NAME + ", " +
+			RIGHT_PERSON_PSEUDO_ID_COLUMN_NAME + ", " +
+			MATCH_STATE_COLUMN_NAME +
+			") VALUES (" +
+			(matchPairStat.getMatchPairStatId() != null ? "?" : ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')")) + "," +
+			"?,?,?) RETURNING " + MATCH_PAIR_STAT_ID_COLUMN_NAME + ";");
+
 		Query query = session.createSQLQuery(sqlInsert.toString());
+
+		int position = 0;
+		if (matchPairStat.getMatchPairStatId() != null) {
+			query.setLong(position, matchPairStat.getMatchPairStatId());
+			position++;
+		}
+		query.setLong(position, matchPairStat.getLeftPersonPseudoId());
+		position++;
+		query.setLong(position, matchPairStat.getRightPersonPseudoId());
+		position++;
+		query.setBoolean(position, matchPairStat.getMatchStatus());
+
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
 		long id = bigInt.longValue();
 		matchPairStat.setMatchPairStatId(id);

@@ -147,41 +147,55 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 	private Long addPersonLinkInHibernate(Session session, String tableName, PersonLink personLink) {
 		log.debug("Storing a person link.");
 		String tableFullName = getTableFullName(tableName);
-		StringBuilder sqlInsertPerson =
-			new StringBuilder("INSERT INTO public." + tableFullName + " (");
-		StringBuilder sqlInsertPerson2ndPart = new StringBuilder(") VALUES (");
-		// adding the Id - it is auto generated
-		sqlInsertPerson.append(PERSON_LINK_ID_COLUMN_NAME + ", ");
-		if (personLink.getPersonLinkId() != null)
-			sqlInsertPerson2ndPart.append(personLink.getPersonLinkId());
-		else
-			sqlInsertPerson2ndPart.append("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')");
-		sqlInsertPerson2ndPart.append(", ");
-		sqlInsertPerson.append(PERSON_MATCH_ID_COLUMN_NAME + ", ");
-		sqlInsertPerson2ndPart.append(personLink.getPersonMatchId() + ", ");
-		sqlInsertPerson.append(LEFT_PERSON_ID_COLUMN_NAME + ", ");
-		sqlInsertPerson2ndPart.append(personLink.getLeftPersonId() + ", ");
-		sqlInsertPerson.append(RIGHT_PERSON_ID_COLUMN_NAME + ", ");
-		sqlInsertPerson2ndPart.append(personLink.getRightPersonId() + ", ");
+
+		StringBuilder sqlInsertPerson = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
+			PERSON_LINK_ID_COLUMN_NAME + ", " +
+			PERSON_MATCH_ID_COLUMN_NAME + ", " +
+			LEFT_PERSON_ID_COLUMN_NAME + ", " +
+			RIGHT_PERSON_ID_COLUMN_NAME + ", " +
+			(personLink.getBinaryVector() != null ? (BINARY_VECTOR_COLUMN_NAME + ", ") : "") +
+			(personLink.getContinousVector() != null ? (CONTINOUS_VECTOR_COLUMN_NAME + ", ") : "") +
+			WEIGHT_COLUMN_NAME + ", " +
+			LINK_STATUS_COLUMN_NAME + ", " +
+			CREATOR_ID_COLUMN_NAME + ", " +
+			DATE_CREATED_COLUMN_NAME +
+			") VALUES (" +
+			(personLink.getPersonLinkId() != null ? "?" : ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')")) +
+			",?,?,?" +
+			(personLink.getBinaryVector() != null ? ",?" : "") +
+			(personLink.getContinousVector() != null ? ",?" : "") +
+			",?,?,?,?" +
+			") RETURNING " + PERSON_LINK_ID_COLUMN_NAME + ";");
+
+		Query query = session.createSQLQuery(sqlInsertPerson.toString());
+
+		int position = 0;
+		if (personLink.getPersonLinkId() != null) {
+			query.setLong(position, personLink.getPersonLinkId());
+			position++;
+		}
+		query.setInteger(position, personLink.getPersonMatchId());
+		position++;
+		query.setLong(position, personLink.getLeftPersonId());
+		position++;
+		query.setLong(position, personLink.getRightPersonId());
+		position++;
 		if (personLink.getBinaryVector() != null) {
-			sqlInsertPerson.append(BINARY_VECTOR_COLUMN_NAME + ", ");
-			sqlInsertPerson2ndPart.append("'" + personLink.getBinaryVector() + "', ");
+			query.setString(position, personLink.getBinaryVector());
+			position++;
 		}
 		if (personLink.getContinousVector() != null) {
-			sqlInsertPerson.append(CONTINOUS_VECTOR_COLUMN_NAME + ", ");
-			sqlInsertPerson2ndPart.append("'" + personLink.getContinousVector() + "', ");
+			query.setString(position, personLink.getContinousVector());
+			position++;
 		}
-		sqlInsertPerson.append(WEIGHT_COLUMN_NAME + ", ");
-		sqlInsertPerson2ndPart.append(personLink.getWeight() + ", ");
-		sqlInsertPerson.append(LINK_STATUS_COLUMN_NAME + ", ");
-		sqlInsertPerson2ndPart.append(personLink.getLinkState() + ", ");
-		sqlInsertPerson.append(CREATOR_ID_COLUMN_NAME + ", ");
-		sqlInsertPerson2ndPart.append(personLink.getCreatorId() + ", ");
-		sqlInsertPerson.append(DATE_CREATED_COLUMN_NAME);
-		sqlInsertPerson2ndPart.append("'" + personLink.getDateCreated().toString() + "'");
-		sqlInsertPerson2ndPart.append(") RETURNING " + PERSON_LINK_ID_COLUMN_NAME + ";");
-		sqlInsertPerson.append(sqlInsertPerson2ndPart.toString());
-		Query query = session.createSQLQuery(sqlInsertPerson.toString());
+		query.setDouble(position, personLink.getWeight());
+		position++;
+		query.setInteger(position, personLink.getLinkState());
+		position++;
+		query.setInteger(position, personLink.getCreatorId());
+		position++;
+		query.setDate(position, personLink.getDateCreated());
+
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
 		Long id = bigInt.longValue();
 		personLink.setPersonLinkId(id);
