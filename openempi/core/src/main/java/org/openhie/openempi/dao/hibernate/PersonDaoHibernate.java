@@ -396,31 +396,38 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 	private Long addPersonInHibernate(Session session, String tableName, Person person) {
 		log.debug("Saving person record: " + person);
 		String tableFullName = getTableFullName(tableName);
-		StringBuilder sqlInsertPerson = new StringBuilder("INSERT INTO public." + tableFullName + " (");
-		StringBuilder sqlInsertPerson2ndPart = new StringBuilder(") VALUES (");
-		// adding the Id - it is auto generated
-		sqlInsertPerson.append(PERSON_ID_COLUMN_NAME);
-		if (person.getPersonId() != null)
-			sqlInsertPerson2ndPart.append(person.getPersonId().toString());
-		else
-			sqlInsertPerson2ndPart.append("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')");
+		StringBuilder sqlInsertPerson = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
+			// adding the Id - it is auto generated
+			PERSON_ID_COLUMN_NAME);
 		// adding the custom fields
 		Map<String, Object> attributes = person.getAttributes();
 		for (Map.Entry<String, Object> pairs : attributes.entrySet()) {
 			ValidationUtil.sanityCheckFieldName(pairs.getKey());
-			sqlInsertPerson.append(", " + COLUMN_NAME_PREFIX + pairs.getKey().toLowerCase());
-			if (pairs.getValue() == null)
-				sqlInsertPerson2ndPart.append(", null");
-			else if (pairs.getValue() instanceof String)
-				sqlInsertPerson2ndPart.append(", '" + escapeString(pairs.getValue().toString()) + "'");
-			else if (pairs.getValue() instanceof byte[])
-				sqlInsertPerson2ndPart.append(", " + convertByteArrayToBlobString((byte[])pairs.getValue()));
-			else
-				sqlInsertPerson2ndPart.append(", " + escapeString(pairs.getValue().toString()));
+			if (pairs.getValue() != null)
+				sqlInsertPerson.append(", " + COLUMN_NAME_PREFIX + pairs.getKey().toLowerCase());
 		}
-		sqlInsertPerson2ndPart.append(") RETURNING " + PERSON_ID_COLUMN_NAME + ";");
-		sqlInsertPerson.append(sqlInsertPerson2ndPart.toString());
+		sqlInsertPerson.append(") VALUES (" +
+			(person.getPersonId() != null ? "?" : ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')")));
+		for (Map.Entry<String, Object> pairs : attributes.entrySet()) {
+			if (pairs.getValue() != null)
+				sqlInsertPerson.append(",?");
+		}
+		sqlInsertPerson.append(") RETURNING " + PERSON_ID_COLUMN_NAME + ";");
+
 		Query query = session.createSQLQuery(sqlInsertPerson.toString());
+
+		int position = 0;
+		if (person.getPersonId() != null) {
+			query.setLong(position, person.getPersonId());
+			position++;
+		}
+		for (Map.Entry<String, Object> pairs : attributes.entrySet()) {
+			if (pairs.getValue() != null) {
+				query.setParameter(position, pairs.getValue());
+				position++;
+			}
+		}
+
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
 		Long id = bigInt.longValue();
 		person.setPersonId(id);
@@ -495,8 +502,13 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 				// adding the custom fields
 				generateSqlSnipFromPerson(person, sqlUpdatePerson, ", ");
 				// adding the Id where clause
-				sqlUpdatePerson.append(" WHERE (" + PERSON_ID_COLUMN_NAME + "=" + person.getPersonId() + ");");
+				sqlUpdatePerson.append(" WHERE (" + PERSON_ID_COLUMN_NAME + "=?);");
+				
 				SQLQuery query = session.createSQLQuery(sqlUpdatePerson.toString());
+
+				int position = addParametersFromPerson(person, query, 0);
+				query.setLong(position, person.getPersonId());
+
 				int num = query.executeUpdate();
 				log.debug("Finished updating the person.");
 				session.flush();
@@ -533,15 +545,26 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 				sqlSelectPerson.append("(");
 				boolean firstIteration = true;
 				for (Long personId : personIds) {
-					if (!firstIteration)
-						sqlSelectPerson.append(" OR ");
-					else
-						firstIteration = false;
-					sqlSelectPerson.append(PERSON_ID_COLUMN_NAME + "=" + personId.toString());
+					if (personId != null) {
+						if (!firstIteration)
+							sqlSelectPerson.append(" OR ");
+						else
+							firstIteration = false;
+						sqlSelectPerson.append(PERSON_ID_COLUMN_NAME + "=?");
+					}
 				}
 				sqlSelectPerson.append(");");
-				List<Map<String, Object>> rows =
-					session.createSQLQuery(sqlSelectPerson.toString()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
+				SQLQuery query = session.createSQLQuery(sqlSelectPerson.toString());
+
+				int position = 0;
+				for (Long personId : personIds) {
+					if (personId != null) {
+						query.setLong(position, personId);
+						position++;
+					}
+				}
+
+				List<Map<String, Object>> rows = query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 				List<Person> persons = new ArrayList<Person>();
 				if (rows != null) {
 					for(Map<String, Object> rs : rows) {
@@ -603,15 +626,24 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 					// TODO: in MySQL this should be: "order by rand()"
 				}
 				boolean paging = maxResults > 0;
+				if (paging || randomize)
+					sqlSelectPerson.append(" LIMIT ?");
+				if (paging && !randomize)
+					sqlSelectPerson.append(" OFFSET ?");
+				sqlSelectPerson.append(";");
+				SQLQuery query = session.createSQLQuery(sqlSelectPerson.toString());
+
+				int position = addParametersFromPerson(example, query, 0);
 				if (paging || randomize) {
-					sqlSelectPerson.append(" LIMIT " + maxResults);
+					query.setInteger(position, maxResults);
+					position++;
 				}
 				if (paging && !randomize) {
-					sqlSelectPerson.append(" OFFSET " + firstResult);
+					query.setLong(position, firstResult);
+					position++;
 				}
-				sqlSelectPerson.append(";");
-				List<Map<String, Object>> rows =
-					session.createSQLQuery(sqlSelectPerson.toString()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
+
+				List<Map<String, Object>> rows = query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 				List<Person> persons = new ArrayList<Person>();
 				if (rows != null) {
 					for(Map<String, Object> rs : rows) {
@@ -625,7 +657,7 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 	}
 	
 	private void generateSqlSnipFromPerson(Person person, StringBuilder sqlQueryString, String concatenationString) {
-		// adding the custom fields
+		// adding the custom field names for criteria
 		boolean criteriaAdded = false;
 		if (person != null) {
 			Map<String, Object> attributes = person.getAttributes();
@@ -637,12 +669,8 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 					String columnName = pairs.getKey().toLowerCase();
 					if (pairs.getValue() == null)
 						sqlQueryString.append(COLUMN_NAME_PREFIX + columnName + "=null");
-					else if (pairs.getValue() instanceof String)
-						sqlQueryString.append(COLUMN_NAME_PREFIX + columnName + "='" + escapeString(pairs.getValue().toString()) + "'");
-					else if (pairs.getValue() instanceof byte[])
-						sqlQueryString.append(COLUMN_NAME_PREFIX + columnName + "=" + convertByteArrayToBlobString((byte[])pairs.getValue()));
 					else
-						sqlQueryString.append(COLUMN_NAME_PREFIX + columnName + "=" + escapeString(pairs.getValue().toString()));
+						sqlQueryString.append(COLUMN_NAME_PREFIX + columnName + "=?");
 					if (it.hasNext())
 						sqlQueryString.append(concatenationString);
 					criteriaAdded = true;
@@ -651,6 +679,24 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 		}
 		if (!criteriaAdded)
 			sqlQueryString.append("TRUE");
+	}
+	
+	private int addParametersFromPerson(Person person, Query query, int position) {
+		// adding the custom field values
+		if (person != null) {
+			Map<String, Object> attributes = person.getAttributes();
+			if (attributes.size() > 0) {
+				Iterator<Entry<String, Object>> it = attributes.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry<String, Object> pairs = (Map.Entry<String, Object>)it.next();
+					if (pairs.getValue() != null) {
+						query.setParameter(position, pairs.getValue());
+						position++;
+					}
+				}
+			}
+		}
+		return position;
 	}
 	
 	private void generateNotNullSqlCriteriaFromFields(StringBuilder sqlSelect, List<String> fields) {
@@ -664,9 +710,7 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 	
 	private void appendSelectPersonFirstHalf(StringBuilder sqlSelect, String tableName, List<String> fields) {
 		sqlSelect.append("SELECT ");
-		if (fields == null)
-			appendFieldsToSelectFromColumnInformation(sqlSelect);
-		else if (fields.size() == 0)
+		if (fields == null || (fields != null && fields.size() == 0))
 			appendFieldsToSelectFromColumnInformation(sqlSelect);
 		else
 			appendFieldsToSelectFromFieldList(sqlSelect, fields);
@@ -695,21 +739,6 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 				p.setAttribute(pairs.getKey().substring(4), pairs.getValue());
 		}
 		return p;
-	}
-	
-	private String escapeString(String input) {
-		return input.replace("'", "''");
-	}
-
-	private String convertByteArrayToBlobString(byte[] blob) {
-		StringBuilder blobString = new StringBuilder("E'");	// Note: the E prefix is for PostgreSQL 8.3+	
-		for(int i = 0; i < blob.length; i++) {
-			blobString.append(BYTE_TO_OCTA_STRING_MAP.get(blob[i]));
-		}
-		blobString.append("'");
-//		blobString.append("::bytea");	// In HQL ":name" notation is for named parameters, unfortunately Hibernate searches for ":bytea" named parameter.
-										// Right now PostgreSQL 8.4 and 9.1 works if I leave this qualifier off from the end of the string
-		return blobString.toString();
 	}
 
 	public List<Person> blockRecords(String tableName, Person example, List<String> fields) {

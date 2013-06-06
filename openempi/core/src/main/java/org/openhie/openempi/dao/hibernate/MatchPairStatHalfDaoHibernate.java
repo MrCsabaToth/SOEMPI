@@ -115,7 +115,7 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 			PERSON_PSEUDO_ID_COLUMN_NAME + ", " +
 			MATCH_STATE_COLUMN_NAME +
 			") VALUES (" +
-			(matchPairStatHalf.getMatchPairStatHalfId() != null ? "?" : "nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')" + ",") +
+			(matchPairStatHalf.getMatchPairStatHalfId() != null ? "?" : "nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')") + "," +
 			"?,?) RETURNING " + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ";");
 
 		Query query = session.createSQLQuery(sqlInsert.toString());
