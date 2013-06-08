@@ -340,7 +340,7 @@
 	</bean>
 	<bean id="ThreeThirdPartyCBFWithRndBlocking"
 		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyCBFProtocol">
-		<property name="name" value="ThreeThirdPartyCBFProtocol"/>
+		<property name="name" value="ThreeThirdPartyCBFWithRndBlocking"/>
 		<property name="matchPairStatDao" ref="matchPairStatDao"/>
 		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
 		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
@@ -349,7 +349,7 @@
 	</bean>
 	<bean id="ThreeThirdPartyCBFWithLshBlocking"
 		class="org.openhie.openempi.recordlinkage.protocols.ThreeThirdPartyCBFProtocol">
-		<property name="name" value="ThreeThirdPartyCBFProtocol"/>
+		<property name="name" value="ThreeThirdPartyCBFWithLshBlocking"/>
 		<property name="matchPairStatDao" ref="matchPairStatDao"/>
 		<property name="matchPairStatHalfDao" ref="matchPairStatHalfDao"/>
 		<property name="personMatchRequestDao" ref="personMatchRequestDao"/>
