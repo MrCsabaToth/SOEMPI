@@ -98,8 +98,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				isThereClearField = true;
 				ciClone.setFieldTransformation(defaultHmacFunctionName);	// Data sent will be all HMAC
 				ciClone.setFieldType(FieldType.FieldTypeEnum.Blob);
-				ciClone.setBloomFilterKParameter(defaultK);
 			}
+			ciClone.setBloomFilterKParameter(defaultK);
 			columnInformation.add(ciClone);
 		}
 		return isThereClearField;
@@ -268,6 +268,9 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		for (ColumnInformation ci : ciNotToEncode) {
 			ciToEncode.add(0, ci);	// insert
 		}
+		PrivacySettings privacySettings =
+				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
+		int defaultK = privacySettings.getBloomfilterSettings().getDefaultK();
 		if (tableName != null && !tableName.isEmpty()) {
 			List<ColumnInformation> ciClone = GeneralUtil.cloneColumnInformationList(ciToEncode);
 			for (ColumnInformation ci : ciClone) {
@@ -276,6 +279,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 					ci.setFieldTransformation(Constants.DEFAULT_HMAC_FUNCTION_NAME);
 					ci.setFieldTypeModifier(null);
 				}
+				ci.setBloomFilterKParameter(defaultK);
 			}
 			personManagerService.createDatasetTable(tableName, ciClone, persons.size(), false, false);
 			personManagerService.addPersons(tableName, persons, false, false);
