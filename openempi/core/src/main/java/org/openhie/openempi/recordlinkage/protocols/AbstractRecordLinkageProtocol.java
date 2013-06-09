@@ -338,7 +338,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 					bfBitArray = new BitArray(fromHowBigPool, bloomFilter);
 				rnd.setSeed(seed);
 				for (int i = 0; i < howManyTimesToSample; i++) {
-					Integer sourceBitIndex = -1;
+					int sourceBitIndex = -1;
 					if (bitPermutation != null)
 						sourceBitIndex = rnd.nextInt(fromHowBigPool);	// TODO: Is this random enough? For small numbers for example?
 					else if (i < fromHowBigPool)	// Don't randomize bits for debug purposes
@@ -346,7 +346,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 					boolean bitValue = false;	// Default to 0 in case of null attribute
 					if (bfBitArray != null && sourceBitIndex > 0)
 						bitValue = bfBitArray.get(sourceBitIndex);
-					Integer destinationBitIndex = bitSetCounter;
+					int destinationBitIndex = bitSetCounter;
 					if (bitPermutation != null)
 						destinationBitIndex = bitPermutation.get(bitSetCounter);
 					cbfBitArray.set(destinationBitIndex, bitValue);
