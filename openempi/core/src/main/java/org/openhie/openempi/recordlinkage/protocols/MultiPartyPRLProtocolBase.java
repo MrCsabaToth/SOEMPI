@@ -378,7 +378,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
 			List<ColumnInformation> bfColumnInformation) throws NamingException, ApplicationException
 	{
-		Integer cbfLength = 0;
+		int cbfLength = 0;
 		for (ColumnMatchInformation cmi : columnMatchInformation) {
 			if (cmi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
 				!cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME))
@@ -389,7 +389,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 		long seed = nonce * myNonce;
 		Random rnd = new Random(seed);
-		List<Integer> bitPermutation = generateBitPermutation(rnd, cbfLength);
+		int[] bitPermutation = generateBitPermutation(rnd, cbfLength);
 
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 		PersonManagerService personManagerService = Context.getPersonManagerService();
@@ -444,9 +444,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				if (morePatients) {
 					cbfPersons.clear();
 					for (Person person : persons) {
-						Person cbfPerson = generateCBFWithOverSamplingAndPermutation(
-								person, cbfLength, rnd, seed, bitPermutation, columnMatchInformation,
-								leftOrRightSide);
+						Person cbfPerson = generateCBFWithOverSamplingAndPermutation(person, cbfLength, rnd, seed,
+								bitPermutation, columnMatchInformation, leftOrRightSide);
 						// Add piggy backing no-match columns
 						for (String ncn : noMatchColumnNames)
 							cbfPerson.setAttribute(ncn, person.getAttribute(ncn));

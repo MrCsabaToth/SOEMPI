@@ -298,25 +298,23 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return functionField;
 	}
 
-	protected List<Integer> generateBitPermutation(Random rnd, Integer size) {
-		List<Integer> bitPermutation = new ArrayList<Integer>();
-		Map<Integer, Integer> bitIndicator = new HashMap<Integer, Integer>();
-		Integer i = 0;
+	protected int[] generateBitPermutation(Random rnd, int size) {
+		int[] bitPermutation = new int[size];
+		int[] bitIndicator = new int[size];
+		int i = 0;
 		while(i < size) {
-			Integer nextBit = rnd.nextInt(size);
-			if (!bitIndicator.containsKey(nextBit)) {
-				bitIndicator.put(nextBit, 1);
-				bitPermutation.add(nextBit);
+			int nextBit = rnd.nextInt(size);
+			if (bitIndicator[nextBit] == 0) {
+				bitIndicator[nextBit] = 1;
+				bitPermutation[i] = nextBit;
 				i++;
-			} else {
-				bitIndicator.put(nextBit, bitIndicator.get(nextBit) + 1);
 			}
 		}
 		return bitPermutation;
 	}
 
 	protected Person generateCBFWithOverSamplingAndPermutation(Person person,
-			Integer cbfLength, Random rnd, Long seed, List<Integer> bitPermutation,
+			int cbfLength, Random rnd, Long seed, int[] bitPermutation,
 			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide) throws ApplicationException {
 		Person cbfPerson = new Person();
 		BitArray cbfBitArray = new BitArray(cbfLength);
@@ -348,7 +346,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 						bitValue = bfBitArray.get(sourceBitIndex);
 					int destinationBitIndex = bitSetCounter;
 					if (bitPermutation != null)
-						destinationBitIndex = bitPermutation.get(bitSetCounter);
+						destinationBitIndex = bitPermutation[bitSetCounter];
 					cbfBitArray.set(destinationBitIndex, bitValue);
 					bitSetCounter++;
 				}
