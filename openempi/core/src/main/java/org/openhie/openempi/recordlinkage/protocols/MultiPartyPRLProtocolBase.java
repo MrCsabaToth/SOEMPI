@@ -389,9 +389,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 		long seed = nonce * myNonce;
 		Random rnd = new Random(seed);
-		List<Integer> bitPermutation = null;
-		if (personPseudoIdsReverseLookup != null)	// Only permute if non local, non-debug
-			bitPermutation = generateBitPermutation(rnd, cbfLength);
+		List<Integer> bitPermutation = generateBitPermutation(rnd, cbfLength);
 
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 		PersonManagerService personManagerService = Context.getPersonManagerService();
