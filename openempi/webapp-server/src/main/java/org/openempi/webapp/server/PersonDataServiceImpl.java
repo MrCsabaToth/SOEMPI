@@ -273,7 +273,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		recordLinkageProtocol.sendPersonMatchRequest(datasetFound, remoteTableName, matchName,
 				keyServerUserName, keyServerPassword, dataIntegratorUserName, dataIntegratorPassword,
 				parameterManagerUserName, parameterManagerPassword);
-		return "DB sent successfully";
+		return "Performed";
 	}
 
 	public boolean doesCurrentLoaderConfigurationNeedKeyServer() {
