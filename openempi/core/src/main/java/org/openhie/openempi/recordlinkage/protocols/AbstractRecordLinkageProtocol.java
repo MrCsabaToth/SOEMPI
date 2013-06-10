@@ -19,6 +19,7 @@ package org.openhie.openempi.recordlinkage.protocols;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,6 @@ import org.openhie.openempi.context.Context;
 import org.openhie.openempi.dao.MatchPairStatDao;
 import org.openhie.openempi.dao.MatchPairStatHalfDao;
 import org.openhie.openempi.dao.PersonMatchRequestDao;
-import org.openhie.openempi.dao.hibernate.UniversalDaoHibernate;
 import org.openhie.openempi.matching.fellegisunter.BloomFilterParameterAdvice;
 import org.openhie.openempi.matching.fellegisunter.MatchConfiguration;
 import org.openhie.openempi.matching.fellegisunter.MatchField;
@@ -48,7 +48,6 @@ import org.openhie.openempi.model.Dataset;
 import org.openhie.openempi.model.FieldType;
 import org.openhie.openempi.model.MatchPairStat;
 import org.openhie.openempi.model.MatchPairStatHalf;
-import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonMatch;
 import org.openhie.openempi.model.PersonMatchRequest;
 import org.openhie.openempi.model.User;
@@ -298,62 +297,52 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return functionField;
 	}
 
-	protected int[] generateBitPermutation(Random rnd, int size) {
-		int[] bitPermutation = new int[size];
-		int[] bitIndicator = new int[size];
+	protected Map<String, int[][]> generateBitPermutation(Random rnd, int cbfLength,
+			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide)
+	{
+		Map<String, int[][]> bitPermutation = new HashMap<String, int[][]>();
+		int[] bitTargetPermutation = new int[cbfLength];
+		int[] bitIndicator = new int[cbfLength];
 		int i = 0;
-		while(i < size) {
-			int nextBit = rnd.nextInt(size);
+		while(i < cbfLength) {
+			int nextBit = rnd.nextInt(cbfLength);
 			if (bitIndicator[nextBit] == 0) {
 				bitIndicator[nextBit] = 1;
-				bitPermutation[i] = nextBit;
+				bitTargetPermutation[i] = nextBit;
 				i++;
 			}
 		}
-		return bitPermutation;
-	}
-
-	protected Person generateCBFWithOverSamplingAndPermutation(Person person,
-			int cbfLength, Random rnd, Long seed, int[] bitPermutation,
-			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide) throws ApplicationException {
-		Person cbfPerson = new Person();
-		BitArray cbfBitArray = new BitArray(cbfLength);
-		int bitSetCounter = 0;
-		Map<String, Object> attributes = person.getAttributes();
+		i = 0;
 		for (ColumnMatchInformation cmi : columnMatchInformation) {
-			if (cmi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob) {
+			if (cmi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
+				!cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME))
+			{
 				String fn = leftOrRightSide ? cmi.getLeftFieldName() : cmi.getRightFieldName();
-				Object attribute = attributes.get(fn);
-				byte[] bloomFilter = null;
-				if (attribute != null)
-					bloomFilter = (byte[])attributes.get(fn);
-				// TODO: what if the attribute is null?
-				// Currently: set to 0
-				int fromHowBigPool = cmi.getBloomFilterFinalM();
 				int howManyTimesToSample = cmi.getBloomFilterProposedM();
-				BitArray bfBitArray = null;
-				if (bloomFilter != null)
-					bfBitArray = new BitArray(fromHowBigPool, bloomFilter);
-				rnd.setSeed(seed);
-				for (int i = 0; i < howManyTimesToSample; i++) {
-					int sourceBitIndex = -1;
-					if (bitPermutation != null)
-						sourceBitIndex = rnd.nextInt(fromHowBigPool);	// TODO: Is this random enough? For small numbers for example?
-					else if (i < fromHowBigPool)	// Don't randomize bits for debug purposes
-						sourceBitIndex = i;
-					boolean bitValue = false;	// Default to 0 in case of null attribute
-					if (bfBitArray != null && sourceBitIndex > 0)
-						bitValue = bfBitArray.get(sourceBitIndex);
-					int destinationBitIndex = bitSetCounter;
-					if (bitPermutation != null)
-						destinationBitIndex = bitPermutation[bitSetCounter];
-					cbfBitArray.set(destinationBitIndex, bitValue);
-					bitSetCounter++;
+				int fromHowBigPool = cmi.getBloomFilterFinalM();
+				// Round up the size to multiplicants of 8, so later the BitArray.performPermutationPart
+				// doesn't have to check fractions in case of the last byte
+				int roundedUpSize = ((fromHowBigPool + BitArray.BITS_PER_UNIT - 1) / BitArray.BITS_PER_UNIT) * BitArray.BITS_PER_UNIT;
+				int[][] permBitCombination = new int[roundedUpSize][];
+				for (int j = 0; j < howManyTimesToSample; j++, i++) {
+					int sourceBit = rnd.nextInt(fromHowBigPool);
+					if (permBitCombination[sourceBit] == null) {
+						permBitCombination[sourceBit] = new int[] { bitTargetPermutation[i] };
+					} else {
+						int[] oldArray = permBitCombination[sourceBit];
+						int newArrayLength = permBitCombination[sourceBit].length + 1;
+						permBitCombination[sourceBit] = Arrays.copyOf(oldArray, newArrayLength);
+						permBitCombination[sourceBit][newArrayLength - 1] = bitTargetPermutation[i];
+					}
 				}
+				for (int k = 0; k < fromHowBigPool; k++) {
+					if (permBitCombination[k] != null)
+						Arrays.sort(permBitCombination[k]);
+				}
+				bitPermutation.put(fn, permBitCombination);
 			}
 		}
-		cbfPerson.setAttribute(UniversalDaoHibernate.CBF_ATTRIBUTE_NAME, cbfBitArray.getByteArrayRep().clone());
-		return cbfPerson;
+		return bitPermutation;
 	}
 
 	abstract public void handleBloomFilterParameterAdvice(String blockingServiceName, String matchingServiceName,

@@ -373,6 +373,33 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		return newBFTableName;
 	}
 
+	protected Person generateCBFWithOverSamplingAndPermutation(Person person,
+			int cbfLength, Random rnd, Long seed, Map<String, int[][]> bitPermutation,
+			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide) throws ApplicationException {
+		Person cbfPerson = new Person();
+		BitArray cbfBitArray = new BitArray(cbfLength);
+		Map<String, Object> attributes = person.getAttributes();
+		for (ColumnMatchInformation cmi : columnMatchInformation) {
+			if (cmi.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.Blob &&
+				!cmi.getComparisonFunctionName().equals(Constants.NO_COMPARISON_JUST_TRANSFER_FUNCTION_NAME))
+			{
+				String fn = leftOrRightSide ? cmi.getLeftFieldName() : cmi.getRightFieldName();
+				Object attribute = attributes.get(fn);
+				// TODO: what if the attribute is null?
+				// Currently: set to 0
+				if (attribute != null) {
+					byte[] bloomFilter = (byte[])attributes.get(fn);
+					int fromHowBigPool = cmi.getBloomFilterFinalM();
+					BitArray bfBitArray = new BitArray(fromHowBigPool, bloomFilter);
+					int[][] bitIndexes = bitPermutation.get(fn);
+					bfBitArray.performPermutationPart(bitIndexes, cbfBitArray);
+				}
+			}
+		}
+		cbfPerson.setAttribute(UniversalDaoHibernate.CBF_ATTRIBUTE_NAME, cbfBitArray.getByteArrayRep().clone());
+		return cbfPerson;
+	}
+
 	protected String sendCBFDataset(String newBFTableName, Dataset newBFDataset, String remoteTableName, List<ColumnMatchInformation> columnMatchInformation,
 			String keyServerUserName, String keyServerPassword, String dataIntegratorUserName, String dataIntegratorPassword,
 			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
@@ -388,8 +415,10 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		}
 
 		long seed = nonce * myNonce;
+		// It's important to use pseudo random generator, so both left and right side will deduct
+		// the same bit permutation from the seed.
 		Random rnd = new Random(seed);
-		int[] bitPermutation = generateBitPermutation(rnd, cbfLength);
+		Map<String, int[][]> bitPermutation = generateBitPermutation(rnd, cbfLength, columnMatchInformation, leftOrRightSide);
 
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 		PersonManagerService personManagerService = Context.getPersonManagerService();
