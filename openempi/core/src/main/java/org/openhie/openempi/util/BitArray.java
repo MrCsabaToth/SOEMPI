@@ -28,6 +28,9 @@
 package org.openhie.openempi.util;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+import org.springframework.util.Assert;
 
 /**
  * A packed array of booleans.
@@ -42,7 +45,7 @@ public class BitArray {
 	private byte[] repn;
 	private int length;
 
-	private static final int BITS_PER_UNIT = 8;
+	public static final int BITS_PER_UNIT = 8;
 
 	private static int subscript(int idx) {
 		return idx / BITS_PER_UNIT;
@@ -50,14 +53,6 @@ public class BitArray {
 
 	private static int position(int idx) { // bits big-endian in each unit
 		return 1 << (BITS_PER_UNIT - 1 - (idx % BITS_PER_UNIT));
-	}
-
-	private int getByteForBitwiseOperation(byte byteVal) {
-		return byteVal & 0xFF;
-	}
-
-	private int getByteForBitwiseOperation(int idx) {
-		return getByteForBitwiseOperation(repn[idx]);
 	}
 
 	/**
@@ -103,7 +98,7 @@ public class BitArray {
 		repn = new byte[repLength];
 		System.arraycopy(a, 0, repn, 0, repLength);
 		if (repLength > 0) {
-			repn[repLength - 1] = (byte)(getByteForBitwiseOperation(repLength - 1) & bitMask);
+			repn[repLength - 1] &= bitMask;
 		}
 	}
 
@@ -137,7 +132,7 @@ public class BitArray {
 					.toString(index));
 		}
 
-		return (getByteForBitwiseOperation(subscript(index)) & position(index)) != 0;
+		return (repn[subscript(index)] & position(index)) != 0;
 	}
 
 	/**
@@ -151,11 +146,10 @@ public class BitArray {
 		int idx = subscript(index);
 		int bit = position(index);
 
-		int byteForOp = getByteForBitwiseOperation(idx);
 		if (value) {
-			repn[idx] = (byte)(byteForOp | bit);
+			repn[idx] |= bit;
 		} else {
-			repn[idx] = (byte)((byteForOp & ~bit) & 0xFF);
+			repn[idx] &= ~bit;
 		}
 	}
 
@@ -232,7 +226,7 @@ public class BitArray {
 		int hashCode = 0;
 
 		for (int i = 0; i < repn.length; i++)
-			hashCode = 31 * hashCode + getByteForBitwiseOperation(i);
+			hashCode = 31 * hashCode + repn[i];
 
 		return hashCode ^ length;
 	}
@@ -268,8 +262,8 @@ public class BitArray {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		for (int i = 0; i < repn.length - 1; i++) {
-			out.write(NYBBLE[(getByteForBitwiseOperation(i) >> 4) & 0x0F], 0, 4);
-			out.write(NYBBLE[getByteForBitwiseOperation(i) & 0x0F], 0, 4);
+			out.write(NYBBLE[(repn[i] >> 4) & 0x0F], 0, 4);
+			out.write(NYBBLE[repn[i] & 0x0F], 0, 4);
 
 			if (i % BYTES_PER_LINE == BYTES_PER_LINE - 1) {
 				out.write('\n');
@@ -303,7 +297,7 @@ public class BitArray {
 		byte[] baRep = ba.getByteArrayRep();
 		int operationLength = Math.min(repn.length, baRep.length);
 		for (int i = 0; i < operationLength; i++) {
-			repn[i] = (byte)(getByteForBitwiseOperation(i) & getByteForBitwiseOperation(baRep[i]) & 0xFF);
+			repn[i] = (byte)(repn[i] & baRep[i]);
 		}
 	}
 
@@ -314,7 +308,7 @@ public class BitArray {
 		byte[] baRep = ba.getByteArrayRep();
 		int operationLength = Math.min(repn.length, baRep.length);
 		for (int i = 0; i < operationLength; i++) {
-			repn[i] = (byte)(getByteForBitwiseOperation(i) | getByteForBitwiseOperation(baRep[i]) & 0xFF);
+			repn[i] = (byte)(repn[i] | baRep[i]);
 		}
 	}
 
@@ -327,11 +321,40 @@ public class BitArray {
 			return false;
 		for (int i = 0; i < baRep.length; i++) {
 			if (baRep[i] != 0) {
-				if ((byte)(getByteForBitwiseOperation(i) & getByteForBitwiseOperation(baRep[i]) & 0xFF) != baRep[i]) {
+				if ((byte)(repn[i] & baRep[i]) != baRep[i]) {
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Set bits of RBF/CBF with possible oversampling the FBF.
+	 * @param bitIndexes: series of bit indexes into the RBF, where the source bits should be placed
+	 * @param cbf: target CBF/RBF
+	 */
+	public void performPermutationPart(int[][] bitIndexes, BitArray cbf) {
+		Assert.isTrue(bitIndexes.length >= length);
+		for (int idx = 0, i = 0; idx < repn.length; idx++) {
+			int j = BITS_PER_UNIT - 1;
+			if (idx == repn.length - 1) {
+				int remainder = length % BITS_PER_UNIT;
+				if (remainder == 0)
+					remainder = BITS_PER_UNIT;
+				j = remainder - 1;
+			}
+			int bit = 1 << j;
+			int index = idx * BITS_PER_UNIT + j;
+			for (; j >= 0 && i < length; j--, i++, index--) {
+				if (bitIndexes[index] != null) {
+					if ((repn[idx] & bit) != 0) {
+						for(int k : bitIndexes[index])
+							cbf.set(k, true);
+					}
+				}
+				bit >>= 1;
+			}
+		}
 	}
 }
