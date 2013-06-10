@@ -710,6 +710,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 	protected BloomFilterParameterAdvice linkCBFRecords(PersonMatchRequest leftPersonMatchRequest,
 			PersonMatchRequest rightPersonMatchRequest, ComponentType componentType) throws ApplicationException {
+		log.warn("CBF match preparation Start");
 		// Generate and score pairs from the current pages
 		List<MatchPairStatHalf> leftMatchPairStatHalves = retrieveMatchPairStatHalvesByRequest(leftPersonMatchRequest);
 		List<MatchPairStatHalf> rightMatchPairStatHalves = retrieveMatchPairStatHalvesByRequest(rightPersonMatchRequest);
@@ -786,6 +787,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 		String blockingServiceTypeName = getBlockingServiceTypeName(componentType, matchPairStats);
 		if (componentType == ComponentType.DATA_INTEGRATOR_MODE) {
+			log.warn("CBF match preparation End");
 			matchingService.linkRecords(
 					blockingServiceTypeName, matchPairStats, matchingServiceTypeName,
 					null, linkTableName, leftTableName, rightTableName,
