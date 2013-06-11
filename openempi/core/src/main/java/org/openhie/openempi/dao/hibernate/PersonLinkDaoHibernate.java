@@ -197,7 +197,7 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		query.setDate(position, personLink.getDateCreated());
 
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
-		Long id = bigInt.longValue();
+		long id = bigInt.longValue();
 		personLink.setPersonLinkId(id);
 		log.debug("Finished saving the person link with id " + id);
 		return id;

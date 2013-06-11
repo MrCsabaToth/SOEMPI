@@ -57,8 +57,7 @@ public class LocalitySensitiveHashingWithCompositeBloomFiltersServiceImpl extend
 //		}
 
 		Collections.sort(bitStats, new BloomFilterBitStatComparatorByImportance());
-		Integer numberOfImportantBits =
-			Context.getConfiguration().getPrivacyPreservingBlockingSettings().getNumberOfBlockingBits();
+		int numberOfImportantBits = Context.getConfiguration().getPrivacyPreservingBlockingSettings().getNumberOfBlockingBits();
 		List<BloomFilterBitStat> importantBits = new ArrayList<BloomFilterBitStat>();
 		for(int i = 0; i < numberOfImportantBits; i++) {
 			importantBits.add(bitStats.get(bitStats.size() - 1 - i));

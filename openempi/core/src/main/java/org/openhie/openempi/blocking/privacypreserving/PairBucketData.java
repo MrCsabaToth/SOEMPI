@@ -30,7 +30,7 @@ public class PairBucketData implements Serializable
 	private static final long serialVersionUID = 5321159661730020582L;
 
 	private List<Long> ids = new ArrayList<Long>();
-	private Integer trueMatchCounter = 0;
+	private int trueMatchCounter = 0;
 
 	PairBucketData() {
 	}

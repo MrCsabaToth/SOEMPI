@@ -262,18 +262,18 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 
 			if (persistLinks) {
 				int countMatched = 0, countUnmatched = 0, countUndecided = 0;
-				Long beginIndex = 0L;
+				long beginIndex = 0L;
 				int size = 1;
 				while (size > 0) {
-					int fromIndex = Math.min(beginIndex.intValue(), pairs.size() - 1);
-					int toIndex = Math.min(beginIndex.intValue() + Constants.PAGE_SIZE, pairs.size());
-					if (beginIndex.intValue() < pairs.size()) {
+					int fromIndex = Math.min((int)beginIndex, pairs.size() - 1);
+					int toIndex = Math.min((int)beginIndex + Constants.PAGE_SIZE, pairs.size());
+					if ((int)beginIndex < pairs.size()) {
 						List<LeanRecordPair> subList = pairs.subList(fromIndex, toIndex);
 						size = subList.size();
 						if (size > 0) {
 							List<PersonLink> personLinks = new ArrayList<PersonLink>();
 							for (LeanRecordPair pair : subList) {
-								Integer linkState = UniversalDaoHibernate.LINK_STATUS_UNDECIDED;
+								int linkState = UniversalDaoHibernate.LINK_STATUS_UNDECIDED;
 								if (pair.getWeight() <= fellegiSunterParams.getLowerBound()) {
 									countUnmatched++;
 									linkState = UniversalDaoHibernate.LINK_STATUS_NONMATCH;

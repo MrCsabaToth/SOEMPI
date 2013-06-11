@@ -78,17 +78,17 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		for (PrivacyPreservingBlockingField ppbField : ppbFields) {
 			if (ppbField.getEmptyBloomFilter() != null)
 				break;
-			Integer bloomFilterSize = bloomFilterDefaultSize;
-			Integer leftBloomFilterK = 0;
-			Integer leftBloomFilterM = 0;
+			int bloomFilterSize = bloomFilterDefaultSize;
+			int leftBloomFilterK = 0;
+			int leftBloomFilterM = 0;
 			for (ColumnInformation leftCI : leftColumnInformation) {
 				if (leftCI.getFieldName().equals(ppbField.getLeftFieldName())) {
 					leftBloomFilterK = leftCI.getBloomFilterKParameter();
 					leftBloomFilterM = leftCI.getBloomFilterMParameter();
 				}
 			}
-			Integer rightBloomFilterK = 0;
-			Integer rightBloomFilterM = 0;
+			int rightBloomFilterK = 0;
+			int rightBloomFilterM = 0;
 			for (ColumnInformation rightCI : rightColumnInformation) {
 				if (rightCI.getFieldName().equals(ppbField.getRightFieldName())) {
 					rightBloomFilterK = rightCI.getBloomFilterKParameter();
@@ -127,7 +127,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		List<String> ppbLeftFieldNames = ppbs.getPrivacyPreservingBlockingLeftFieldNames();
 
 		int pageSize = Constants.PAGE_SIZE;
-		Long pageStart = 0L;
+		long pageStart = 0L;
 		int numPersons = 0;
 		// Allocate buckets
 		int numberOfBuckets = (int)Math.pow(2, bits.size());
@@ -153,7 +153,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 				if (numPersons > 0) {
 					for(Person person : personList) {
 						byte[] bloomFilterBytes = null;
-						Integer previousCompositeFieldIndex = -1;
+						int previousCompositeFieldIndex = -1;
 						// Determine bucket number
 						int bucketNumber = 0;
 						for(BloomFilterBitStat bloomFilterBit : bits) {
@@ -189,7 +189,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 				otherBuckets.add(new PairBucketData());
 			}
 			// Go through all PersonOther and sort them into the buckets according to the bits
-			Long otherPageStart = 0L;
+			long otherPageStart = 0L;
 			int otherNumPersons = 0;
 			do {
 				List<Person> personOtherList = personQueryService.getPersonsPaged(rightTableName,
@@ -198,7 +198,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 				if (otherNumPersons > 0) {
 					for (Person personOther : personOtherList) {
 						byte[] bloomFilterBytes = null;
-						Integer previousCompositeFieldIndex = -1;
+						int previousCompositeFieldIndex = -1;
 						// Determine bucket number
 						int bucketNumber = 0;
 						for(BloomFilterBitStat bloomFilterBit : bits) {
@@ -306,7 +306,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 		PrivacyPreservingBlockingSettings ppbs = config.getPrivacyPreservingBlockingSettings();
 		BlockingSettings blockingSettings = (BlockingSettings)
 				config.lookupConfigurationEntry(BasicBlockingConstants.BLOCKING_SETTINGS_REGISTRY_KEY);
-		Integer numberOfPairsToSample = blockingSettings.getNumberOfRecordsToSample();
+		int numberOfPairsToSample = blockingSettings.getNumberOfRecordsToSample();
 		numberOfPairsToSample = numberOfPairsToSample * numberOfPairsToSample;	// Take the square root of it?
 		List<String> ppbLeftFieldNames = ppbs.getPrivacyPreservingBlockingLeftFieldNames();
 		leftMatchFieldNames.addAll(ppbLeftFieldNames);
@@ -442,7 +442,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 						int xorBits = leftBloomFilterByte ^ rightBloomFilterByte;
 						for (int j = 0; j < 8; j++) {
 							// TODO: bug if there are multiple fields and BF sizes are not the same
-							Integer bitStatIndex = bloomFilterIndex * bloomFilterSize + (i * 8 + j);
+							int bitStatIndex = bloomFilterIndex * bloomFilterSize + (i * 8 + j);
 							BloomFilterBitStat actualBitStat = bitStats.get(bitStatIndex);
 							actualBitStat.incrementBitTotal();
 							boolean bitMatches = !((xorBits & 1) == 0);

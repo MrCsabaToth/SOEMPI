@@ -374,7 +374,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 	}
 
 	protected Person generateCBFWithOverSamplingAndPermutation(Person person,
-			int cbfLength, Random rnd, Long seed, Map<String, int[][]> bitPermutation,
+			int cbfLength, Random rnd, long seed, Map<String, int[][]> bitPermutation,
 			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide) throws ApplicationException {
 		Person cbfPerson = new Person();
 		BitArray cbfBitArray = new BitArray(cbfLength);
@@ -498,8 +498,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				if (matchPairStatHalves != null) {
 					// Resolve pseudo Ids if appicable before sending it to DI
 					for (MatchPairStatHalf matchPairStatHalf : matchPairStatHalves) {
-						Long id = matchPairStatHalf.getPersonPseudoId();
-						Long id2 = personPseudoIdsReverseLookup != null ? personPseudoIdsReverseLookup.get(id) : id;
+						long id = matchPairStatHalf.getPersonPseudoId();
+						long id2 = personPseudoIdsReverseLookup != null ? personPseudoIdsReverseLookup.get(id) : id;
 						matchPairStatHalf.setPersonPseudoId(id2);
 					}
 	

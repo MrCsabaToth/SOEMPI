@@ -113,7 +113,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 			throw new RuntimeException("Failed while loading the input file.");
 		}
 		for (ColumnInformation ci : columnInformation) {
-			Double averageLen = 0.0;
+			double averageLen = 0.0;
 			if (loadedLines != ci.getNumberOfMissing()) // Otherwise it would be division by zero
 				averageLen = ci.getAverageFieldLength() / (loadedLines - ci.getNumberOfMissing());
 			ci.setAverageFieldLength(averageLen);

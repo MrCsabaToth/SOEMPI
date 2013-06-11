@@ -158,8 +158,8 @@ public final class ConvertUtil {
 		return sb.toString().toUpperCase();
 	}
 
-	public static String getUnsignedByteStringFromIPChunk(Byte signedIPChunk) {
-		Integer signedIPChunkInt = signedIPChunk.intValue();
+	public static String getUnsignedByteStringFromIPChunk(byte signedIPChunk) {
+		int signedIPChunkInt = Integer.valueOf(signedIPChunk);
 		return ((Integer)(signedIPChunkInt >= 0 ? signedIPChunkInt : 256 + signedIPChunkInt)).toString();
 	}
 

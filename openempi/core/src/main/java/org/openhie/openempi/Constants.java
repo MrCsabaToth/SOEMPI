@@ -137,7 +137,7 @@ public class Constants {
     /**
      * The weight that is assigned to a pair of records when they are merged intentionally and not by the matching algorithm
      */
-	public static final Double MERGE_RECORDS_WEIGHT = 1.0;
+	public static final double MERGE_RECORDS_WEIGHT = 1.0;
 
 	/**
 	 * Probabilistic matching (with binary scores) service's name
@@ -172,7 +172,7 @@ public class Constants {
 	/**
 	 * Number of fields if we want to get just limited number of them
 	 */
-	public static final Integer FIELD_NUMBER_LIMIT = 10;
+	public static final int FIELD_NUMBER_LIMIT = 10;
 
 	/**
 	 * Basic blocking (with distinct bins) service's name
@@ -217,22 +217,22 @@ public class Constants {
 	/**
 	 * Distance in case of the left or right (or both) attribute is null
 	 */
-	public static final Double DEFAULT_DISTANCE = 0.0;
+	public static final double DEFAULT_DISTANCE = 0.0;
 
     /**
      * The length of a salt data, in bytes.
      */
-    public static final Integer SALT_LENGTH = 512 / 8;
+    public static final int SALT_LENGTH = 512 / 8;
 
     /**
      * The length of the public key data, in bytes.
      */
-    public static final Integer PUBLIC_KEY_PART_LENGTH = 2048 / 8;
+    public static final int PUBLIC_KEY_PART_LENGTH = 2048 / 8;
 
     /**
      * The length of the private key data, in bytes.
      */
-    public static final Integer PRIVATE_KEY_PART_LENGTH = 2048 / 8;
+    public static final int PRIVATE_KEY_PART_LENGTH = 2048 / 8;
 
     /**
      * The default date(+time) format string.
@@ -253,7 +253,7 @@ public class Constants {
      * Default page size.
      * TODO: make it configurable?
      */
-    public static final Integer PAGE_SIZE = 500;
+    public static final int PAGE_SIZE = 1000;
 
     /**
      * personManagerService bean name.
@@ -273,7 +273,7 @@ public class Constants {
     /**
      * Standard sleep time in milliseconds.
      */
-    public static final Integer STANDARD_SLEEP_TIME = 10000;
+    public static final int STANDARD_SLEEP_TIME = 10000;
 
     /**
      * Localhost IP address.

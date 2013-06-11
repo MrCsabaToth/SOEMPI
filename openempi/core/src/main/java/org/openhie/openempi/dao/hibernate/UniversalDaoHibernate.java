@@ -193,9 +193,9 @@ public class UniversalDaoHibernate extends HibernateDaoSupport implements Univer
 	 * Link status column name (match/non-match/undecided/...)
 	 */
 	public static final String LINK_STATUS_COLUMN_NAME = "link_state";
-	public static final Integer LINK_STATUS_MATCH = 1;
-	public static final Integer LINK_STATUS_NONMATCH = 0;
-	public static final Integer LINK_STATUS_UNDECIDED = 2;
+	public static final int LINK_STATUS_MATCH = 1;
+	public static final int LINK_STATUS_NONMATCH = 0;
+	public static final int LINK_STATUS_UNDECIDED = 2;
 
 	/**
 	 * Creation date column name

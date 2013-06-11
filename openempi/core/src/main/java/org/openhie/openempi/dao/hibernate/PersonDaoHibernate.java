@@ -151,7 +151,7 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 		}
 
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
-		Long id = bigInt.longValue();
+		long id = bigInt.longValue();
 		person.setPersonId(id);
 		log.debug("Finished saving the person with id " + id);
 		return id;

@@ -35,7 +35,7 @@ public class BlockingWithGivenBitsServiceImpl extends PrivacyPreservingBlockingB
 			Context.getConfiguration().getPrivacyPreservingBlockingSettings().getPrivacyPreservingBlockingFields();
 		for(PrivacyPreservingBlockingField ppbField : ppbFields) {
 			List<Integer> bits = ppbField.getBits();
-			for(Integer bit : bits) {
+			for(int bit : bits) {
 				BloomFilterBitStat bitStat = new BloomFilterBitStat(ppbFields.indexOf(ppbField), bit);
 				selectedBits.add(bitStat);
 			}

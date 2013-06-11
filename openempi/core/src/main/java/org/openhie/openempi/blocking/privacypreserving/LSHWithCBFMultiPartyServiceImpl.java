@@ -68,7 +68,7 @@ public class LSHWithCBFMultiPartyServiceImpl extends PrivacyPreservingBlockingBa
 //		}
 
 		Collections.sort(bitStats, new BloomFilterBitStatComparatorByImportance());
-		Integer numberOfImportantBits =
+		int numberOfImportantBits =
 			Context.getConfiguration().getPrivacyPreservingBlockingSettings().getNumberOfBlockingBits();
 		List<BloomFilterBitStat> importantBits = new ArrayList<BloomFilterBitStat>();
 		for(int i = 0; i < numberOfImportantBits; i++) {
@@ -191,7 +191,7 @@ public class LSHWithCBFMultiPartyServiceImpl extends PrivacyPreservingBlockingBa
 						byte rightBloomFilterByte = rightBloomFilterBytes[i];
 						int xorBits = leftBloomFilterByte ^ rightBloomFilterByte;
 						for (int j = 0; j < 8; j++) {
-							Integer bitStatIndex = (i * 8 + j);
+							int bitStatIndex = (i * 8 + j);
 							BloomFilterBitStat actualBitStat = bitStats.get(bitStatIndex);
 							actualBitStat.incrementBitTotal();
 							boolean bitMatches = !((xorBits & 1) == 0);

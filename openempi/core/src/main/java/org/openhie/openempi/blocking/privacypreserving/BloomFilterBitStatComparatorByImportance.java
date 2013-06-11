@@ -25,7 +25,7 @@ public class BloomFilterBitStatComparatorByImportance implements Comparator<Bloo
 	public int compare(BloomFilterBitStat pair1, BloomFilterBitStat pair2) {
 		Double importance1 = Double.valueOf(pair1.getBitMatchPairMatch()) /
 							(pair1.getBitMatchPairMatch() + pair1.getBitUnmatchPairMatch());
-		Double importance2 = Double.valueOf(pair2.getBitMatchPairMatch()) /
+		double importance2 = Double.valueOf(pair2.getBitMatchPairMatch()) /
 							(pair2.getBitMatchPairMatch() + pair2.getBitUnmatchPairMatch());
 		return importance1.compareTo(importance2);
 	}

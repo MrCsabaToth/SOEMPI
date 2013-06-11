@@ -26,7 +26,7 @@ public class ScalarDoubleDistanceMetric extends AbstractDistanceMetric
 		if (missingValues(value1, value2)) {
 			return handleMissingValues(value1, value2);
 		}
-		Double v1 = 0.0;
+		double v1 = 0.0;
 		if (value1 instanceof Double) {
 			v1 = (Double)value1;
 		} else {
@@ -36,7 +36,7 @@ public class ScalarDoubleDistanceMetric extends AbstractDistanceMetric
 			catch (java.lang.NumberFormatException e) {
 			}
 		}
-		Double v2 = 0.0;
+		double v2 = 0.0;
 		if (value2 instanceof Double) {
 			v2 = (Double)value2;
 		} else {

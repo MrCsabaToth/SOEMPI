@@ -150,10 +150,10 @@ public class ComparisonVector extends BaseObject implements Serializable
 						// It can be -1, if one of the fields are null, but we filtered for that
 					}
 				} else {
-					Double est = estimatedMarginals[i];
-					Double si = scores[i];
+					double est = estimatedMarginals[i];
+					double si = scores[i];
 //					Double si = quantizedScores[i];
-					Double prob = 0.0;
+					double prob = 0.0;
 //					prob = (Math.pow(est, si) * Math.pow(1.0 - est, 1.0 - si));
 					prob = 2.0 * est * si - si - est + 1.0;
 					product *= prob;

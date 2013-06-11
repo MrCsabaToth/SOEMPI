@@ -26,7 +26,7 @@ public class ScalarIntegerDistanceMetric extends AbstractDistanceMetric
 		if (missingValues(value1, value2)) {
 			return handleMissingValues(value1, value2);
 		}
-		Integer v1 = 0;
+		int v1 = 0;
 		if (value1 instanceof Integer) {
 			v1 = (Integer)value1;
 		} else {
@@ -36,7 +36,7 @@ public class ScalarIntegerDistanceMetric extends AbstractDistanceMetric
 			catch (java.lang.NumberFormatException e) {
 			}
 		}
-		Integer v2 = 0;
+		int v2 = 0;
 		if (value2 instanceof Integer) {
 			v2 = (Integer)value2;
 		} else {

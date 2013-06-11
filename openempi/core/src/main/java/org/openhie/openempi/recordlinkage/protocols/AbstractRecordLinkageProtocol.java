@@ -263,7 +263,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return columnInformation;
 	}
 
-	protected PersonMatchRequest createPersonMatchRequest(Dataset dataset, Integer nonce, String matchName,
+	protected PersonMatchRequest createPersonMatchRequest(Dataset dataset, int nonce, String matchName,
 			String blockingServiceName, String matchingServiceName) {
 		User currentUser = Context.getPersonManagerService().getCurrentUser(dataset.getOwner());
 		log.debug("Current user is " + currentUser);
@@ -359,7 +359,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		if (matchPairStatHalfTableName.length() <= 0)
 			return null;
 		List<MatchPairStatHalf> matchPairStatHalves = new ArrayList<MatchPairStatHalf>();
-		Long start = 0L;
+		long start = 0L;
 		int numRead = 0;
 		do {
 			List<MatchPairStatHalf> matchPairStatHalvesPart =
@@ -373,10 +373,10 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 
 	protected void persistMatchPairStatHalves(String matchPairStatHalfTableName, String datasetTableName, List<MatchPairStatHalf> matchPairStatHalves) {
 		matchPairStatHalfDao.createTable(matchPairStatHalfTableName, datasetTableName, false);
-		Long start = 0L;
+		long start = 0L;
 		int toIndex = 0;
 		do {
-			int fromIndex = start.intValue();
+			int fromIndex = (int)start;
 			toIndex = fromIndex + Constants.PAGE_SIZE;
 			if (toIndex > matchPairStatHalves.size())
 				toIndex = matchPairStatHalves.size();
@@ -480,7 +480,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		rightBFPA.setPersonMatchReuqest(leftPersonMatchRequest);
 		rightBFPA.setLeftDataset(leftDataset);
 		rightBFPA.setRightDataset(rightDataset);
-		Integer personMatchId = leftPersonMatchRequest.getPersonMatchId();
+		int personMatchId = leftPersonMatchRequest.getPersonMatchId();
 		PersonMatch personMatch = Context.getPersonQueryService().getPersonMatch(personMatchId);
 		rightBFPA.setColumnMatchInformation(personMatch.getColumnMatchInformation());
 		String matchPairStatHalfTableName = leftPersonMatchRequest.getMatchPairStatHalfTableName();

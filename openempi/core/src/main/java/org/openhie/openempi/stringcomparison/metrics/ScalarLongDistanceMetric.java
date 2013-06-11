@@ -26,7 +26,7 @@ public class ScalarLongDistanceMetric extends AbstractDistanceMetric
 		if (missingValues(value1, value2)) {
 			return handleMissingValues(value1, value2);
 		}
-		Long v1 = 0L;
+		long v1 = 0L;
 		if (value1 instanceof Long) {
 			v1 = (Long)value1;
 		} else {
@@ -36,7 +36,7 @@ public class ScalarLongDistanceMetric extends AbstractDistanceMetric
 			catch (java.lang.NumberFormatException e) {
 			}
 		}
-		Long v2 = 0L;
+		long v2 = 0L;
 		if (value2 instanceof Long) {
 			v2 = (Long)value2;
 		} else {

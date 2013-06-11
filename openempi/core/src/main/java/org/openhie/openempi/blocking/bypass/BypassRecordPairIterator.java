@@ -58,8 +58,8 @@ public class BypassRecordPairIterator implements RecordPairIterator
 	private boolean emOnly;
 	private FellegiSunterParameters fellegiSunterParameters;
 
-	private Long pageStart = 0L;
-	private Long otherPageStart = 0L;
+	private long pageStart = 0L;
+	private long otherPageStart = 0L;
 
 	public BypassRecordPairIterator(BypassRecordPairSource recordPairSource, String leftTableName,
 			String rightTableName, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
@@ -160,7 +160,7 @@ public class BypassRecordPairIterator implements RecordPairIterator
 		return false;
 	}
 
-	private int loadNextPersonList(List<Person> personListParam, Long pageStartParam, Iterator<Person> personIteratorParam,
+	private int loadNextPersonList(List<Person> personListParam, long pageStartParam, Iterator<Person> personIteratorParam,
 			String tableName, List<String> matchFieldNames) {
 		personListParam = personQueryService.getPersonsByExamplePaged(tableName, null, matchFieldNames,
 				pageStartParam, Constants.PAGE_SIZE);

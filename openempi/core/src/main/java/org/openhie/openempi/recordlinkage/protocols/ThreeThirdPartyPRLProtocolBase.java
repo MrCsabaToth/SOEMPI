@@ -202,13 +202,13 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		SecureRandom rnd = new SecureRandom();
 		PersonManagerService personManagerService = Context.getPersonManagerService();
 		Dataset leftDataset = personManagerService.getDatasetById(leftDatasetId);
-		Integer leftNonce = rnd.nextInt();
+		int leftNonce = rnd.nextInt();
 		PersonMatchRequest leftPersonMatchRequest = createPersonMatchRequest(leftDataset, leftNonce,
 				Constants.LOCALHOST_IP_ADDRESS, blockingServiceName, matchingServiceName);
 		leftPersonMatchRequest = personMatchRequestDao.addPersonMatchRequest(leftPersonMatchRequest);
 
 		Dataset rightDataset = personManagerService.getDatasetById(rightDatasetId);
-		Integer rightNonce = rnd.nextInt();
+		int rightNonce = rnd.nextInt();
 		PersonMatchRequest rightPersonMatchRequest = createPersonMatchRequest(rightDataset, rightNonce,
 				Constants.LOCALHOST_IP_ADDRESS, blockingServiceName, matchingServiceName);
 		rightPersonMatchRequest = personMatchRequestDao.addPersonMatchRequest(rightPersonMatchRequest);

@@ -149,7 +149,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		String tableName = dataset.getTableName();
 		for (ColumnInformation ci : columnInformation) {
 			if (ci.getFieldType().getFieldTypeEnum() == FieldType.FieldTypeEnum.String) {
-				Double averageFieldLength = personDao.getFieldAverageLength(tableName, ci.getFieldName());
+				double averageFieldLength = personDao.getFieldAverageLength(tableName, ci.getFieldName());
 				ci.setAverageFieldLength(averageFieldLength);
 			}
 			int numberOfMissing = personDao.getFieldNumberOfMissing(tableName, ci.getFieldName());
@@ -499,7 +499,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 				PersonQueryService personQueryService = Context.getPersonQueryService();
 				String lastFn = fieldNames.get(fieldNames.size() - 1);;
 				int pageSize = Constants.PAGE_SIZE;
-				Long pageStart = 0L;
+				long pageStart = 0L;
 				int numPersons = 0;
 				do {
 					List<Person> personList = personQueryService.getPersonsPaged(dataset.getTableName(), fieldNames, pageStart, pageSize);

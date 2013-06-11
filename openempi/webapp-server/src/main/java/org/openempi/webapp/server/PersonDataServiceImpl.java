@@ -241,7 +241,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			log.warn("Send Start");
 			remotePersonService.createDatasetTable(remoteTableName, columnInformation, dataset.getTotalRecords(), false);
 			int pageSize = Constants.PAGE_SIZE;
-			Long firstResult = 0L;
+			long firstResult = 0L;
 			boolean morePatients = true;
 			do {
 				List<Person> persons = personQueryService.getPersonsPaged(localTableName, firstResult, pageSize);
@@ -336,8 +336,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
-				Integer leftPersonMatchRequestId = 1;
-				Integer rightPersonMatchRequestId = 2;
+				int leftPersonMatchRequestId = 1;
+				int rightPersonMatchRequestId = 2;
 				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
 			}
 		} catch (Throwable t) {

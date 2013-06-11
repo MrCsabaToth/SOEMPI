@@ -70,14 +70,14 @@ public class BlockingBypassServiceImpl extends AbstractBlockingServiceBase
 		List<String> rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 
 		int pageSize = Constants.PAGE_SIZE;
-		Long pageStart = 0L;
+		long pageStart = 0L;
 		int numPersons = 0;
 		do {
 			List<Person> personList = personQueryService.getPersonsByExamplePaged(leftTableName, null, leftMatchFieldNames,
 					pageStart, pageSize);
 			numPersons = personList.size();
 			if (numPersons > 0) {
-				Long otherPageStart = 0L;
+				long otherPageStart = 0L;
 				int otherNumPersons = 0;
 				do {
 					List<Person> personOtherList = personQueryService.getPersonsByExamplePaged(rightTableName,

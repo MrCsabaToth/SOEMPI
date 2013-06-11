@@ -26,7 +26,7 @@ public class ScalarFloatDistanceMetric extends AbstractDistanceMetric
 		if (missingValues(value1, value2)) {
 			return handleMissingValues(value1, value2);
 		}
-		Float v1 = 0.0f;
+		float v1 = 0.0f;
 		if (value1 instanceof Float) {
 			v1 = (Float)value1;
 		} else {
@@ -36,7 +36,7 @@ public class ScalarFloatDistanceMetric extends AbstractDistanceMetric
 			catch (java.lang.NumberFormatException e) {
 			}
 		}
-		Float v2 = 0.0f;
+		float v2 = 0.0f;
 		if (value2 instanceof Float) {
 			v2 = (Float)value2;
 		} else {

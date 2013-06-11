@@ -33,10 +33,10 @@ public class ProbabilisticMatchingWithScaledScoresService extends ProbabilisticM
 		ComparisonVector vector = pair.getComparisonVector();
 		double weight = 0.0;
 		for (int i = 0; i < fellegiSunterParams.getFieldCount(); i++) {
-			Double scorei = vector.getScores()[i];
+			double scorei = vector.getScores()[i];
 			// If score is -1 (one of the fields were null or empty), then do not contribute to weight
 			if (Math.abs(scorei + 1.0) >= 10e-5) {
-				Double w = (wa[i] - wd[i]) * scorei + wd[i];
+				double w = (wa[i] - wd[i]) * scorei + wd[i];
 				weight += w;
 			}
 		}

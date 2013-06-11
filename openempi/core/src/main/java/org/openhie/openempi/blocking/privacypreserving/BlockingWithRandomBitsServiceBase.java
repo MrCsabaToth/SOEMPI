@@ -45,8 +45,8 @@ public abstract class BlockingWithRandomBitsServiceBase extends PrivacyPreservin
 			List<LeanRecordPair> pairs, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
 		PrivacyPreservingBlockingSettings ppbs = Context.getConfiguration().getPrivacyPreservingBlockingSettings();
 		List<PrivacyPreservingBlockingField> ppbFields = ppbs.getPrivacyPreservingBlockingFields();
-		Integer numberOfRandomBits = ppbs.getNumberOfBlockingBits();
-		Integer numberOfFields = ppbFields.size();
+		int numberOfRandomBits = ppbs.getNumberOfBlockingBits();
+		int numberOfFields = ppbFields.size();
 		Random r = getRandomSource();
 
 		PersonQueryService personQueryService = Context.getPersonQueryService();
@@ -55,25 +55,25 @@ public abstract class BlockingWithRandomBitsServiceBase extends PrivacyPreservin
 		Dataset rightDataset = personQueryService.getDatasetByTableName(rightTableName);
 		List<ColumnInformation> rightColumnInformation = rightDataset.getColumnInformation();
 		Set<String> idPairHash = new HashSet<String>();
-		for(Integer runIndex = 0; runIndex < ppbs.getNumberOfRuns(); runIndex++) {
+		for(int runIndex = 0; runIndex < ppbs.getNumberOfRuns(); runIndex++) {
 			List<BloomFilterBitStat> selectedBits = new ArrayList<BloomFilterBitStat>();
-			for(Integer i = 0; i < numberOfRandomBits; i++) {
-				Integer randomFieldIndex = r.nextInt(numberOfFields);
+			for(int i = 0; i < numberOfRandomBits; i++) {
+				int randomFieldIndex = r.nextInt(numberOfFields);
 				PrivacySettings privacySettings =
 						(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
-				Integer bloomFilterSize = privacySettings.getBloomfilterSettings().getDefaultM();
+				int bloomFilterSize = privacySettings.getBloomfilterSettings().getDefaultM();
 				// get the function parameters from the persisted import configuration and check match
 				PrivacyPreservingBlockingField ppbField = ppbFields.get(randomFieldIndex);
-				Integer leftBloomFilterK = 0;
-				Integer leftBloomFilterM = 0;
+				int leftBloomFilterK = 0;
+				int leftBloomFilterM = 0;
 				for (ColumnInformation leftCI : leftColumnInformation) {
 					if (leftCI.getFieldName().equals(ppbField.getLeftFieldName())) {
 						leftBloomFilterK = leftCI.getBloomFilterKParameter();
 						leftBloomFilterM = leftCI.getBloomFilterMParameter();
 					}
 				}
-				Integer rightBloomFilterK = 0;
-				Integer rightBloomFilterM = 0;
+				int rightBloomFilterK = 0;
+				int rightBloomFilterM = 0;
 				for (ColumnInformation rightCI : rightColumnInformation) {
 					if (rightCI.getFieldName().equals(ppbField.getRightFieldName())) {
 						rightBloomFilterK = rightCI.getBloomFilterKParameter();
@@ -86,7 +86,7 @@ public abstract class BlockingWithRandomBitsServiceBase extends PrivacyPreservin
 							ppbField.getRightFieldName() + " - " + rightBloomFilterK + ", " + rightBloomFilterM, null);
 				if (rightBloomFilterM != 0)
 					bloomFilterSize = rightBloomFilterM;
-				Integer randomBitIndex = r.nextInt(bloomFilterSize);
+				int randomBitIndex = r.nextInt(bloomFilterSize);
 				BloomFilterBitStat bitStat = new BloomFilterBitStat(randomFieldIndex, randomBitIndex);
 				selectedBits.add(bitStat);
 			}
