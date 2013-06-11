@@ -165,7 +165,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 							}
 							int byteIndex = bloomFilterBit.getBloomFilterBitIndex() / 8;
 							int bitIndex = bloomFilterBit.getBloomFilterBitIndex() % 8;
-							int bucketBit = (bloomFilterBytes[byteIndex] >> bitIndex) & 1;
+							int bucketBit = (bloomFilterBytes[byteIndex] >> bitIndex) & 0x01;
 							bucketNumber = (bucketNumber << 1) + bucketBit;
 							previousCompositeFieldIndex = bloomFilterBit.getCompositeFieldIndex();
 						}
@@ -211,7 +211,7 @@ public abstract class PrivacyPreservingBlockingBase extends AbstractBlockingServ
 							int byteIndex = bloomFilterBit.getBloomFilterBitIndex() / 8;
 							int bitIndex = bloomFilterBit.getBloomFilterBitIndex() % 8;
 							int bucketBit = (bloomFilterBytes[byteIndex] >> bitIndex) & 1;
-							bucketNumber = (bucketNumber << 1) + bucketBit;
+							bucketNumber = (bucketNumber << 0x01) + bucketBit;
 							previousCompositeFieldIndex = bloomFilterBit.getCompositeFieldIndex();
 						}
 						// Put into bucket
