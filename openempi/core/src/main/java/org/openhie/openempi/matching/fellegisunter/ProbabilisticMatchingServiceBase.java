@@ -95,7 +95,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			boolean emOnly, boolean persistLinks) throws ApplicationException {
 
 		log.warn("CBF link Start");
-		//long startTime = System.nanoTime();
+		long startTime = System.nanoTime();
 		MatchConfiguration matchConfig =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
 		List<MatchField> matchFields = matchConfig.getMatchFields(FieldQuerySelector.MatchOnlyFields);
@@ -115,8 +115,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			calculateVectorFrequencies(pairs, fellegiSunterParams);
 		}
 		estimateMarginalProbabilities(fellegiSunterParams, matchConfig, pairs.size());
-		//long blockNfsTime = System.nanoTime();
-		//long fileOutTime = 0L;
+		long blockNfsTime = System.nanoTime();
+		long fileOutTime = 0L;
 		log.trace("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
 		String fileRepoDir = Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
 		if (!emOnly) {
@@ -256,7 +256,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		personMatch = personManagerService.addPersonMatch(personMatch);
 
 		log.warn("CBF link End, Link persist Start");
-		//long linkPersistStartTime = System.nanoTime();
+		long linkPersistStartTime = System.nanoTime();
 		if (!emOnly) {
 			personManagerService.createLinkTable(linkTableName, leftTableName, rightTableName, false);
 
@@ -297,12 +297,12 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			}
 			personManagerService.addIndexesAndConstraintsToLinkTable(linkTableName, leftTableName, rightTableName);
 		}
-		//long linkPersistEndTime = System.nanoTime();
-		//log.trace("ns of blocking + EM / FS: " + (blockNfsTime - startTime));
-		//log.trace("ns of file out + blocking + EM / FS: " + (fileOutTime - startTime));
-		//log.trace("ns from start to link persist: " + (linkPersistStartTime - startTime));
-		//log.trace("ns of link persist: " + (linkPersistEndTime - linkPersistStartTime));
-		//log.trace("ns total: " + (linkPersistEndTime - startTime));
+		long linkPersistEndTime = System.nanoTime();
+		log.trace("ns of blocking + EM / FS: " + (blockNfsTime - startTime));
+		log.trace("ns of file out + blocking + EM / FS: " + (fileOutTime - startTime));
+		log.trace("ns from start to link persist: " + (linkPersistStartTime - startTime));
+		log.trace("ns of link persist: " + (linkPersistEndTime - linkPersistStartTime));
+		log.trace("ns total: " + (linkPersistEndTime - startTime));
 		log.warn("Link persist End");
 
 		return personMatch;
