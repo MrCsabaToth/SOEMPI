@@ -68,15 +68,12 @@ CREATE TABLE person (
 -- Structure for table person_link (OID = 34531):
 CREATE TABLE person_link (
     person_link_id integer NOT NULL,
-    person_match_id integer NOT NULL,
     left_person_id BIGINT NOT NULL,
     right_person_id BIGINT NOT NULL,
     binary_vector text,
     continous_vector text,
     weight double precision NOT NULL,
     link_state integer NOT NULL,
-    creator_id bigint NOT NULL,
-    date_created timestamp without time zone NOT NULL
 ) WITHOUT OIDS;
 
 -- Structure for table person_match:
@@ -608,10 +605,6 @@ ALTER TABLE ONLY user_session
     ADD CONSTRAINT user_session_pkey PRIMARY KEY (session_id);
 
 
--- Definition for index fk_person_match_id:
-ALTER TABLE ONLY person_link
-    ADD CONSTRAINT fk_person_match_id FOREIGN KEY (person_match_id) REFERENCES person_match(person_match_id);
-
 -- Definition for index fk_left_person_id (OID = 34714):
 ALTER TABLE ONLY person_link
     ADD CONSTRAINT fk_left_person_id FOREIGN KEY (left_person_id) REFERENCES person(person_id);
@@ -619,10 +612,6 @@ ALTER TABLE ONLY person_link
 -- Definition for index fk_right_person_id (OID = 34719):
 ALTER TABLE ONLY person_link
     ADD CONSTRAINT fk_right_person_id FOREIGN KEY (right_person_id) REFERENCES person(person_id);
-
--- Definition for index fk_created_by_app_user (OID = 34724):
-ALTER TABLE ONLY person_link
-    ADD CONSTRAINT fk_created_by_app_user FOREIGN KEY (creator_id) REFERENCES app_user(id);
 
 -- Definition for index fk_left_dataset_id:
 ALTER TABLE ONLY person_match

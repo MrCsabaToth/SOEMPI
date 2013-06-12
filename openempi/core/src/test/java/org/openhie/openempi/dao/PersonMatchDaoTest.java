@@ -85,25 +85,25 @@ public class PersonMatchDaoTest extends BaseDaoTestCase
 		String linkTableName = "person_match_dao_test";
 		Integer personMatchId = personMatch.getPersonMatchId();
 		personLinkDao.createTable(linkTableName, leftDatasetName, rightDatasetName, false);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(0), rightPersonIds.get(0), user, 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(1), rightPersonIds.get(1), user, 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(2), rightPersonIds.get(2), user, 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(3), rightPersonIds.get(3), user, 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(4), rightPersonIds.get(4), user, 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(5), rightPersonIds.get(5), user, 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(0), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(1), rightPersonIds.get(1), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(2), rightPersonIds.get(2), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(3), rightPersonIds.get(3), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(4), rightPersonIds.get(4), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(5), rightPersonIds.get(5), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
 
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(0), rightPersonIds.get(1), user, 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(0), rightPersonIds.get(2), user, 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(0), rightPersonIds.get(3), user, 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(0), rightPersonIds.get(4), user, 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(0), rightPersonIds.get(5), user, 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(1), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(2), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(3), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(4), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(5), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
 
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(1), rightPersonIds.get(2), user, 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(1), rightPersonIds.get(3), user, 5.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(1), rightPersonIds.get(4), user, 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(1), rightPersonIds.get(5), user, 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(1), rightPersonIds.get(2), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(1), rightPersonIds.get(3), 5.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
+		addPersonLink(linkTableName, leftPersonIds.get(1), rightPersonIds.get(4), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, leftPersonIds.get(1), rightPersonIds.get(5), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
 
-		addPersonLink(linkTableName, personMatchId, leftPersonIds.get(4), rightPersonIds.get(5), user, 9.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
+		addPersonLink(linkTableName, leftPersonIds.get(4), rightPersonIds.get(5), 9.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
 
 		personLinkDao.addIndexesAndConstraints(linkTableName, leftDatasetName, rightDatasetName);
 
@@ -144,15 +144,12 @@ public class PersonMatchDaoTest extends BaseDaoTestCase
 		assertTrue(fsp2.equals(fsp2Back));
 	}
 
-	private void addPersonLink(String linkTableName, Integer personMatchId, Long leftPersonId, Long rightPersonId,
-			User user, Double weight, Integer linkState)
+	private void addPersonLink(String linkTableName, Long leftPersonId, Long rightPersonId,
+			Double weight, Integer linkState)
 	{
 		PersonLink personLink = new PersonLink();
-		personLink.setPersonMatchId(personMatchId);
 		personLink.setLeftPersonId(leftPersonId);
 		personLink.setRightPersonId(rightPersonId);
-		personLink.setCreatorId(user.getId());
-		personLink.setDateCreated(new java.util.Date());
 		personLink.setWeight(weight);
 		personLink.setLinkState(linkState);
 		personLinkDao.addPersonLink(linkTableName, personLink);

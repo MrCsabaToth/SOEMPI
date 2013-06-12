@@ -142,20 +142,16 @@ public class GeneralUtilTest extends BaseServiceTestCase {
 
 	public void testConstructPersonLink() {
 		createTestData();
-		Integer personMatchId = 1;
 		pair.setWeight(0.7);
 		Integer linkState = 4;
 
-		PersonLink pl1 = GeneralUtil.constructPersonLink(personMatchId, 1L, 2L,
-				person.getUserCreatedBy(), pair.getWeight(), linkState);
-		assertEquals((Integer)pl1.getPersonMatchId(), personMatchId);
+		PersonLink pl1 = GeneralUtil.constructPersonLink(1L, 2L, pair.getWeight(), linkState);
 		assertEquals((Long)pl1.getLeftPersonId(), (Long)1L);
 		assertEquals((Long)pl1.getRightPersonId(), (Long)2L);
-		assertEquals(pl1.getCreatorId(), person.getUserCreatedBy().getId());
 		assertEquals((Double)pl1.getWeight(), pair.getWeight());
 		assertEquals((Integer)pl1.getLinkState(), linkState);
 
-		PersonLink pl2 = GeneralUtil.constructPersonLink(personMatchId, pair, linkState);
+		PersonLink pl2 = GeneralUtil.constructPersonLink(pair, linkState);
 		assertEquals(pl2.getBinaryVector(), pair.getComparisonVector().getBinaryVectorString());
 		assertEquals(pl2.getContinousVector(), pair.getComparisonVector().getScoreVectorString());
 	}

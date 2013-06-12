@@ -136,11 +136,10 @@ public interface PersonManagerService extends PersonServiceBase
 	 * User and creation date will be added automatically. Person ids will be deducted from the pair.
 	 * 
 	 * @param linkTableName: name of the link table
-	 * @param personMatchId: id of the related PersonMatch
 	 * @param pair: record pair structure of the two records to be linked
 	 * @param linkState: link status
 	 */
-	public PersonLink constructAndAddPersonLink(String linkTableName, Integer personMatchId, LeanRecordPair pair, Integer linkState);
+	public PersonLink constructAndAddPersonLink(String linkTableName, LeanRecordPair pair, Integer linkState);
 
 	/**
 	 * Add indexes and constraints to a previously created person link table.

@@ -457,14 +457,12 @@ public class ModelTransformer
 			for (PersonLink personLink : personLinks) {
 				PersonLinkWeb personLinkWeb = new PersonLinkWeb();
 				personLinkWeb.setPersonLinkId(personLink.getPersonLinkId());
-				personLinkWeb.setPersonMatchId(personLink.getPersonMatchId());
 				personLinkWeb.setLeftPersonId(personLink.getLeftPersonId());
 				personLinkWeb.setRightPersonId(personLink.getRightPersonId());
 				personLinkWeb.setBinaryVector(personLink.getBinaryVector());
 				personLinkWeb.setContinousVector(personLink.getContinousVector());
 				personLinkWeb.setWeight(personLink.getWeight());
 				personLinkWeb.setLinkState(personLink.getLinkState());
-				personLinkWeb.setDateCreated(personLink.getDateCreated());
 				personLinksWeb.add(personLinkWeb);
 			}
 		}

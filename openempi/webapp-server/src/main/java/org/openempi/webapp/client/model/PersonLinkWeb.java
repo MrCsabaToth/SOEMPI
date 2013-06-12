@@ -26,14 +26,12 @@ public class PersonLinkWeb extends BaseModelData implements Serializable
 	private static final long serialVersionUID = 8075579955061626675L;
 
 	public static final String PERSON_LINK_ID = "personLinkId";
-	public static final String PERSON_MATCH_ID = "personMatchId";
 	public static final String LEFT_PERSON_ID = "leftPersonId";
 	public static final String RIGHT_PERSON_ID = "rightPersonId";
 	public static final String BINARY_VECTOR = "binaryVector";
 	public static final String CONTINOUS_VECTOR = "continousVector";
 	public static final String WEIGHT = "weight";
 	public static final String LINK_STATE = "linkState";
-	public static final String DATE_CREATED = "dateCreated";
 
 	public static final String SHOW_LEFT_ATTRIBUTES_BUTTON = "showLeftAttributesButton";
 	public static final String SHOW_RIGHT_ATTRIBUTES_BUTTON = "showRightAttributesButton";
@@ -49,14 +47,6 @@ public class PersonLinkWeb extends BaseModelData implements Serializable
 
 	public void setPersonLinkId(Long personLinkId) {
 		set(PERSON_LINK_ID, personLinkId);
-	}
-
-	public Integer getPersonMatchId() {
-		return get(PERSON_MATCH_ID);
-	}
-
-	public void setPersonMatchId(Integer personMatchId) {
-		set(PERSON_MATCH_ID, personMatchId);
 	}
 
 	public Long getLeftPersonId() {
@@ -105,14 +95,6 @@ public class PersonLinkWeb extends BaseModelData implements Serializable
 
 	public void setLinkState(Integer linkState) {
 		set(LINK_STATE, linkState);
-	}
-
-	public java.util.Date getDateCreated() {
-		return get(DATE_CREATED);
-	}
-
-	public void setDateCreated(java.util.Date dateCreated) {
-		set(DATE_CREATED, dateCreated);
 	}
 
 	public String getShowLeftAttributesButton() {

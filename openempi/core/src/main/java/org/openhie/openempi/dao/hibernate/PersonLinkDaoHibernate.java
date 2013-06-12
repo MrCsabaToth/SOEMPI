@@ -44,15 +44,12 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 				String tableFullName = getTableFullName(tableName);
 				StringBuilder sqlCreateTable = new StringBuilder("CREATE TABLE public." + tableFullName + "(" +
 						PERSON_LINK_ID_COLUMN_NAME + " BIGINT NOT NULL," +
-						PERSON_MATCH_ID_COLUMN_NAME + " integer NOT NULL," +
 						LEFT_PERSON_ID_COLUMN_NAME + " BIGINT NOT NULL," +
 						RIGHT_PERSON_ID_COLUMN_NAME + " BIGINT NOT NULL," +
 						BINARY_VECTOR_COLUMN_NAME + " text," +
 						CONTINOUS_VECTOR_COLUMN_NAME + " text," +
 						WEIGHT_COLUMN_NAME + " double precision NOT NULL," +
-						LINK_STATUS_COLUMN_NAME + " integer NOT NULL," +
-						CREATOR_ID_COLUMN_NAME + " bigint NOT NULL," +
-						DATE_CREATED_COLUMN_NAME + " timestamp without time zone NOT NULL");
+						LINK_STATUS_COLUMN_NAME + " integer NOT NULL");
 				sqlCreateTable.append(");");
 				Query query = session.createSQLQuery(sqlCreateTable.toString());
 				int num = query.executeUpdate();
@@ -79,62 +76,50 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		getHibernateTemplate().execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				String tableFullName = getTableFullName(tableName);
-				// 1. Remove foreign key constraint for creator_id
+				// 1. Remove foreign key constraint for left_person_id
 				String sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
-						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + CREATOR_ID_COLUMN_NAME + ";";
+						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME + ";";
 				Query query = session.createSQLQuery(sqlDropFKConstraint);
 				int num = query.executeUpdate();
 
-				// 2. Remove foreign key constraint for person_match_id
-				sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
-						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + PERSON_MATCH_ID_COLUMN_NAME + ";";
-				query = session.createSQLQuery(sqlDropFKConstraint);
-				num = query.executeUpdate();
-
-				// 3. Remove foreign key constraint for left_person_id
-				sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
-						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME + ";";
-				query = session.createSQLQuery(sqlDropFKConstraint);
-				num = query.executeUpdate();
-
-				// 4. Remove foreign key constraint for right_person_id
+				// 2. Remove foreign key constraint for right_person_id
 				sqlDropFKConstraint = "ALTER TABLE " + tableFullName +
 						" DROP CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + RIGHT_PERSON_ID_COLUMN_NAME + ";";
 				query = session.createSQLQuery(sqlDropFKConstraint);
 				num = query.executeUpdate();
 
-				// 5. Drop weight index
+				// 3. Drop weight index
 				String sqlDropIndex = "DROP INDEX " + tableFullName + "_" + WEIGHT_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
 
-				// 6. Drop right_person_id index
+				// 4. Drop right_person_id index
 				sqlDropIndex = "DROP INDEX " + tableFullName + "_" + RIGHT_PERSON_ID_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
 
-				// 7. Drop right_person_id index
+				// 5. Drop right_person_id index
 				sqlDropIndex = "DROP INDEX " + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
 
-				// 8. Drop primary index
+				// 6. Drop primary index
 				sqlDropIndex = "DROP INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropIndex);
 				num = query.executeUpdate();
 
-				// 9. Drop primary key constraint
+				// 7. Drop primary key constraint
 				String sqlDropPKConstraint = "ALTER TABLE " + tableFullName +
 						" DROP CONSTRAINT " + tableFullName + PK_CONSTNRAINT_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropPKConstraint);
 				num = query.executeUpdate();
 
-				// 10. Drop Sequence
+				// 8. Drop Sequence
 				String sqlDropSequence = "DROP SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + ";";
 				query = session.createSQLQuery(sqlDropSequence);
 				num = query.executeUpdate();
 
-				// 11. Create Table
+				// 9. Drop Table
 				String sqlDropTable = "DROP TABLE public." + tableFullName + ";";
 				query = session.createSQLQuery(sqlDropTable);
 				num = query.executeUpdate();
@@ -150,21 +135,18 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 
 		StringBuilder sqlInsertPerson = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
 			PERSON_LINK_ID_COLUMN_NAME + ", " +
-			PERSON_MATCH_ID_COLUMN_NAME + ", " +
 			LEFT_PERSON_ID_COLUMN_NAME + ", " +
 			RIGHT_PERSON_ID_COLUMN_NAME + ", " +
 			(personLink.getBinaryVector() != null ? (BINARY_VECTOR_COLUMN_NAME + ", ") : "") +
 			(personLink.getContinousVector() != null ? (CONTINOUS_VECTOR_COLUMN_NAME + ", ") : "") +
 			WEIGHT_COLUMN_NAME + ", " +
-			LINK_STATUS_COLUMN_NAME + ", " +
-			CREATOR_ID_COLUMN_NAME + ", " +
-			DATE_CREATED_COLUMN_NAME +
+			LINK_STATUS_COLUMN_NAME +
 			") VALUES (" +
 			(personLink.getPersonLinkId() != null ? "?" : ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')")) +
-			",?,?,?" +
+			",?,?" +
 			(personLink.getBinaryVector() != null ? ",?" : "") +
 			(personLink.getContinousVector() != null ? ",?" : "") +
-			",?,?,?,?" +
+			",?,?" +
 			") RETURNING " + PERSON_LINK_ID_COLUMN_NAME + ";");
 
 		Query query = session.createSQLQuery(sqlInsertPerson.toString());
@@ -174,8 +156,6 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 			query.setLong(position, personLink.getPersonLinkId());
 			position++;
 		}
-		query.setInteger(position, personLink.getPersonMatchId());
-		position++;
 		query.setLong(position, personLink.getLeftPersonId());
 		position++;
 		query.setLong(position, personLink.getRightPersonId());
@@ -191,10 +171,6 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		query.setDouble(position, personLink.getWeight());
 		position++;
 		query.setInteger(position, personLink.getLinkState());
-		position++;
-		query.setInteger(position, personLink.getCreatorId());
-		position++;
-		query.setDate(position, personLink.getDateCreated());
 
 		BigInteger bigInt = (BigInteger)query.uniqueResult();
 		long id = bigInt.longValue();
@@ -257,31 +233,18 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 				" PRIMARY KEY (" + PERSON_LINK_ID_COLUMN_NAME + ");";
 		query = session.createSQLQuery(sqlAddPKConstraint);
 		num = query.executeUpdate();
-		// 8. Create foreign key constraint for person_match_id
+		// 8. Create foreign key constraint for left_person_id
 		String sqlAddFKConstraint = "ALTER TABLE ONLY " + tableFullName +
-				" ADD CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + PERSON_MATCH_ID_COLUMN_NAME +
-				" FOREIGN KEY (" + PERSON_MATCH_ID_COLUMN_NAME + ") REFERENCES " +
-				"person_match(" + PERSON_MATCH_ID_COLUMN_NAME + ");";
-		query = session.createSQLQuery(sqlAddFKConstraint);
-		num = query.executeUpdate();
-		// 9. Create foreign key constraint for left_person_id
-		sqlAddFKConstraint = "ALTER TABLE ONLY " + tableFullName +
 				" ADD CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME +
 				" FOREIGN KEY (" + LEFT_PERSON_ID_COLUMN_NAME + ") REFERENCES " +
 				DATASET_TABLE_NAME_PREFIX + leftDatasetTableName + "(" + PERSON_ID_COLUMN_NAME + ");";
 		query = session.createSQLQuery(sqlAddFKConstraint);
 		num = query.executeUpdate();
-		// 10. Create foreign key constraint for right_person_id
+		// 9. Create foreign key constraint for right_person_id
 		sqlAddFKConstraint = "ALTER TABLE ONLY " + tableFullName +
 				" ADD CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + RIGHT_PERSON_ID_COLUMN_NAME +
 				" FOREIGN KEY (" + RIGHT_PERSON_ID_COLUMN_NAME + ") REFERENCES " +
 				DATASET_TABLE_NAME_PREFIX + rightDatasetTableName + "(" + PERSON_ID_COLUMN_NAME + ");";
-		query = session.createSQLQuery(sqlAddFKConstraint);
-		num = query.executeUpdate();
-		// 11. Create foreign key constraint for creator_id
-		sqlAddFKConstraint = "ALTER TABLE ONLY " + tableFullName +
-				" ADD CONSTRAINT " + FK_CONSTNRAINT_NAME_PREFIX + tableFullName + "_" + CREATOR_ID_COLUMN_NAME +
-				" FOREIGN KEY (" + CREATOR_ID_COLUMN_NAME + ") REFERENCES app_user(id);";
 		query = session.createSQLQuery(sqlAddFKConstraint);
 		num = query.executeUpdate();
 	}
@@ -348,14 +311,11 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				StringBuilder sqlSelectLinks = new StringBuilder("SELECT " +
 						PERSON_LINK_ID_COLUMN_NAME + ", " +
-						PERSON_MATCH_ID_COLUMN_NAME + ", " +
 						LEFT_PERSON_ID_COLUMN_NAME + ", " +
 						RIGHT_PERSON_ID_COLUMN_NAME + ", " +
 						BINARY_VECTOR_COLUMN_NAME + ", " +
 						CONTINOUS_VECTOR_COLUMN_NAME + ", " +
-						WEIGHT_COLUMN_NAME + ", " +
-						CREATOR_ID_COLUMN_NAME + ", " +
-						DATE_CREATED_COLUMN_NAME +
+						WEIGHT_COLUMN_NAME +
 					" FROM public." + getTableFullName(tableName));
 				if (leftPerson != null || rightPerson != null) {
 					sqlSelectLinks.append(" WHERE (");

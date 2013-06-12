@@ -127,26 +127,22 @@ public final class GeneralUtil {
 		return columnInformationList;
 	}
 
-	public static PersonLink constructPersonLink(Integer personMatchId, LeanRecordPair pair, int linkState) {
-		PersonLink personLink = constructPersonLink(personMatchId, pair.getLeftRecordId(),
-				pair.getRightRecordId(), null, pair.getWeight(), linkState);
+	public static PersonLink constructPersonLink(LeanRecordPair pair, int linkState) {
+		PersonLink personLink = constructPersonLink(pair.getLeftRecordId(),
+				pair.getRightRecordId(), pair.getWeight(), linkState);
 		personLink.setBinaryVector(pair.getComparisonVector().getBinaryVectorString());
 		personLink.setContinousVector(pair.getComparisonVector().getScoreVectorString());
 		return personLink;
 	}
 
-	public static PersonLink constructPersonLink(Integer personMatchId, long leftPersonId, long rightPersonId,
-			User user, double weight, int linkState) {
+	public static PersonLink constructPersonLink(long leftPersonId, long rightPersonId,
+			double weight, int linkState)
+	{
 		PersonLink personLink = new PersonLink();
-		personLink.setPersonMatchId(personMatchId);
 		personLink.setLeftPersonId(leftPersonId);
 		personLink.setRightPersonId(rightPersonId);
 		personLink.setWeight(weight);
 		personLink.setLinkState(linkState);
-		if (user != null) {
-			personLink.setCreatorId(user.getId());
-			personLink.setDateCreated(new java.util.Date());
-		}
 		return personLink;
 	}
 

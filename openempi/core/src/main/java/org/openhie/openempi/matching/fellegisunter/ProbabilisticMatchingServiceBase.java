@@ -92,8 +92,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 	public PersonMatch linkRecords(String blockingServiceTypeName, Object blockingServiceCustomParameters,
 			String matchingServiceTypeName, Object matchingServiceCustomParameters, String linkTableName,
 			String leftTableName, String rightTableName, List<LeanRecordPair> pairsParam, ComponentType componentType,
-			boolean emOnly, boolean persistLinks) throws ApplicationException {
-
+			boolean emOnly, boolean persistLinks) throws ApplicationException
+	{
 		log.warn("CBF link Start");
 		long startTime = System.nanoTime();
 		MatchConfiguration matchConfig =
@@ -283,7 +283,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 									countMatched++;
 									linkState = UniversalDaoHibernate.LINK_STATUS_MATCH;
 								}
-								PersonLink personLink = GeneralUtil.constructPersonLink(personMatch.getPersonMatchId(), pair, linkState);
+								PersonLink personLink = GeneralUtil.constructPersonLink(pair, linkState);
 								personLinks.add(personLink);
 							}
 							personManagerService.addPersonLinks(linkTableName, personLinks);

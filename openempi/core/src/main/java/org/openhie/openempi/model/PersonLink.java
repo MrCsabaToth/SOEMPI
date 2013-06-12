@@ -17,7 +17,6 @@
  */
 package org.openhie.openempi.model;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,8 +24,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -44,29 +41,22 @@ public class PersonLink extends BaseObject implements java.io.Serializable
 	private static final long serialVersionUID = -2998399249175445866L;
 
 	private Long personLinkId;
-	private int personMatchId;	// TODO: replace with PersonMatch instead of id?
 	private long leftPersonId;
 	private long rightPersonId;
 	private String binaryVector;
 	private String continousVector;
 	private double weight;
 	private int linkState;
-	private Integer creatorId;
-	private Date dateCreated;
 
 	/** default constructor */
 	public PersonLink() {
 	}
 
 	/** full constructor */
-	public PersonLink(Long personLinkId, int personMatchId, long leftPersonId, long rightPersonId, User userCreatedBy,
-			Date dateCreated) {
+	public PersonLink(Long personLinkId, long leftPersonId, long rightPersonId) {
 		this.personLinkId = personLinkId;
-		this.personMatchId = personMatchId;
 		this.leftPersonId = leftPersonId;
 		this.rightPersonId = rightPersonId;
-		this.creatorId = userCreatedBy.getId();
-		this.dateCreated = dateCreated;
 	}
 
 	// Property accessors
@@ -83,19 +73,6 @@ public class PersonLink extends BaseObject implements java.io.Serializable
 
 	public void setPerson_link_id(java.math.BigInteger personLinkId) {
 		setPersonLinkId(personLinkId.longValue());
-	}
-
-	@Column(name = "person_match_id", nullable = false)
-	public int getPersonMatchId() {
-		return personMatchId;
-	}
-
-	public void setPersonMatchId(int personMatchId) {
-		this.personMatchId = personMatchId;
-	}
-
-	public void setPerson_match_id(int personMatchId) {
-		setPersonMatchId(personMatchId);
 	}
 
 	@Column(name = "left_person_id", nullable = false)
@@ -172,33 +149,6 @@ public class PersonLink extends BaseObject implements java.io.Serializable
 		setLinkState(linkState);
 	}
 
-	@Column(name = "creator_id", nullable = false)
-	public Integer getCreatorId() {
-		return this.creatorId;
-	}
-
-	public void setCreatorId(Integer creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public void setCreator_id(java.math.BigInteger creatorId) {
-		setCreatorId(creatorId.intValue());
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_created", nullable = false, length = 8)
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public void setDate_created(Date dateCreated) {
-		setDateCreated(dateCreated);
-	}
-
 	@Override
 	public boolean equals(final Object other) {
 		if (!(other instanceof PersonLink))
@@ -209,14 +159,14 @@ public class PersonLink extends BaseObject implements java.io.Serializable
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(personLinkId).append(personMatchId).toHashCode();
+		return new HashCodeBuilder().append(personLinkId).append(leftPersonId).append(rightPersonId).toHashCode();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("personLinkId", personLinkId).append("personMatchId", personMatchId)
+		return new ToStringBuilder(this).append("personLinkId", personLinkId)
 			.append("leftPersonId", leftPersonId).append("rightPersonId", rightPersonId)
-			.append("creatorId", creatorId).append("dateCreated", dateCreated).append("weight", weight).toString();
+			.append("weight", weight).toString();
 	}
 
 }

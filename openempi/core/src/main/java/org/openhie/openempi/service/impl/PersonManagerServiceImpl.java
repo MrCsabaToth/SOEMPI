@@ -179,25 +179,13 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		personLinkDao.createTable(linkTableName, leftDatasetName, rightDatasetName, withIndexesAndConstraints);
 	}
 
-	private void preparePersonLink(PersonLink personLink) {
-		if (personLink.getCreatorId() == null) {
-			User currUser = getCurrentUser();
-			if (currUser != null)
-				personLink.setCreatorId(currUser.getId());
-		}
-		personLink.setDateCreated(new java.util.Date());		
-	}
-
 	public void addPersonLink(String linkTableName, PersonLink personLink)
 	{
-		preparePersonLink(personLink);
 		personLinkDao.addPersonLink(linkTableName, personLink);
 	}
 
 	public void addPersonLinks(String linkTableName, List<PersonLink> personLinks)
 	{
-		for (PersonLink personLink : personLinks)
-			preparePersonLink(personLink);
 		personLinkDao.addPersonLinks(linkTableName, personLinks);
 	}
 
@@ -346,8 +334,8 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		//Context.getAuditEventService().saveAuditEvent(AuditEventType.DELETE_PERSON_EVENT_TYPE, "Deleted a person record", personFound);
 	}
 
-	public PersonLink constructAndAddPersonLink(String linkTableName, Integer personMatchId, LeanRecordPair pair, Integer linkState) {
-		PersonLink personLink = GeneralUtil.constructPersonLink(personMatchId, pair, linkState);
+	public PersonLink constructAndAddPersonLink(String linkTableName, LeanRecordPair pair, Integer linkState) {
+		PersonLink personLink = GeneralUtil.constructPersonLink(pair, linkState);
 		addPersonLink(linkTableName, personLink);
 		return personLink;
 	}
