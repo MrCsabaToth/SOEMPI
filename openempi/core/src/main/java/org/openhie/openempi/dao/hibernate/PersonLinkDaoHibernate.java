@@ -53,17 +53,8 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 				sqlCreateTable.append(");");
 				Query query = session.createSQLQuery(sqlCreateTable.toString());
 				int num = query.executeUpdate();
-				// 2. Create Sequence
-				String sqlCreateSequence = "CREATE SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + " " +
-						"START WITH 1 " +
-						"INCREMENT BY 1 " +
-						"NO MAXVALUE " +
-						"NO MINVALUE " +
-						"CACHE 1;";
-				query = session.createSQLQuery(sqlCreateSequence);
-				num = query.executeUpdate();
 				if (withIndexesAndConstraints)
-					addIndexesAndConstraintsInHibernate(session, tableFullName, leftDatasetTableName,
+					addIndexesAndConstraintsInHibernate(session, tableFullName, 1L, leftDatasetTableName,
 							rightDatasetTableName);
 				session.flush();
 				return num;
@@ -203,15 +194,24 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		});
 	}
 
-	private void addIndexesAndConstraintsInHibernate(Session session, final String tableFullName,
+	private void addIndexesAndConstraintsInHibernate(Session session, final String tableFullName, final long seqStart,
 			final String leftDatasetTableName, final String rightDatasetTableName) {
 		log.trace("Adding indexes and constraints to table " + tableFullName);
+		// 2. Create Sequence
+		String sqlCreateSequence = "CREATE SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + " " +
+				"START WITH " + seqStart + " " +
+				"INCREMENT BY 1 " +
+				"NO MAXVALUE " +
+				"NO MINVALUE " +
+				"CACHE 1;";
+		Query query = session.createSQLQuery(sqlCreateSequence);
+		@SuppressWarnings("unused")
+		int num = query.executeUpdate();
 		// 3. Create primary index
 		String sqlCreateIndex = "CREATE UNIQUE INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX +
 				" ON " + tableFullName + " USING btree (" + PERSON_LINK_ID_COLUMN_NAME + ");";
-		Query query = session.createSQLQuery(sqlCreateIndex);
-		@SuppressWarnings("unused")
-		int num = query.executeUpdate();
+		query = session.createSQLQuery(sqlCreateIndex);
+		num = query.executeUpdate();
 		// 4. Create left_person_id index
 		sqlCreateIndex = "CREATE INDEX " + tableFullName + "_" + LEFT_PERSON_ID_COLUMN_NAME + INDEX_CONSTNRAINT_NAME_POSTFIX +
 				" ON " + tableFullName + " USING btree (" + LEFT_PERSON_ID_COLUMN_NAME + ");";
@@ -249,14 +249,14 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		num = query.executeUpdate();
 	}
 
-	public void addIndexesAndConstraints(final String tableName, final String leftDatasetTableName,
+	public void addIndexesAndConstraints(final String tableName, final long seqStart, final String leftDatasetTableName,
 			final String rightDatasetTableName) {
 		ValidationUtil.sanityCheckFieldName(leftDatasetTableName);
 		ValidationUtil.sanityCheckFieldName(rightDatasetTableName);
 		final String tableFullName = getTableFullName(tableName);
 		getHibernateTemplate().execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				addIndexesAndConstraintsInHibernate(session, tableFullName, leftDatasetTableName,
+				addIndexesAndConstraintsInHibernate(session, tableFullName, seqStart, leftDatasetTableName,
 						rightDatasetTableName);
 				session.flush();
 				return 1;

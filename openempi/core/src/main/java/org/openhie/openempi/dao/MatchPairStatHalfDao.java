@@ -70,10 +70,11 @@ public interface MatchPairStatHalfDao extends UniversalDao
 	 * "withIndexesAndConstraints" must have been false before during createTable call.
 	 * 
 	 * @param tableName: name of the table, will get "tbl_matchpairstathalf_" prefix
+	 * @param seqStart: starting value the created sequence should start from
 	 * @param datasetTableName: table name of the associated dataset
 	 */
     @Transactional
-	public void addIndexesAndConstraints(final String tableName, final String datasetTableName);
+	public void addIndexesAndConstraints(final String tableName, final long seqStart, final String datasetTableName);
 
 	/**
 	 * Update an existing MatchPairStatHalf entity in the table.

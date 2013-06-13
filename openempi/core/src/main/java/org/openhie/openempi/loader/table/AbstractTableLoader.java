@@ -120,7 +120,7 @@ public abstract class AbstractTableLoader extends AbstractLoaderBase implements 
 		}
 		dataset.setTotalRecords(loadedLines);*/
 		personManagerService.updateDataset(dataset);
-		personManagerService.addIndexesAndConstraintsToDatasetTable(tableName);
+		personManagerService.addIndexesAndConstraintsToDatasetTable(tableName, 0L);
 	}
 
 	protected abstract Person processLine(String line, int lineIndex);

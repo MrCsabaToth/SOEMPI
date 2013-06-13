@@ -92,10 +92,10 @@ public class RecordLinkageProtocolSelectorImpl extends BaseServiceImpl implement
 		recordLinkageProtocol.addMatchPairStatHalves(statTableName, matchPairStatHalves);
 	}
 
-	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName)
+	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, long seqStart, String datasetTableName)
 	{
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
-		recordLinkageProtocol.addIndexesAndConstraintsToMatchPairStatHalfTable(statTableName, datasetTableName);
+		recordLinkageProtocol.addIndexesAndConstraintsToMatchPairStatHalfTable(statTableName, seqStart, datasetTableName);
 	}
 
 	public PersonMatchRequest sendPersonMatchRequest(String protocolTypeName, Dataset dataset, String remoteTableName, String matchName,

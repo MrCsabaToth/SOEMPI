@@ -71,9 +71,10 @@ public interface PersonDao extends UniversalDao
 	 * "withIndexesAndConstraints" must have been false before during createTable call.
 	 * 
 	 * @param tableName: name of the table, will get "tbl_dataset_" prefix
+	 * @param seqStart: starting value the created sequence should start from
 	 */
     @Transactional
-	public void addIndexesAndConstraints(final String tableName);
+	public void addIndexesAndConstraints(final String tableName, final long seqStart);
 
 	/**
 	 * Update an existing Person entity in the table.

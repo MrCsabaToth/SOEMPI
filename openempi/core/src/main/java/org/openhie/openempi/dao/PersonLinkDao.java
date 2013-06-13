@@ -68,11 +68,12 @@ public interface PersonLinkDao extends UniversalDao
 	 * "withIndexesAndConstraints" must have been false before during createTable call.
 	 * 
 	 * @param tableName: name of the table, will get "tbl_link_" prefix
+	 * @param seqStart: starting value the created sequence should start from
 	 * @param leftDatasetTableName: table name of the associated left dataset
 	 * @param rightDatasetTableName: table name of the associated right dataset
 	 */
     @Transactional
-	public void addIndexesAndConstraints(final String tableName, final String leftDatasetTableName,
+	public void addIndexesAndConstraints(final String tableName, final long seqStart, final String leftDatasetTableName,
 			final String rightDatasetTableName);
 
 	/**

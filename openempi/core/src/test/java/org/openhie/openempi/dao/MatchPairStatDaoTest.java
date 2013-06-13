@@ -40,35 +40,36 @@ public class MatchPairStatDaoTest extends BaseDaoTestCase
 		String rightDatasetName = "right_test_dataset";
 		List<Long> leftPersonIds = new ArrayList<Long>();
 		PersonUtils.createTestPersonTable(personDao, leftDatasetName, "", datasetDao, true,
-				applicationContext, false, null, leftPersonIds);
+				applicationContext, true, null, leftPersonIds);
 		List<Long> rightPersonIds = new ArrayList<Long>();
 		PersonUtils.createTestPersonTable(personDao, rightDatasetName, "2", datasetDao, true,
-				applicationContext, false, null, rightPersonIds);
+				applicationContext, true, null, rightPersonIds);
 
 		matchPairStatDao.createTable(matchPairStatTableName, leftDatasetName, rightDatasetName, !deferredIndexesAndConstraints);
 
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(0), rightPersonIds.get(0), true);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(1), rightPersonIds.get(1), true);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(2), rightPersonIds.get(2), true);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(3), rightPersonIds.get(3), true);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(4), rightPersonIds.get(4), true);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(5), rightPersonIds.get(5), true);
+		long matchPairStatCounter = 1L;
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(0), rightPersonIds.get(0), true);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(1), rightPersonIds.get(1), true);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(2), rightPersonIds.get(2), true);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(3), rightPersonIds.get(3), true);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(4), rightPersonIds.get(4), true);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(5), rightPersonIds.get(5), true);
 
 		List<MatchPairStat> mpsl = new ArrayList<MatchPairStat>();
-		mpsl.add(constructMatchPairStat(leftPersonIds.get(0), rightPersonIds.get(1), false));
-		mpsl.add(constructMatchPairStat(leftPersonIds.get(0), rightPersonIds.get(2), false));
-		mpsl.add(constructMatchPairStat(leftPersonIds.get(0), rightPersonIds.get(3), false));
-		mpsl.add(constructMatchPairStat(leftPersonIds.get(0), rightPersonIds.get(4), false));
-		mpsl.add(constructMatchPairStat(leftPersonIds.get(0), rightPersonIds.get(5), false));
+		mpsl.add(constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(0), rightPersonIds.get(1), false));
+		mpsl.add(constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(0), rightPersonIds.get(2), false));
+		mpsl.add(constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(0), rightPersonIds.get(3), false));
+		mpsl.add(constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(0), rightPersonIds.get(4), false));
+		mpsl.add(constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(0), rightPersonIds.get(5), false));
 		matchPairStatDao.addMatchPairStats(matchPairStatTableName, mpsl);
 
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(1), rightPersonIds.get(2), false);
-		MatchPairStat mps1 = constructMatchPairStat(leftPersonIds.get(1), rightPersonIds.get(3), true);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(1), rightPersonIds.get(2), false);
+		MatchPairStat mps1 = constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(1), rightPersonIds.get(3), true);
 		matchPairStatDao.addMatchPairStat(matchPairStatTableName, mps1);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(1), rightPersonIds.get(4), false);
-		addMatchPairStat(matchPairStatTableName, leftPersonIds.get(1), rightPersonIds.get(5), false);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(1), rightPersonIds.get(4), false);
+		addMatchPairStat(matchPairStatTableName, matchPairStatCounter++, leftPersonIds.get(1), rightPersonIds.get(5), false);
 
-		MatchPairStat mps2 = constructMatchPairStat(leftPersonIds.get(4), rightPersonIds.get(5), true);
+		MatchPairStat mps2 = constructMatchPairStat(matchPairStatCounter++, leftPersonIds.get(4), rightPersonIds.get(5), true);
 		matchPairStatDao.addMatchPairStat(matchPairStatTableName, mps2);
 
 		mps1.setMatchStatus(false);
@@ -88,7 +89,7 @@ public class MatchPairStatDaoTest extends BaseDaoTestCase
 		} while (mpsl2.size() > 0);
 
 		if (deferredIndexesAndConstraints)
-			matchPairStatDao.addIndexesAndConstraints(matchPairStatTableName, leftDatasetName, rightDatasetName);
+			matchPairStatDao.addIndexesAndConstraints(matchPairStatTableName, matchPairStatCounter, leftDatasetName, rightDatasetName);
 
 		// testRemoveMatchPairStatTable
 		matchPairStatDao.removeTable(matchPairStatTableName);
@@ -102,20 +103,22 @@ public class MatchPairStatDaoTest extends BaseDaoTestCase
 		internalTestAddMatchPairStat(true);
 	}
 
-	private MatchPairStat constructMatchPairStat(Long leftPersonId, Long rightPersonId, boolean matchState)
+	private MatchPairStat constructMatchPairStat(long matchPairStatId, long leftPersonId, long rightPersonId,
+			boolean matchState)
 	{
 		MatchPairStat matchPairStat = new MatchPairStat();
+		matchPairStat.setMatchPairStatId(matchPairStatId);
 		matchPairStat.setLeftPersonPseudoId(leftPersonId);
 		matchPairStat.setRightPersonPseudoId(rightPersonId);
 		matchPairStat.setMatchStatus(matchState);
 		return matchPairStat;
 	}
 
-	private void addMatchPairStat(String matchPairStatTableName, Long leftPersonId, Long rightPersonId,
+	private void addMatchPairStat(String matchPairStatTableName, long matchPairStatId, long leftPersonId, long rightPersonId,
 			boolean matchState)
 	{
 		matchPairStatDao.addMatchPairStat(matchPairStatTableName,
-				constructMatchPairStat(leftPersonId, rightPersonId, matchState));
+				constructMatchPairStat(matchPairStatId, leftPersonId, rightPersonId, matchState));
 	}
 
 	public PersonDao getPersonDao() {

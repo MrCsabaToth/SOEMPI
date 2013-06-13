@@ -129,15 +129,15 @@ public class GeneralUtilTest extends BaseServiceTestCase {
 		ComparisonVector cv = pair.getComparisonVector();
 		System.out.println(cv);
 		double[] scores = cv.getScores();
-		assertEquals(scores.length, 3);
-		assertEquals(scores[0], 0.5777777777777778);
-		assertEquals(scores[1], 1.0);
-		assertEquals(scores[2], 0.4545454680919647);
+		assertEquals(3, scores.length);
+		assertEquals(0.5777777777777778, scores[0]);
+		assertEquals(1.0, scores[1]);
+		assertEquals(0.9090909361839294, scores[2]);
 		int[] binaryScores = cv.getBinaryVector();
-		assertEquals(binaryScores.length, 3);
-		assertEquals(binaryScores[0], 0);
-		assertEquals(binaryScores[1], 1);
-		assertEquals(binaryScores[2], 0);
+		assertEquals(3, binaryScores.length);
+		assertEquals(0, binaryScores[0]);
+		assertEquals(1, binaryScores[1]);
+		assertEquals(1, binaryScores[2]);
 	}
 
 	public void testConstructPersonLink() {
@@ -145,13 +145,15 @@ public class GeneralUtilTest extends BaseServiceTestCase {
 		pair.setWeight(0.7);
 		Integer linkState = 4;
 
-		PersonLink pl1 = GeneralUtil.constructPersonLink(1L, 2L, pair.getWeight(), linkState);
+		PersonLink pl1 = GeneralUtil.constructPersonLink(1L, 1L, 2L, pair.getWeight(), linkState);
+		assertEquals((Long)pl1.getPersonLinkId(), (Long)1L);
 		assertEquals((Long)pl1.getLeftPersonId(), (Long)1L);
 		assertEquals((Long)pl1.getRightPersonId(), (Long)2L);
 		assertEquals((Double)pl1.getWeight(), pair.getWeight());
 		assertEquals((Integer)pl1.getLinkState(), linkState);
 
-		PersonLink pl2 = GeneralUtil.constructPersonLink(pair, linkState);
+		PersonLink pl2 = GeneralUtil.constructPersonLink(pair, 2L, linkState);
+		assertEquals((Long)pl2.getPersonLinkId(), (Long)2L);
 		assertEquals(pl2.getBinaryVector(), pair.getComparisonVector().getBinaryVectorString());
 		assertEquals(pl2.getContinousVector(), pair.getComparisonVector().getScoreVectorString());
 	}

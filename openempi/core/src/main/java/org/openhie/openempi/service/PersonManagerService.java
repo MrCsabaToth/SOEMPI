@@ -136,21 +136,23 @@ public interface PersonManagerService extends PersonServiceBase
 	 * User and creation date will be added automatically. Person ids will be deducted from the pair.
 	 * 
 	 * @param linkTableName: name of the link table
+	 * @param linkId: Id of the link entity
 	 * @param pair: record pair structure of the two records to be linked
 	 * @param linkState: link status
 	 */
-	public PersonLink constructAndAddPersonLink(String linkTableName, LeanRecordPair pair, Integer linkState);
+	public PersonLink constructAndAddPersonLink(String linkTableName, Long linkId, LeanRecordPair pair, Integer linkState);
 
 	/**
 	 * Add indexes and constraints to a previously created person link table.
 	 * "withIndexesAndConstraints" must have been false before during createTable call.
 	 * 
 	 * @param tableName: name of the person link table
+	 * @param seqStart: starting value the created sequence should start from
 	 * @param leftDatasetTableName: table name of the associated left dataset
 	 * @param rightDatasetTableName: table name of the associated right dataset
 	 */
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public void addIndexesAndConstraintsToLinkTable(String tableName, String leftDatasetName, String rightDatasetName);
+	public void addIndexesAndConstraintsToLinkTable(String tableName, long seqStart, String leftDatasetName, String rightDatasetName);
 
 	/**
 	 * Adds a person record to the EMPI. The system will first check to see if a person with the same identifier is already known to the system. If the person
@@ -175,9 +177,10 @@ public interface PersonManagerService extends PersonServiceBase
 	 * "withIndexesAndConstraints" must have been false before during createTable call.
 	 * 
 	 * @param tableName: name of the dataset table
+	 * @param seqStart: starting value the created sequence should start from
 	 */
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public void addIndexesAndConstraintsToDatasetTable(String tableName);
+	public void addIndexesAndConstraintsToDatasetTable(String tableName, long seqStart);
 
 	/**
 	 * Updates the attributes maintained in the EMPI about the person. The system will locate the person record using the person identifiers as

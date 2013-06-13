@@ -68,7 +68,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 		log.error("addMatchPairStatHalves doesn't make sense during simple send");
 	}
 
-	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String statTableName, String datasetTableName)
+	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String statTableName, long seqStart, String datasetTableName)
 	{
 		log.error("addIndexesAndConstraintsToMatchPairStatHalfTable doesn't make sense during simple send");
 	}

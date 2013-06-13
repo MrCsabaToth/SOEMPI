@@ -263,9 +263,10 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 
 			personManagerService.createLinkTable(linkTableName, leftTableName, rightTableName, false);
 
+			long beginIndex = 0L;
+			long linkId = 0L;
 			if (persistLinks) {
 				int countMatched = 0, countUnmatched = 0, countUndecided = 0;
-				long beginIndex = 0L;
 				int size = 1;
 				while (size > 0) {
 					int fromIndex = Math.min((int)beginIndex, pairs.size() - 1);
@@ -287,8 +288,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 									linkState = UniversalDaoHibernate.LINK_STATUS_MATCH;
 								}
 								PersonLink personLink = cbfMatch ?
-									GeneralUtil.constructPersonLink(pair.getLeftRecordId(), pair.getRightRecordId(), pair.getWeight(), linkState) :
-									GeneralUtil.constructPersonLink(pair, linkState);
+									GeneralUtil.constructPersonLink(linkId++, pair.getLeftRecordId(), pair.getRightRecordId(), pair.getWeight(), linkState) :
+									GeneralUtil.constructPersonLink(pair, linkId++, linkState);
 								personLinks.add(personLink);
 							}
 							personManagerService.addPersonLinks(linkTableName, personLinks);
@@ -300,7 +301,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 				}
 				log.debug("We automatically matched " + countMatched + ", unmatched " + countUnmatched + " and have undecided: " + countUndecided);
 			}
-			personManagerService.addIndexesAndConstraintsToLinkTable(linkTableName, leftTableName, rightTableName);
+			personManagerService.addIndexesAndConstraintsToLinkTable(linkTableName, beginIndex + 1, leftTableName, rightTableName);
 		}
 		long linkPersistEndTime = System.nanoTime();
 		log.trace("ns of blocking + EM / FS: " + (blockNfsTime - startTime));

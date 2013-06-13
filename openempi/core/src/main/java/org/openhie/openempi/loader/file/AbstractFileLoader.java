@@ -59,7 +59,7 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 			throw new RuntimeException("Unable to read the input file.");
 		}
 		
-		long loadedLines = 0;
+		long loadedLines = 0L;
 		try {
 			boolean done = false;
 			int lineIndex = 0;
@@ -74,6 +74,7 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 				Person person = processLine(line, lineIndex++);
 				if (person != null) {
 					loadedLines++;
+					person.setPersonId(loadedLines);
 					persons.add(person);
 					contributePersonToStatistics(person);
 					if (persons.size() >= pageSize) {
@@ -107,7 +108,7 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 		}
 		dataset.setTotalRecords(loadedLines);
 		personManagerService.updateDataset(dataset);
-		personManagerService.addIndexesAndConstraintsToDatasetTable(tableName);
+		personManagerService.addIndexesAndConstraintsToDatasetTable(tableName, loadedLines + 1);
 	}
 
 	public void loadTable(String hostAddress, String dbName, String dbUserName, String dbPassword,

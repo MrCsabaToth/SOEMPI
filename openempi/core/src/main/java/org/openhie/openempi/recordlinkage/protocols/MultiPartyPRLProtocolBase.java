@@ -247,6 +247,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					leftLocalDataset.getTotalRecords(), false, false);
 
 			long firstResult = 0L;
+			long personId = 0L;
 			boolean morePersons = true;
 			List<Person> bfReencodedPersons = new ArrayList<Person>();
 			TransformationService transformationService = Context.getTransformationService();
@@ -258,6 +259,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					for (Person clearTextPerson : clearTextPersons) {
 						// Perform the actual BF reencoding
 						Person bfReencodedPerson = new Person();
+						bfReencodedPerson.setPersonId(clearTextPerson.getPersonId());
+						bfReencodedPerson.setPersonId(personId++);
 						for (LoaderDataField ldf : loaderDataForBFReencode) {
 							String fn = ldf.getFieldName();
 							Object value = clearTextPerson.getAttribute(fn);
@@ -279,7 +282,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				}
 				firstResult += clearTextPersons.size();
 			} while (morePersons);
-			personManagerService.addIndexesAndConstraintsToDatasetTable(newBFTableName);
+			personManagerService.addIndexesAndConstraintsToDatasetTable(newBFTableName, firstResult + 1);
 
 			Dataset reencodedDataset = personQueryService.getDatasetByTableName(newBFTableName);
 			reencodedDataset.setFileName(leftLocalDataset.getFileName());
@@ -377,6 +380,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			int cbfLength, Random rnd, long seed, Map<String, int[][]> bitPermutation,
 			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide) throws ApplicationException {
 		Person cbfPerson = new Person();
+		cbfPerson.setPersonId(person.getPersonId());
 		BitArray cbfBitArray = new BitArray(cbfLength);
 		Map<String, Object> attributes = person.getAttributes();
 		for (ColumnMatchInformation cmi : columnMatchInformation) {
@@ -465,6 +469,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			}
 
 			long firstResult = 0L;
+			long personId = 0L;
 			boolean morePatients = true;
 			List<Person> cbfPersons = new ArrayList<Person>();
 			do {
@@ -475,6 +480,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					for (Person person : persons) {
 						Person cbfPerson = generateCBFWithOverSamplingAndPermutation(person, cbfLength, rnd, seed,
 								bitPermutation, columnMatchInformation, leftOrRightSide);
+						cbfPerson.setPersonId(personId++);
 						// Add piggy backing no-match columns
 						for (String ncn : noMatchColumnNames)
 							cbfPerson.setAttribute(ncn, person.getAttribute(ncn));
@@ -487,7 +493,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				}
 				firstResult += persons.size();
 			} while (morePatients);
-			personManagerService.addIndexesAndConstraintsToDatasetTable(newCBFTableName);
+			personManagerService.addIndexesAndConstraintsToDatasetTable(newCBFTableName, firstResult + 1);
 
 			String matchPairStatHalfTableName = null;
 			// We don't use pseudoIds for local experiments, so no need to resolve them

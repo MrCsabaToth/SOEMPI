@@ -48,10 +48,10 @@ public class PersonLinkDaoTest extends BaseDaoTestCase
 		String rightDatasetName = "right_test_dataset";
 		List<Long> leftPersonIds = new ArrayList<Long>();
 		Dataset leftDataset = PersonUtils.createTestPersonTable(personDao, leftDatasetName, "", datasetDao, true,
-				applicationContext, false, null, leftPersonIds);
+				applicationContext, true, null, leftPersonIds);
 		List<Long> rightPersonIds = new ArrayList<Long>();
 		Dataset rightDataset = PersonUtils.createTestPersonTable(personDao, rightDatasetName, "2", datasetDao, true,
-				applicationContext, false, null, rightPersonIds);
+				applicationContext, true, null, rightPersonIds);
 
 		User user = (User) userDao.loadUserByUsername("admin");
 
@@ -73,37 +73,38 @@ public class PersonLinkDaoTest extends BaseDaoTestCase
 
 		String linkTableName = "person_link_dao_test";
 		personLinkDao.createTable(linkTableName, leftDatasetName, rightDatasetName, false);
-		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(0), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(1), rightPersonIds.get(1), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(2), rightPersonIds.get(2), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(3), rightPersonIds.get(3), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(4), rightPersonIds.get(4), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(5), rightPersonIds.get(5), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		long linkId = 1L;
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(0), rightPersonIds.get(0), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(1), rightPersonIds.get(1), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(2), rightPersonIds.get(2), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(3), rightPersonIds.get(3), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(4), rightPersonIds.get(4), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(5), rightPersonIds.get(5), 10.0, UniversalDaoHibernate.LINK_STATUS_MATCH);
 
-		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(1), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(2), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(3), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(4), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
-		addPersonLink(linkTableName, leftPersonIds.get(0), rightPersonIds.get(5), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(0), rightPersonIds.get(1), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(0), rightPersonIds.get(2), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(0), rightPersonIds.get(3), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(0), rightPersonIds.get(4), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(0), rightPersonIds.get(5), 1.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
 
 		List<PersonLink> personLinks = new ArrayList<PersonLink>();
 		PersonLink pl1 =
-			createPersonLink(leftPersonIds.get(1), rightPersonIds.get(2), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+			createPersonLink(linkId++, leftPersonIds.get(1), rightPersonIds.get(2), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
 		personLinks.add(pl1);
 		PersonLink pl2 =
-			createPersonLink(leftPersonIds.get(1), rightPersonIds.get(3), 5.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
+			createPersonLink(linkId++, leftPersonIds.get(1), rightPersonIds.get(3), 5.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
 		personLinks.add(pl2);
 		PersonLink pl3 =
-			createPersonLink(leftPersonIds.get(1), rightPersonIds.get(4), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+			createPersonLink(linkId++, leftPersonIds.get(1), rightPersonIds.get(4), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
 		personLinks.add(pl3);
 		PersonLink pl4 =
-			createPersonLink(leftPersonIds.get(1), rightPersonIds.get(5), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
+			createPersonLink(linkId++, leftPersonIds.get(1), rightPersonIds.get(5), 0.0, UniversalDaoHibernate.LINK_STATUS_NONMATCH);
 		personLinks.add(pl4);
 		personLinkDao.addPersonLinks(linkTableName, personLinks);
 
-		addPersonLink(linkTableName, leftPersonIds.get(4), rightPersonIds.get(5), 9.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
+		addPersonLink(linkTableName, linkId++, leftPersonIds.get(4), rightPersonIds.get(5), 9.0, UniversalDaoHibernate.LINK_STATUS_UNDECIDED);
 
-		personLinkDao.addIndexesAndConstraints(linkTableName, leftDatasetName, rightDatasetName);
+		personLinkDao.addIndexesAndConstraints(linkTableName, linkId, leftDatasetName, rightDatasetName);
 
 		Person leftPerson = personDao.getPersonById(leftDatasetName, leftPersonIds.get(0));
 		Person rightPerson = personDao.getPersonById(rightDatasetName, rightPersonIds.get(0));
@@ -143,14 +144,15 @@ public class PersonLinkDaoTest extends BaseDaoTestCase
 		}
 	}
 
-	private PersonLink createPersonLink(Long leftPersonId, Long rightPersonId, Double weight, Integer linkState) {
-		PersonLink personLink = GeneralUtil.constructPersonLink(leftPersonId, rightPersonId, weight, linkState);
+	private PersonLink createPersonLink(long linkId, long leftPersonId, long rightPersonId, double weight, int linkState) {
+		PersonLink personLink = GeneralUtil.constructPersonLink(linkId, leftPersonId, rightPersonId, weight, linkState);
 		return personLink;
 	}
 
-	private void addPersonLink(String linkTableName, Long leftPersonId, Long rightPersonId, Double weight, Integer linkState)
+	private void addPersonLink(String linkTableName, long linkId, long leftPersonId, long rightPersonId,
+			double weight, int linkState)
 	{
-		PersonLink personLink = createPersonLink(leftPersonId, rightPersonId, weight, linkState);
+		PersonLink personLink = createPersonLink(linkId, leftPersonId, rightPersonId, weight, linkState);
 		personLinkDao.addPersonLink(linkTableName, personLink);
 	}
 

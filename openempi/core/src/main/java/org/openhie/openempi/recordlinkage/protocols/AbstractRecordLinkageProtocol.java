@@ -102,11 +102,11 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		matchPairStatHalfDao.addMatchPairStatHalves(statTableName, matchPairStatHalves);
 	}
 
-	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String statTableName, String datasetTableName)
+	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String statTableName, long seqStart, String datasetTableName)
 	{
 		ValidationUtil.sanityCheckFieldName(statTableName);
 		ValidationUtil.sanityCheckFieldName(datasetTableName);
-		matchPairStatHalfDao.addIndexesAndConstraints(statTableName, datasetTableName);
+		matchPairStatHalfDao.addIndexesAndConstraints(statTableName, seqStart, datasetTableName);
 	}
 	
 	protected boolean isHmacField(ColumnInformation ci) {
@@ -382,9 +382,9 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 				toIndex = matchPairStatHalves.size();
 			List<MatchPairStatHalf> matchPairStatHalvesPart = matchPairStatHalves.subList(fromIndex, toIndex);
 			matchPairStatHalfDao.addMatchPairStatHalves(matchPairStatHalfTableName, matchPairStatHalvesPart);
-			start += matchPairStatHalvesPart.size();
+			start += Constants.PAGE_SIZE;
 		} while (toIndex < matchPairStatHalves.size());
-		matchPairStatHalfDao.addIndexesAndConstraints(matchPairStatHalfTableName, datasetTableName);
+		matchPairStatHalfDao.addIndexesAndConstraints(matchPairStatHalfTableName, matchPairStatHalves.size() + 1, datasetTableName);
 	}
 
 	protected String getNowString() {

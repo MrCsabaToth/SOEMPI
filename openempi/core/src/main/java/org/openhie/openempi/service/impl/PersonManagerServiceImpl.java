@@ -189,9 +189,9 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		personLinkDao.addPersonLinks(linkTableName, personLinks);
 	}
 
-	public void addIndexesAndConstraintsToLinkTable(String tableName, String leftDatasetName, String rightDatasetName)
+	public void addIndexesAndConstraintsToLinkTable(String tableName, long seqStart, String leftDatasetName, String rightDatasetName)
 	{
-		personLinkDao.addIndexesAndConstraints(tableName, leftDatasetName, rightDatasetName);
+		personLinkDao.addIndexesAndConstraints(tableName, seqStart, leftDatasetName, rightDatasetName);
 	}
 
 	private void addPersonInternal(String tableName, Person person, boolean applyFieldTransformations,
@@ -261,9 +261,9 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		//Context.getAuditEventService().saveAuditEvent(AuditEventType.ADD_PERSON_EVENT_TYPE, "Added a new person record", person);
 	}
 
-	public void addIndexesAndConstraintsToDatasetTable(String tableName)
+	public void addIndexesAndConstraintsToDatasetTable(String tableName, long seqStart)
 	{
-		personDao.addIndexesAndConstraints(tableName);
+		personDao.addIndexesAndConstraints(tableName, seqStart);
 	}
 
 	public void deletePerson(String tableName, long personIdentifier) throws ApplicationException {
@@ -334,8 +334,8 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		//Context.getAuditEventService().saveAuditEvent(AuditEventType.DELETE_PERSON_EVENT_TYPE, "Deleted a person record", personFound);
 	}
 
-	public PersonLink constructAndAddPersonLink(String linkTableName, LeanRecordPair pair, Integer linkState) {
-		PersonLink personLink = GeneralUtil.constructPersonLink(pair, linkState);
+	public PersonLink constructAndAddPersonLink(String linkTableName, Long linkId, LeanRecordPair pair, Integer linkState) {
+		PersonLink personLink = GeneralUtil.constructPersonLink(pair, linkId, linkState);
 		addPersonLink(linkTableName, personLink);
 		return personLink;
 	}

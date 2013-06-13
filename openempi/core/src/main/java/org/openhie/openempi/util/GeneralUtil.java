@@ -127,20 +127,18 @@ public final class GeneralUtil {
 		return columnInformationList;
 	}
 
-	public static PersonLink constructPersonLink(LeanRecordPair pair, int linkState) {
-		PersonLink personLink = constructPersonLink(pair.getLeftRecordId(),
+	public static PersonLink constructPersonLink(LeanRecordPair pair, long linkId, int linkState) {
+		PersonLink personLink = constructPersonLink(linkId, pair.getLeftRecordId(),
 				pair.getRightRecordId(), pair.getWeight(), linkState);
 		personLink.setBinaryVector(pair.getComparisonVector().getBinaryVectorString());
 		personLink.setContinousVector(pair.getComparisonVector().getScoreVectorString());
 		return personLink;
 	}
 
-	public static PersonLink constructPersonLink(long leftPersonId, long rightPersonId,
+	public static PersonLink constructPersonLink(long linkId, long leftPersonId, long rightPersonId,
 			double weight, int linkState)
 	{
-		PersonLink personLink = new PersonLink();
-		personLink.setLeftPersonId(leftPersonId);
-		personLink.setRightPersonId(rightPersonId);
+		PersonLink personLink = new PersonLink(linkId, leftPersonId, rightPersonId);
 		personLink.setWeight(weight);
 		personLink.setLinkState(linkState);
 		return personLink;

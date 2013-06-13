@@ -210,7 +210,7 @@ public class PersonDaoDynamicTest extends BaseDaoTestCase
 		ci.setFieldMeaning(fieldDao.findFieldMeaningByName(FieldMeaning.FieldMeaningEnum.Custom8.name()));
 		columnInformation1.add(ci);
 		personDao.createTable(tableName1, columnInformation1, false);
-		personDao.addIndexesAndConstraints(tableName1);
+		personDao.addIndexesAndConstraints(tableName1, 1L);
 		Dataset dataset = new Dataset(tableName1, "N/A");
 		dataset.setImported("Y");
 		dataset.setColumnInformation(columnInformation1);
@@ -662,7 +662,7 @@ public class PersonDaoDynamicTest extends BaseDaoTestCase
 	private List<Long> createTestPersonTable(String tableName) throws ApplicationException {
 		List<Long> personIds = new ArrayList<Long>();
 		PersonUtils.createTestPersonTable(personDao, tableName, "", datasetDao, true, applicationContext,
-				false, null, personIds);
+				true, null, personIds);
 		return personIds;
 	}
 
@@ -697,6 +697,7 @@ public class PersonDaoDynamicTest extends BaseDaoTestCase
 
 		Person person = new Person();
 		person.setAttribute("name", "Odysseas Pentakalos");
+		person.setPersonId(1L);
 		byte[] blob1 = new byte[] { 0, 1, 2, 31, 32, 33, 63, 64, 65, 127, -1, -2, -31, -32, -33, -63, -64, -65, -127, -128 };
 		person.setAttribute("blob1", blob1);
 		byte[] blob2 = new byte[] { -1, -2, -31, -32, -33, -63, -64, -65, -127, -128, 0, 1, 2, 31, 32, 33, 63, 64, 65, 127 };
@@ -706,6 +707,7 @@ public class PersonDaoDynamicTest extends BaseDaoTestCase
 
 		Random rnd = new Random(1234567);
 		person = new Person();
+		person.setPersonId(2L);
 		person.setAttribute("name", "Demi Moorxe");
 		int blobLength = 32;
 		byte[] blob3 = new byte[blobLength];
@@ -748,7 +750,7 @@ public class PersonDaoDynamicTest extends BaseDaoTestCase
 			BitArray ba4 = new BitArray(blobLength, blob4);
 			assertTrue(ba4.equals(ba4Found));
 		}
-		personDao.addIndexesAndConstraints(tableName);
+		personDao.addIndexesAndConstraints(tableName, 3L);
 	}
 	
 	private void queryAndPrintResultsByExample(String tableName, Person personExample, String queryAnnouncement) {

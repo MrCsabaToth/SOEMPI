@@ -283,7 +283,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 			}
 			personManagerService.createDatasetTable(tableName, ciClone, persons.size(), false, false);
 			personManagerService.addPersons(tableName, persons, false, false);
-			personManagerService.addIndexesAndConstraintsToDatasetTable(tableName);
+			personManagerService.addIndexesAndConstraintsToDatasetTable(tableName, persons.size() + 1);
 		}
 	}
 

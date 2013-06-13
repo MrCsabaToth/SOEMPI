@@ -35,7 +35,7 @@ public interface RecordLinkageProtocol
 	
 	public void addMatchPairStatHalves(String statTableName, List<MatchPairStatHalf> matchPairStatHalves);
 
-	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String statTableName, String datasetTableName);
+	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String statTableName, long seqStart, String datasetTableName);
 	
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public PersonMatchRequest sendPersonMatchRequest(Dataset dataset, String remoteTableName, String matchName,

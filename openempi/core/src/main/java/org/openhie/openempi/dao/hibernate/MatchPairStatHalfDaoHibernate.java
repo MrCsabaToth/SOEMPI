@@ -51,17 +51,8 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 				sqlCreateTable.append(");");
 				Query query = session.createSQLQuery(sqlCreateTable.toString());
 				int num = query.executeUpdate();
-				// 2. Create Sequence
-				String sqlCreateSequence = "CREATE SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + " " +
-						"START WITH 1 " +
-						"INCREMENT BY 1 " +
-						"NO MAXVALUE " +
-						"NO MINVALUE " +
-						"CACHE 1;";
-				query = session.createSQLQuery(sqlCreateSequence);
-				num = query.executeUpdate();
 				if (withIndexesAndConstraints)
-					addIndexesAndConstraintsInHibernate(session, tableFullName, datasetTableName);
+					addIndexesAndConstraintsInHibernate(session, tableFullName, 1L, datasetTableName);
 				session.flush();
 				return num;
 			}
@@ -160,15 +151,24 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 		});
 	}
 
-	private void addIndexesAndConstraintsInHibernate(Session session, final String tableFullName,
+	private void addIndexesAndConstraintsInHibernate(Session session, final String tableFullName, final long seqStart,
 			final String datasetTableName) {
 		log.trace("Adding indexes and constraints to table " + tableFullName);
+		// 2. Create Sequence
+		String sqlCreateSequence = "CREATE SEQUENCE " + tableFullName + SEQUENCE_NAME_POSTFIX + " " +
+				"START WITH " + seqStart + " " +
+				"INCREMENT BY 1 " +
+				"NO MAXVALUE " +
+				"NO MINVALUE " +
+				"CACHE 1;";
+		Query query = session.createSQLQuery(sqlCreateSequence);
+		@SuppressWarnings("unused")
+		int num = query.executeUpdate();
 		// 3. Create Index
 		String sqlCreateIndex = "CREATE UNIQUE INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX +
 				" ON " + tableFullName + " USING btree (" + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ");";
-		Query query = session.createSQLQuery(sqlCreateIndex);
-		@SuppressWarnings("unused")
-		int num = query.executeUpdate();
+		query = session.createSQLQuery(sqlCreateIndex);
+		num = query.executeUpdate();
 		// 4. Create Index
 		sqlCreateIndex = "CREATE INDEX " + tableFullName + INDEX_CONSTNRAINT_NAME_POSTFIX + "2" + " ON " +
 				tableFullName + " USING btree (" + PERSON_PSEUDO_ID_COLUMN_NAME + ");";
@@ -190,12 +190,12 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 		num = query.executeUpdate();
 	}
 
-	public void addIndexesAndConstraints(final String tableName, final String datasetTableName) {
+	public void addIndexesAndConstraints(final String tableName, final long seqStart, final String datasetTableName) {
 		ValidationUtil.sanityCheckFieldName(datasetTableName);
 		final String tableFullName = getTableFullName(tableName);
 		getHibernateTemplate().execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				addIndexesAndConstraintsInHibernate(session, tableFullName, datasetTableName);
+				addIndexesAndConstraintsInHibernate(session, tableFullName, seqStart, datasetTableName);
 				session.flush();
 				return 1;
 			}

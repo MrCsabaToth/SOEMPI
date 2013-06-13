@@ -284,7 +284,7 @@ public class PersonUtils
 		Person person = new Person();
 		if (explicitIds)
 			person.setPersonId(100L);
-		person.setAttribute(origIdFieldName, 100);
+		person.setAttribute(origIdFieldName, 100L);
 		person.setAttribute(givenNameFieldName, "Odysseas");
 		person.setAttribute(familyNameFieldName, "Pentakalos");
 		person.setAttribute(address1FieldName, "2930 Oak Shadow Drive");
@@ -305,7 +305,7 @@ public class PersonUtils
 		person = new Person();
 		if (explicitIds)
 			person.setPersonId(101L);
-		person.setAttribute(origIdFieldName, 101);
+		person.setAttribute(origIdFieldName, 101L);
 		person.setAttribute(givenNameFieldName, "Demi");
 		person.setAttribute(familyNameFieldName, "Moorxe");
 		person.setAttribute(cityFieldName, "Greenville");
@@ -324,7 +324,7 @@ public class PersonUtils
 		person = new Person();
 		if (explicitIds)
 			person.setPersonId(102L);
-		person.setAttribute(origIdFieldName, 102);
+		person.setAttribute(origIdFieldName, 102L);
 		person.setAttribute(givenNameFieldName, "Steve");
 		person.setAttribute(middleNameFieldName, "L");
 		person.setAttribute(familyNameFieldName, "Nyemba");
@@ -345,7 +345,7 @@ public class PersonUtils
 		person = new Person();
 		if (explicitIds)
 			person.setPersonId(103L);
-		person.setAttribute(origIdFieldName, 103);
+		person.setAttribute(origIdFieldName, 103L);
 		person.setAttribute(givenNameFieldName, "Beth");
 		person.setAttribute(middleNameFieldName, "Anne");
 		person.setAttribute(familyNameFieldName, "Weinman");
@@ -358,7 +358,7 @@ public class PersonUtils
 		person = new Person();
 		if (explicitIds)
 			person.setPersonId(104L);
-		person.setAttribute(origIdFieldName, 104);
+		person.setAttribute(origIdFieldName, 104L);
 		person.setAttribute(givenNameFieldName, "Attila");
 		person.setAttribute(familyNameFieldName, "Toth");
 		person.setAttribute(cityFieldName, "Birmingham");
@@ -370,7 +370,7 @@ public class PersonUtils
 		person = new Person();
 		if (explicitIds)
 			person.setPersonId(105L);
-		person.setAttribute(origIdFieldName, 105);
+		person.setAttribute(origIdFieldName, 105L);
 		person.setAttribute(givenNameFieldName, "Csaba");
 		person.setAttribute(familyNameFieldName, "Toth");
 		person.setAttribute(cityFieldName, "Nashville");
@@ -392,9 +392,9 @@ public class PersonUtils
 		}
 
 		if (pms != null)
-			pms.addIndexesAndConstraintsToDatasetTable(tableName);
+			pms.addIndexesAndConstraintsToDatasetTable(tableName, 106L);
 		else
-			personDao.addIndexesAndConstraints(tableName);
+			personDao.addIndexesAndConstraints(tableName, 106L);
 
 		return dataset;
 	}

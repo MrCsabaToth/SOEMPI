@@ -39,32 +39,33 @@ public class MatchPairStatHalfDaoTest extends BaseDaoTestCase
 		String datasetName = "test_dataset2";
 		List<Long> personIds = new ArrayList<Long>();
 		PersonUtils.createTestPersonTable(personDao, datasetName, "", datasetDao, true,
-				applicationContext, false, null, personIds);
+				applicationContext, true, null, personIds);
 
 		matchPairStatHalfDao.createTable(matchPairStatHalfTableName, datasetName, !deferredIndexesAndConstraints);
 
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(0), true);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(1), true);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(2), true);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(3), true);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(4), true);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(5), true);
+		long idCounter = 1L;
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(0), true);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(1), true);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(2), true);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(3), true);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(4), true);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(5), true);
 
 		List<MatchPairStatHalf> mpshl = new ArrayList<MatchPairStatHalf>();
-		mpshl.add(constructMatchPairStatHalf(personIds.get(0), false));
-		mpshl.add(constructMatchPairStatHalf(personIds.get(0), false));
-		mpshl.add(constructMatchPairStatHalf(personIds.get(0), false));
-		mpshl.add(constructMatchPairStatHalf(personIds.get(0), false));
-		mpshl.add(constructMatchPairStatHalf(personIds.get(0), false));
+		mpshl.add(constructMatchPairStatHalf(idCounter++, personIds.get(0), false));
+		mpshl.add(constructMatchPairStatHalf(idCounter++, personIds.get(0), false));
+		mpshl.add(constructMatchPairStatHalf(idCounter++, personIds.get(0), false));
+		mpshl.add(constructMatchPairStatHalf(idCounter++, personIds.get(0), false));
+		mpshl.add(constructMatchPairStatHalf(idCounter++, personIds.get(0), false));
 		matchPairStatHalfDao.addMatchPairStatHalves(matchPairStatHalfTableName, mpshl);
 
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(1), false);
-		MatchPairStatHalf mpsh1 = constructMatchPairStatHalf(personIds.get(1), true);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(1), false);
+		MatchPairStatHalf mpsh1 = constructMatchPairStatHalf(idCounter++, personIds.get(1), true);
 		matchPairStatHalfDao.addMatchPairStatHalf(matchPairStatHalfTableName, mpsh1);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(1), false);
-		addMatchPairStatHalf(matchPairStatHalfTableName, personIds.get(1), false);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(1), false);
+		addMatchPairStatHalf(matchPairStatHalfTableName, idCounter++, personIds.get(1), false);
 
-		MatchPairStatHalf mpsh2 = constructMatchPairStatHalf(personIds.get(4), true);
+		MatchPairStatHalf mpsh2 = constructMatchPairStatHalf(idCounter++, personIds.get(4), true);
 		matchPairStatHalfDao.addMatchPairStatHalf(matchPairStatHalfTableName, mpsh2);
 
 		mpsh1.setMatchStatus(false);
@@ -84,7 +85,7 @@ public class MatchPairStatHalfDaoTest extends BaseDaoTestCase
 		} while (mpshl2.size() > 0);
 
 		if (deferredIndexesAndConstraints)
-			matchPairStatHalfDao.addIndexesAndConstraints(matchPairStatHalfTableName, datasetName);
+			matchPairStatHalfDao.addIndexesAndConstraints(matchPairStatHalfTableName, idCounter, datasetName);
 
 		// testRemoveMatchPairStatTable
 		matchPairStatHalfDao.removeTable(matchPairStatHalfTableName);
@@ -98,18 +99,20 @@ public class MatchPairStatHalfDaoTest extends BaseDaoTestCase
 		internalTestAddMatchPairStat(true);
 	}
 
-	private MatchPairStatHalf constructMatchPairStatHalf(Long personId, boolean matchState)
+	private MatchPairStatHalf constructMatchPairStatHalf(long matchPairStatHalfId, long personId, boolean matchState)
 	{
 		MatchPairStatHalf matchPairStatHalf = new MatchPairStatHalf();
+		matchPairStatHalf.setMatchPairStatHalfId(matchPairStatHalfId);
 		matchPairStatHalf.setPersonPseudoId(personId);
 		matchPairStatHalf.setMatchStatus(matchState);
 		return matchPairStatHalf;
 	}
 
-	private void addMatchPairStatHalf(String matchPairStatHalfTableName, Long personId, boolean matchState)
+	private void addMatchPairStatHalf(String matchPairStatHalfTableName, long matchPairStatHalfId, long personId,
+			boolean matchState)
 	{
 		matchPairStatHalfDao.addMatchPairStatHalf(matchPairStatHalfTableName,
-				constructMatchPairStatHalf(personId, matchState));
+				constructMatchPairStatHalf(matchPairStatHalfId, personId, matchState));
 	}
 
 	public PersonDao getPersonDao() {

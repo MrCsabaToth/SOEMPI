@@ -54,7 +54,7 @@ public class PersonDaoTest extends BaseDaoTestCase
 			String datasetName = "test_dataset";
 			List<Long> personIds = new ArrayList<Long>();
 			PersonUtils.createTestPersonTable(personDao, datasetName, "", datasetDao, true, applicationContext,
-					false, null, personIds);
+					true, null, personIds);
 			Person person = personDao.getPersonById(datasetName, personIds.get(0));
 			assertTrue(person != null);
 			System.out.println("Found person: " + person.toStringLong());
