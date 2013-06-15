@@ -46,8 +46,8 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 						PERSON_LINK_ID_COLUMN_NAME + " BIGINT NOT NULL," +
 						LEFT_PERSON_ID_COLUMN_NAME + " BIGINT NOT NULL," +
 						RIGHT_PERSON_ID_COLUMN_NAME + " BIGINT NOT NULL," +
-						BINARY_VECTOR_COLUMN_NAME + " text," +
-						CONTINOUS_VECTOR_COLUMN_NAME + " text," +
+						BINARY_VECTOR_COLUMN_NAME + " varchar(65536)," +
+						CONTINOUS_VECTOR_COLUMN_NAME + " varchar(65536)," +
 						WEIGHT_COLUMN_NAME + " double precision NOT NULL," +
 						LINK_STATUS_COLUMN_NAME + " integer NOT NULL");
 				sqlCreateTable.append(");");
