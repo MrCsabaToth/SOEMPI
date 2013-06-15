@@ -19,6 +19,24 @@ package org.openhie.openempi.stringcomparison.metrics;
 
 public class JaccardSimilarityMetricBinaryVersion extends AbstractDistanceMetric
 {
+	static int[][] UNIONHW_LOOKUP_TABLE = null;
+	static Object preComputeGuard = new Object();
+	public static void computeUnionHammingWeightLookupTable() {
+		if (UNIONHW_LOOKUP_TABLE == null) {
+			synchronized(preComputeGuard) {
+				if (UNIONHW_LOOKUP_TABLE == null) {
+					UNIONHW_LOOKUP_TABLE = new int[256][256];
+					for (int i = 0; i < 256; i++) {
+						for (int j = 0; j <= i; j++) {
+							UNIONHW_LOOKUP_TABLE[i][j] = DiceSimilarityMetricBinaryVersion.HAMMING_WEIGHT_LOOKUP_TABLE[i | j];
+							UNIONHW_LOOKUP_TABLE[j][i] = UNIONHW_LOOKUP_TABLE[i][j];
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public JaccardSimilarityMetricBinaryVersion() {
 	}
 
@@ -26,18 +44,20 @@ public class JaccardSimilarityMetricBinaryVersion extends AbstractDistanceMetric
 		if (missingValues(value1, value2)) {
 			return handleMissingValues(value1, value2);
 		}
+
+		DiceSimilarityMetricBinaryVersion.computeIntersectionHammingWeightLookupTable();
+		computeUnionHammingWeightLookupTable();
+
 		byte[] byteArray1 = (byte[])value1;
 		byte[] byteArray2 = (byte[])value2;
 
 		int intersectionBits = 0;
 		int unionBits = 0;
-		for (int i = 0; i < byteArray1.length * 8; i++) {
-			boolean bit1 = (byteArray1[byteArray1.length - i / 8 - 1] & (1 << (i % 8))) > 0;
-			boolean bit2 = (byteArray2[byteArray2.length - i / 8 - 1] & (1 << (i % 8))) > 0;
-			if (bit1 && bit2)
-				intersectionBits++;
-			if (bit1 || bit2)
-				unionBits++;
+		for (int i = 0; i < byteArray1.length; i++) {
+			int b1 = (byteArray1[i] & 0xFF);
+			int b2 = (byteArray2[i] & 0xFF);
+			intersectionBits += DiceSimilarityMetricBinaryVersion.INTERSECTIONHW_LOOKUP_TABLE[b1][b2];
+			unionBits += UNIONHW_LOOKUP_TABLE[b1][b2];
 		}
 		double distance = 1.0;
 		if (unionBits != 0)
