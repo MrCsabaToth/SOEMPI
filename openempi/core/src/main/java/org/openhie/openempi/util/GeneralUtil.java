@@ -35,7 +35,6 @@ import org.openhie.openempi.model.ComparisonVector;
 import org.openhie.openempi.model.LeanRecordPair;
 import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonLink;
-import org.openhie.openempi.model.User;
 import org.openhie.openempi.stringcomparison.StringComparisonService;
 import org.openhie.openempi.stringcomparison.metrics.DistanceMetric;
 

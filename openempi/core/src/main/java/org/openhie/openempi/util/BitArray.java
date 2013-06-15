@@ -28,7 +28,6 @@
 package org.openhie.openempi.util;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 import org.springframework.util.Assert;
 
