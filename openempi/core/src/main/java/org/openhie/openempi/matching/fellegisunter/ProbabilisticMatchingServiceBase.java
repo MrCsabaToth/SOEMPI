@@ -119,13 +119,18 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		long fileOutTime = 0L;
 		log.trace("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
 		String fileRepoDir = Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
+		boolean parameterManagerMode = (componentType == ComponentType.PARAMETER_MANAGER_MODE);
+		boolean cbfMatch = (!parameterManagerMode && matchFields.size() == 1 &&
+				matchFields.get(0).getLeftFieldName().equals(UniversalDaoHibernate.CBF_ATTRIBUTE_NAME));
 		if (!emOnly) {
 			calculateRecordPairWeights(pairs, fellegiSunterParams);
 			calculateMarginalProbabilities(pairs, fellegiSunterParams, false, fileRepoDir + "/" + linkTableName);
-			//fileOutTime = System.nanoTime();
-			orderRecordPairsByWeight(pairs, false, fileRepoDir + "/" + linkTableName);
-			calculateLowerBound(pairs, fellegiSunterParams);
-			calculateUpperBound(pairs, fellegiSunterParams);
+			fileOutTime = System.nanoTime();
+			if (!cbfMatch) {
+				orderRecordPairsByWeight(pairs, false, fileRepoDir + "/" + linkTableName);
+				calculateLowerBound(pairs, fellegiSunterParams);
+				calculateUpperBound(pairs, fellegiSunterParams);
+			}
 		}
 		SerializationUtil.serializeObject(fileRepoDir, linkTableName + "_" + Constants.FELLEGI_SUNTER_CONFIG_FILE_NAME, fellegiSunterParams);
 		initialized = true;
@@ -152,7 +157,6 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		int i = 0;
 		long totalRecords = 0;
 		double downweightedRangeSum = 0.0;
-		boolean parameterManagerMode = (componentType == ComponentType.PARAMETER_MANAGER_MODE);
 		if (parameterManagerMode && !emOnly)
 			totalRecords = leftDataset.getTotalRecords() + rightDataset.getTotalRecords();
 		StringComparisonService comparisonService = Context.getStringComparisonService();
@@ -258,9 +262,6 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		log.warn("Link End, Link persist Start");
 		long linkPersistStartTime = System.nanoTime();
 		if (!emOnly) {
-			boolean cbfMatch = (!parameterManagerMode && columnMatchInformation.size() == 1 &&
-								columnMatchInformation.get(0).getLeftFieldName().equals(UniversalDaoHibernate.CBF_ATTRIBUTE_NAME));
-
 			personManagerService.createLinkTable(linkTableName, leftTableName, rightTableName, false);
 
 			long beginIndex = 0L;
@@ -293,7 +294,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 								personLinks.add(personLink);
 							}
 							personManagerService.addPersonLinks(linkTableName, personLinks);
-							beginIndex += personLinks.size();
+							beginIndex += Constants.PAGE_SIZE;
 						}
 					} else {
 						size = 0;
