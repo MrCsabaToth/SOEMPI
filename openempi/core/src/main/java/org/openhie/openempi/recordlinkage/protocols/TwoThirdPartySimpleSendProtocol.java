@@ -117,7 +117,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 				}
 				firstResult += persons.size();
 			} while (morePatients);
-			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName);
+			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName, firstResult + 1);
 		} catch (NamingException e) {
 			log.error("Couldn't connect to Data Integrator (" + serverAddress4DI + ") to send the dataset");
 			e.printStackTrace();

@@ -63,7 +63,7 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 	}
 	
 	public void addIndexesAndConstraints(String sessionKey, String protocolTypeName, String statTableName,
-			String datasetTableName) throws ApplicationException
+			Long seqStart, String datasetTableName) throws ApplicationException
 	{
 		log.trace("In addIndexesAndConstraints method.");
 		Context.authenticate(sessionKey);
@@ -72,7 +72,7 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 		org.openhie.openempi.recordlinkage.RecordLinkageProtocolType recordLinkageProtocolType =
 				recordLinkageProtocolSelector.getRecordLinkageProtocolType(protocolTypeName);
 		recordLinkageProtocolType.getRecordLinkageProtocol().addIndexesAndConstraintsToMatchPairStatHalfTable(
-				statTableName, datasetTableName);
+				statTableName, seqStart, datasetTableName);
 	}
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName,

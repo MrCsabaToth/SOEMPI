@@ -111,7 +111,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 		/*Person personResult =*/ personManagerService.addPersons(sessionKey, tableName, persons, applyFieldTransformations, existenceCheck);
 	}
 
-	public void addIndexesAndConstraintsToDatasetTable(String tableName) throws NamingException, ApplicationException
+	public void addIndexesAndConstraintsToDatasetTable(String tableName, long seqStart) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
 			log.warn("Session is not authenticated while trying to import person to remote host.");
@@ -120,7 +120,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 
 		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
 		PersonManagerService personManagerService = remotePersonServiceLocator.getPersonManagerService();
-		personManagerService.addIndexesAndConstraints(sessionKey, tableName);
+		personManagerService.addIndexesAndConstraints(sessionKey, tableName, seqStart);
 	}
 
 	public List<Person> getPersonsPaged(String tableName, long firstResult, int maxResults) throws NamingException,
@@ -164,7 +164,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 		recordLinkageProtocol.addMatchPairStatHalves(sessionKey, protocolTypeName, statTableName, matchPairStatHalves);
 	}
 
-	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName) throws NamingException, ApplicationException
+	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, long seqStart, String datasetTableName) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
 			log.warn("Session is not authenticated while trying to import person to remote host.");
@@ -173,7 +173,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 
 		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
 		RecordLinkageProtocol recordLinkageProtocol = remotePersonServiceLocator.getRecordLinkageProtocol();
-		recordLinkageProtocol.addIndexesAndConstraints(sessionKey, protocolTypeName, statTableName, datasetTableName);
+		recordLinkageProtocol.addIndexesAndConstraints(sessionKey, protocolTypeName, statTableName, seqStart, datasetTableName);
 	}
 
 	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName,

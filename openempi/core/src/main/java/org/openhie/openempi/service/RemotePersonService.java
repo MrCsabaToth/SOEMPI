@@ -50,14 +50,14 @@ public interface RemotePersonService
 	public List<Person> getPersonsPaged(String tableName, long firstResult,
 			int maxResults) throws NamingException, ApplicationException;
 
-	public void addIndexesAndConstraintsToDatasetTable(String tableName) throws NamingException, ApplicationException;
+	public void addIndexesAndConstraintsToDatasetTable(String tableName, long seqStart) throws NamingException, ApplicationException;
 
 	public void createMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName,
 			boolean withIndexesAndConstraints) throws NamingException, ApplicationException;
 
 	public void addMatchPairStatHalves(String protocolTypeName, String statTableName, List<MatchPairStatHalf> matchPairStatHalves) throws NamingException, ApplicationException;
 
-	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, String datasetTableName) throws NamingException, ApplicationException;
+	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, long seqStart, String datasetTableName) throws NamingException, ApplicationException;
 
 	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName,
 			Integer nonce, String matchPairStatHalfTableName) throws NamingException, ApplicationException;

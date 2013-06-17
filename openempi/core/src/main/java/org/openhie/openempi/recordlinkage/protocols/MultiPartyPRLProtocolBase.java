@@ -156,7 +156,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			sendFirstPhaseData(dataset, totalRecords, matchColumnNames, matchColumnInformation,
 					noMatchColumnInformation, isThereClearField, defaultHmacFunctionName,
 					thirdPartyAddress, personPseudoIdsReverseLookup, remotePersonService, remoteTableName);
-			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName);
+			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName, totalRecords + 1);
 
 			// 2. Send MatchRequest right after
 			// Preliminary steps
@@ -371,7 +371,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					remotePersonService.addPersons(newBFTableName, persons, false, false);
 				firstResult += persons.size();
 			} while (morePatients);
-			remotePersonService.addIndexesAndConstraintsToDatasetTable(newBFTableName);
+			remotePersonService.addIndexesAndConstraintsToDatasetTable(newBFTableName, firstResult + 1);
 		}
 		return newBFTableName;
 	}
@@ -498,7 +498,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String matchPairStatHalfTableName = null;
 			// We don't use pseudoIds for local experiments, so no need to resolve them
 			if (!isLocalAddress(serverAddress4DI)) {
-				remotePersonService.addIndexesAndConstraintsToDatasetTable(newCBFTableName);
+				remotePersonService.addIndexesAndConstraintsToDatasetTable(newCBFTableName, firstResult + 1);
 
 				// No point in sending matchPairStatHalves in case there's a random bit selection blocking at DI => matchPairStatHalves == null
 				if (matchPairStatHalves != null) {
@@ -524,7 +524,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 						remotePersonService.addMatchPairStatHalves(getName(), matchPairStatHalfTableName, matchPairStatHalvesPart);
 						matchPairStatHalvesPart.clear();
 					} while (i < matchPairStatHalves.size());
-					remotePersonService.addIndexesAndConstraintsToMatchPairStatHalfTable(getName(), matchPairStatHalfTableName, newCBFTableName);
+					remotePersonService.addIndexesAndConstraintsToMatchPairStatHalfTable(getName(), matchPairStatHalfTableName, i + 1, newCBFTableName);
 				}
 			}
 		} catch (NamingException e) {

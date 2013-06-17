@@ -39,7 +39,7 @@ public interface PersonManagerService
 	public void addPersons(String sessionKey, String tableName, List<Person> persons,
 			boolean applyFieldTransformations, boolean existenceCheck) throws ApplicationException;
 
-	public void addIndexesAndConstraints(String sessionKey, String tableName) throws ApplicationException;
+	public void addIndexesAndConstraints(String sessionKey, String tableName, Long seqStart) throws ApplicationException;
 
 	public void updatePerson(String sessionKey, String tableName, Person person) throws ApplicationException;
 

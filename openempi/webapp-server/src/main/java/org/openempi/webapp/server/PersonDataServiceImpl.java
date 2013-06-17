@@ -250,7 +250,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 					remotePersonService.addPersons(remoteTableName, persons, false, false);
 				firstResult += persons.size();
 			} while (morePatients);
-			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName);
+			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName, firstResult + 1);
 			remotePersonService.close();
 			log.warn("Send End");
 		} catch (Exception e) {
@@ -308,12 +308,12 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 	public void saveDatasetToFile(DatasetWeb dataset, String tableName) {
 		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
-//			PersonManagerService personManagerService = Context.getPersonManagerService();
-//			org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
-//			personManagerService.saveDatasetToFile(datasetFound, tableName);
-
 			int testType = 0;
 			if (testType == 0) {
+				PersonManagerService personManagerService = Context.getPersonManagerService();
+				org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
+				personManagerService.saveDatasetToFile(datasetFound, tableName);
+			} if (testType == 1) {
 				// For HMAC Encode Test
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
@@ -321,7 +321,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
 				recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
-			} else if (testType == 1) {
+			} else if (testType == 2) {
 				// EM link test
 				PersonManagerService personManagerService = Context.getPersonManagerService();
 				org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(tableName);
@@ -336,8 +336,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
-				int leftPersonMatchRequestId = 1;
-				int rightPersonMatchRequestId = 2;
+				int leftPersonMatchRequestId = 618;
+				int rightPersonMatchRequestId = 619;
 				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
 			}
 		} catch (Throwable t) {
@@ -420,6 +420,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			// TODO: what if it's not Probabilistic?
 			ProbabilisticMatchingServiceBase matchingService = (ProbabilisticMatchingServiceBase)matchingServiceType.getMatchingService();
 
+			leftTableName = "v10cl_cbf_0616174149235";
+			rightTableName = "v10dr_cbf_0616174220566";
 			PersonMatch personMatch = matchingService.linkRecords(blockingServiceTypeName, null,
 						matchingServiceTypeName, null, linkTableName, leftTableName, rightTableName, null,
 						ComponentType.DATA_INTEGRATOR_MODE, emOnly, true);

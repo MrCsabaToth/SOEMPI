@@ -61,13 +61,13 @@ public class PersonManagerServiceBean extends BaseSpringInjectableBean implement
 		personService.addPersons(tableName, persons, applyFieldTransformations, existenceCheck);
 	}
 
-	public void addIndexesAndConstraints(String sessionKey, String tableName) throws ApplicationException
+	public void addIndexesAndConstraints(String sessionKey, String tableName, Long seqStart) throws ApplicationException
 	{
 		log.trace("In addIndexesAndConstraints method.");
 		Context.authenticate(sessionKey);
 		org.openhie.openempi.service.PersonManagerService personService =
 				Context.getPersonManagerService();
-		personService.addIndexesAndConstraintsToDatasetTable(tableName);
+		personService.addIndexesAndConstraintsToDatasetTable(tableName, seqStart);
 	}
 
 	public void updatePerson(String sessionKey, String tableName, Person person) throws ApplicationException {

@@ -35,7 +35,7 @@ public interface RecordLinkageProtocol
 	public void addMatchPairStatHalves(String sessionKey, String protocolTypeName, String statTableName,
 			List<MatchPairStatHalf> matchPairStatHalves) throws ApplicationException;
 
-	public void addIndexesAndConstraints(String sessionKey, String protocolTypeName, String statTableName,
+	public void addIndexesAndConstraints(String sessionKey, String protocolTypeName, String statTableName, Long seqStart,
 			String datasetTableName) throws ApplicationException;
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName, String address,
