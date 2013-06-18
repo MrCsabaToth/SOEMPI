@@ -120,10 +120,11 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		});
 	}
 
-	private Long addPersonLinkInHibernate(Session session, String tableName, PersonLink personLink) {
+	private void addPersonLinkInHibernate(Session session, String tableName, PersonLink personLink) {
 		log.debug("Storing a person link.");
 		String tableFullName = getTableFullName(tableName);
 
+		boolean generateId = (personLink.getPersonLinkId() == null);
 		StringBuilder sqlInsertPerson = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
 			PERSON_LINK_ID_COLUMN_NAME + ", " +
 			LEFT_PERSON_ID_COLUMN_NAME + ", " +
@@ -133,12 +134,12 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 			WEIGHT_COLUMN_NAME + ", " +
 			LINK_STATUS_COLUMN_NAME +
 			") VALUES (" +
-			(personLink.getPersonLinkId() != null ? "?" : ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')")) +
+			(generateId ? ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')") : "?") +
 			",?,?" +
 			(personLink.getBinaryVector() != null ? ",?" : "") +
 			(personLink.getContinousVector() != null ? ",?" : "") +
-			",?,?" +
-			") RETURNING " + PERSON_LINK_ID_COLUMN_NAME + ";");
+			",?,?)" +
+			(generateId ? (" RETURNING " + PERSON_LINK_ID_COLUMN_NAME) : "") + ";");
 
 		Query query = session.createSQLQuery(sqlInsertPerson.toString());
 
@@ -163,11 +164,15 @@ public class PersonLinkDaoHibernate extends UniversalDaoHibernate implements Per
 		position++;
 		query.setInteger(position, personLink.getLinkState());
 
-		BigInteger bigInt = (BigInteger)query.uniqueResult();
-		long id = bigInt.longValue();
-		personLink.setPersonLinkId(id);
-		log.debug("Finished saving the person link with id " + id);
-		return id;
+		if (generateId) {
+			BigInteger bigInt = (BigInteger)query.uniqueResult();
+			long id = bigInt.longValue();
+			personLink.setPersonLinkId(id);
+			log.debug("Finished saving the person link with id " + id);
+		} else {
+			query.executeUpdate();
+			log.debug("Finished saving the person link with id " + personLink.getPersonLinkId());
+		}
 	}
 
 	public void addPersonLink(final String tableName, final PersonLink personLink) {

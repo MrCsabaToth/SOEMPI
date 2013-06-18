@@ -45,6 +45,7 @@ public interface PersonLinkDao extends UniversalDao
 	 * 
 	 * @param tableName: name of the table, will get "tbl_link_" prefix
 	 */
+    @Transactional
     public void removeTable(final String tableName);
     
 	/**

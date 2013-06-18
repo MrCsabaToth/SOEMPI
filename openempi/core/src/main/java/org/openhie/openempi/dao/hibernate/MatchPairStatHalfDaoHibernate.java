@@ -97,22 +97,24 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 		});
 	}
 
-	private long addMatchPairStatHalfInHibernate(Session session, String tableName, MatchPairStatHalf matchPairStatHalf) {
+	private void addMatchPairStatHalfInHibernate(Session session, String tableName, MatchPairStatHalf matchPairStatHalf) {
 		log.debug("Saving matchPairStatHalf record: " + matchPairStatHalf);
 		String tableFullName = getTableFullName(tableName);
 
+		boolean generateId = (matchPairStatHalf.getMatchPairStatHalfId() == null);
 		StringBuilder sqlInsert = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
 			MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ", " +
 			PERSON_PSEUDO_ID_COLUMN_NAME + ", " +
 			MATCH_STATE_COLUMN_NAME +
 			") VALUES (" +
-			(matchPairStatHalf.getMatchPairStatHalfId() != null ? "?" : "nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')") + "," +
-			"?,?) RETURNING " + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME + ";");
+			(generateId ? ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')") : "?") +
+			",?,?)" +
+			(generateId ? (" RETURNING " + MATCH_PAIR_STAT_HALF_ID_COLUMN_NAME) : "") + ";");
 
 		Query query = session.createSQLQuery(sqlInsert.toString());
 
 		int position = 0;
-		if (matchPairStatHalf.getMatchPairStatHalfId() != null) {
+		if (!generateId) {
 			query.setLong(position, matchPairStatHalf.getMatchPairStatHalfId());
 			position++;
 		}
@@ -120,11 +122,15 @@ public class MatchPairStatHalfDaoHibernate extends UniversalDaoHibernate impleme
 		position++;
 		query.setBoolean(position, matchPairStatHalf.getMatchStatus());
 
-		BigInteger bigInt = (BigInteger)query.uniqueResult();
-		long id = bigInt.longValue();
-		matchPairStatHalf.setMatchPairStatHalfId(id);
-		log.debug("Finished saving the matchPairStatHalf with id " + id);
-		return id;
+		if (generateId) {
+			BigInteger bigInt = (BigInteger)query.uniqueResult();
+			long id = bigInt.longValue();
+			matchPairStatHalf.setMatchPairStatHalfId(id);
+			log.debug("Finished saving the matchPairStatHalf with id " + id);
+		} else {
+			query.executeUpdate();
+			log.debug("Finished saving the matchPairStatHalf with id " + matchPairStatHalf.getPersonPseudoId());
+		}
 	}
 
 	public void addMatchPairStatHalf(final String tableName, final MatchPairStatHalf matchPairStatHalf) {

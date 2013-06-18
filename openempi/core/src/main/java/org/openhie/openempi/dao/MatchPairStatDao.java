@@ -54,7 +54,6 @@ public interface MatchPairStatDao extends UniversalDao
 	 * @param tableName: name of the table, will get "tbl_matchpairstat_" prefix
 	 * @param matchPairStat: the MatchPairStat entity to be added
 	 */
-    @Transactional
 	public void addMatchPairStat(final String tableName, final MatchPairStat matchPairStat);
 	
 	/**
@@ -63,7 +62,6 @@ public interface MatchPairStatDao extends UniversalDao
 	 * @param tableName: name of the table, will get "tbl_matchpairstat_" prefix
 	 * @param matchPairStats: list of the MatchPairStat entities to be added
 	 */
-    @Transactional
 	public void addMatchPairStats(final String tableName, final List<MatchPairStat> matchPairStats);
 	
 	/**

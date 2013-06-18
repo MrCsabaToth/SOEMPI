@@ -53,7 +53,6 @@ public interface MatchPairStatHalfDao extends UniversalDao
 	 * @param tableName: name of the table, will get "tbl_matchpairstathalf_" prefix
 	 * @param matchPairStatHalf: the MatchPairStatHalf entity to be added
 	 */
-    @Transactional
 	public void addMatchPairStatHalf(final String tableName, final MatchPairStatHalf matchPairStatHalf);
 	
 	/**
@@ -62,7 +61,6 @@ public interface MatchPairStatHalfDao extends UniversalDao
 	 * @param tableName: name of the table, will get "tbl_matchpairstathalf_" prefix
 	 * @param matchPairStatHalves: list of the MatchPairStatHalf entities to be added
 	 */
-    @Transactional
 	public void addMatchPairStatHalves(final String tableName, final List<MatchPairStatHalf> matchPairStatHalves);
 
 	/**

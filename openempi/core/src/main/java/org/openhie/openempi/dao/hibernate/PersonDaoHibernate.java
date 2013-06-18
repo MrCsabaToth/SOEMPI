@@ -106,7 +106,7 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 		});
 	}
 
-	private Long addPersonInHibernate(Session session, String tableName, Person person) {
+	private void addPersonInHibernate(Session session, String tableName, Person person) {
 		log.debug("Saving person record: " + person);
 		String tableFullName = getTableFullName(tableName);
 		StringBuilder sqlInsertPerson = new StringBuilder("INSERT INTO public." + tableFullName + " (" +
@@ -119,18 +119,19 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 			if (pairs.getValue() != null)
 				sqlInsertPerson.append(", " + COLUMN_NAME_PREFIX + pairs.getKey().toLowerCase());
 		}
+		boolean generateId = (person.getPersonId() == null);
 		sqlInsertPerson.append(") VALUES (" +
-			(person.getPersonId() != null ? "?" : ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')")));
+			(generateId ? ("nextval('" + tableFullName + SEQUENCE_NAME_POSTFIX + "')") : "?"));
 		for (Map.Entry<String, Object> pairs : attributes.entrySet()) {
 			if (pairs.getValue() != null)
 				sqlInsertPerson.append(",?");
 		}
-		sqlInsertPerson.append(") RETURNING " + PERSON_ID_COLUMN_NAME + ";");
+		sqlInsertPerson.append(")" + (generateId ? (" RETURNING " + PERSON_ID_COLUMN_NAME) : "") + ";");
 
 		Query query = session.createSQLQuery(sqlInsertPerson.toString());
 
 		int position = 0;
-		if (person.getPersonId() != null) {
+		if (!generateId) {
 			query.setLong(position, person.getPersonId());
 			position++;
 		}
@@ -141,11 +142,15 @@ public class PersonDaoHibernate extends UniversalDaoHibernate implements PersonD
 			}
 		}
 
-		BigInteger bigInt = (BigInteger)query.uniqueResult();
-		long id = bigInt.longValue();
-		person.setPersonId(id);
-		log.debug("Finished saving the person with id " + id);
-		return id;
+		if (generateId) {
+			BigInteger bigInt = (BigInteger)query.uniqueResult();
+			long id = bigInt.longValue();
+			person.setPersonId(id);
+			log.debug("Finished saving the person with id " + id);
+		} else {
+			query.executeUpdate();
+			log.debug("Finished saving the person with id " + person.getPersonId());
+		}
 	}
 
 	public void addPerson(final String tableName, final Person person) {
