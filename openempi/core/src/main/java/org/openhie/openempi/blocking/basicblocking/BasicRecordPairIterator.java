@@ -142,11 +142,11 @@ public class BasicRecordPairIterator implements RecordPairIterator
 		}
 		log.debug("Found " + persons.size() + " - " + personsOther.size() + " person sets");
 		int countTrueMatch = 0;
-		for (int i = 0; i < persons.size(); i++) {
-			for (int j = 0; j < personsOther.size(); j++) {
+		int i = 0;
+		int j = 0;
+		for (Person p : persons) {
+			for (Person po : personsOther) {
 				log.debug("Building record pairs using indices " + i + " and " + j);
-				Person p = persons.get(i);
-				Person po = personsOther.get(j);
 				String hashKey = null;
 				if (!distinctBinsMode)
 					hashKey = p.getPersonId() + "_" + po.getPersonId();
@@ -161,14 +161,16 @@ public class BasicRecordPairIterator implements RecordPairIterator
 					}
 					recordPairs.add(recordPair);
 					String leftOriginalId = p.getStringAttribute(leftOriginalIdFieldName);
-					String rightOriginalId = p.getStringAttribute(rightOriginalIdFieldName);					
+					String rightOriginalId = po.getStringAttribute(rightOriginalIdFieldName);					
 					if (leftOriginalId != null && rightOriginalId != null)
 						if (leftOriginalId.equals(rightOriginalId))
 							countTrueMatch++;
 					if (!distinctBinsMode)
 						idPairs.add(hashKey);
 				}
+				j++;
 			}
+			i++;
 		}
 		log.debug("Out of which " + countTrueMatch + " are true matches");
 		if (recordPairs.size() == 0) {
