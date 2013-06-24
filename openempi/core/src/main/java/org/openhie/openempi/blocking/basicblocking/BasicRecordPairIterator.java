@@ -62,6 +62,7 @@ public class BasicRecordPairIterator implements RecordPairIterator
 	private boolean emOnly;
 	private FellegiSunterParameters fellegiSunterParameters;
 	private boolean distinctBinsMode;	// true - bins are distinct so no record pairs will enumerated more times, no need to check
+	private long trueMatchCounter;
 
 	public BasicRecordPairIterator(BasicRecordPairSource recordPairSource, String leftTableName,
 			String rightTableName, boolean distinctBinsMode, boolean emOnly, FellegiSunterParameters fellegiSunterParameters) {
@@ -81,6 +82,7 @@ public class BasicRecordPairIterator implements RecordPairIterator
 		loadRecordPairList(nameValuePairsList.get(0));
 		lastNameValuePairsSet = 1;
 		lastRecordPair = 0;
+		trueMatchCounter = 0;
 
 		initialized = true;
 	}
@@ -127,8 +129,12 @@ public class BasicRecordPairIterator implements RecordPairIterator
 			matchFields = matchConfiguration.getMatchFields(FieldQuerySelector.MatchOnlyFields);
 			leftMatchFieldNames = matchConfiguration.getLeftFieldNames(FieldQuerySelector.MatchOnlyFields);
 			leftOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(leftTableName);
+			if (leftOriginalIdFieldName != null)
+				leftMatchFieldNames.add(leftOriginalIdFieldName);
 			rightMatchFieldNames = matchConfiguration.getRightFieldNames(FieldQuerySelector.MatchOnlyFields);
 			rightOriginalIdFieldName = personQueryService.getDatasetOriginalIdFieldName(rightTableName);
+			if (rightOriginalIdFieldName != null)
+				rightMatchFieldNames.add(rightOriginalIdFieldName);
 		}
 		Person leftExample = new Person();
 		Person rightExample = new Person();
@@ -141,9 +147,9 @@ public class BasicRecordPairIterator implements RecordPairIterator
 			return;
 		}
 		log.debug("Found " + persons.size() + " - " + personsOther.size() + " person sets");
-		int countTrueMatch = 0;
-		int i = 0;
-		int j = 0;
+		long countTrueMatch = 0;
+		long i = 0;
+		long j = 0;
 		for (Person p : persons) {
 			for (Person po : personsOther) {
 				log.debug("Building record pairs using indices " + i + " and " + j);
@@ -173,6 +179,7 @@ public class BasicRecordPairIterator implements RecordPairIterator
 			i++;
 		}
 		log.debug("Out of which " + countTrueMatch + " are true matches");
+		trueMatchCounter += countTrueMatch;
 		if (recordPairs.size() == 0) {
 			log.error("ERROR: loadRecordPairList couldn't find records during blocking, the iterator will crash!");
 		}
@@ -198,5 +205,9 @@ public class BasicRecordPairIterator implements RecordPairIterator
 
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
+	}
+
+	public long getTrueMatchCounter() {
+		return trueMatchCounter;
 	}
 }

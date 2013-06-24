@@ -181,4 +181,9 @@ public class BypassRecordPairIterator implements RecordPairIterator
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
 	}
+
+	public long getTrueMatchCounter() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

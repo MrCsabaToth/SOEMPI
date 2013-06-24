@@ -97,6 +97,7 @@ public abstract class AbstractBlockingServiceBase extends BaseServiceImpl implem
 				log.error("ERROR: blockingService pairs iterator couldn't return a value!");
 			}
 		}
+		log.warn("True matches: " + iter.getTrueMatchCounter());
 	}
 
 	public abstract List<LeanRecordPair> findCandidates(String leftTableName, String rightTableName, Person person);

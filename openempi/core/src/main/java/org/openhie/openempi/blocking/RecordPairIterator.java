@@ -23,5 +23,5 @@ import org.openhie.openempi.model.LeanRecordPair;
 
 public interface RecordPairIterator extends Iterator<LeanRecordPair>
 {
-
+	long getTrueMatchCounter();
 }

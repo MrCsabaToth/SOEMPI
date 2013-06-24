@@ -420,8 +420,6 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			// TODO: what if it's not Probabilistic?
 			ProbabilisticMatchingServiceBase matchingService = (ProbabilisticMatchingServiceBase)matchingServiceType.getMatchingService();
 
-			leftTableName = "v10cl_cbf_0616174149235";
-			rightTableName = "v10dr_cbf_0616174220566";
 			PersonMatch personMatch = matchingService.linkRecords(blockingServiceTypeName, null,
 						matchingServiceTypeName, null, linkTableName, leftTableName, rightTableName, null,
 						ComponentType.DATA_INTEGRATOR_MODE, emOnly, true);
