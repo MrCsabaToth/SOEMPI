@@ -70,8 +70,8 @@ CREATE TABLE person_link (
     person_link_id integer NOT NULL,
     left_person_id BIGINT NOT NULL,
     right_person_id BIGINT NOT NULL,
-    binary_vector text,
-    continous_vector text,
+    binary_vector varchar(65535),
+    continous_vector varchar(65535),
     weight double precision NOT NULL,
     link_state integer NOT NULL,
 ) WITHOUT OIDS;
