@@ -19,16 +19,7 @@ package org.openhie.openempi.util;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class SerializationUtilTest extends TestCase {
-    //~ Instance fields ========================================================
-
-    private final Log log = LogFactory.getLog(SerializationUtilTest.class);
-
-    //~ Constructors ===========================================================
-
     public SerializationUtilTest(String name) {
         super(name);
     }

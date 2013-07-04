@@ -19,16 +19,7 @@ package org.openhie.openempi.util;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ValidationUtilTest extends TestCase {
-	//~ Instance fields ========================================================
-
-	private final Log log = LogFactory.getLog(ValidationUtilTest.class);
-
-	//~ Constructors ===========================================================
-
 	public ValidationUtilTest(String name) {
 		super(name);
 	}

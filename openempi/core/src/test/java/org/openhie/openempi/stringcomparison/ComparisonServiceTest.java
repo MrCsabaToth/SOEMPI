@@ -116,16 +116,8 @@ public class ComparisonServiceTest extends BaseServiceTestCase
 			return string1;
 		}
 
-		public void setString1(String string1) {
-			this.string1 = string1;
-		}
-
 		public String getString2() {
 			return string2;
-		}
-
-		public void setString2(String string2) {
-			this.string2 = string2;
 		}
 
 		public StringPair(String string1, String string2) {
@@ -161,16 +153,8 @@ public class ComparisonServiceTest extends BaseServiceTestCase
 			return stream1;
 		}
 
-		public void setStream1(byte[] stream1) {
-			this.stream1 = stream1;
-		}
-
 		public byte[] getStream2() {
 			return stream2;
-		}
-
-		public void setStream2(byte[] stream2) {
-			this.stream2 = stream2;
 		}
 
 		public BitStreamPair(byte[] stream1, byte[] stream2) {

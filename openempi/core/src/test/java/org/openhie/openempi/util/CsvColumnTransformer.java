@@ -18,7 +18,6 @@
 package org.openhie.openempi.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
@@ -72,6 +71,7 @@ public class CsvColumnTransformer
 	    	}
 	    	System.out.println();
 	    }
+	    reader.close();
 	}
 
 	private List<Integer> parseColumnOrder(String columnOrder) throws IOException {
