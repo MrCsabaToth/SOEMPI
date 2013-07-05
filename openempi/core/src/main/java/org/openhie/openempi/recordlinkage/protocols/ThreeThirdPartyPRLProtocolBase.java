@@ -17,6 +17,7 @@
  */
 package org.openhie.openempi.recordlinkage.protocols;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import javax.naming.NamingException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.openhie.openempi.ApplicationException;
 import org.openhie.openempi.Constants;
 import org.openhie.openempi.blocking.basicblocking.BasicBlockingConstants;
@@ -52,6 +54,7 @@ import org.openhie.openempi.service.PersonManagerService;
 import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.service.RemotePersonService;
 import org.openhie.openempi.transformation.TransformationService;
+import org.openhie.openempi.util.DiffieHellmanKeyExchange;
 import org.openhie.openempi.util.GeneralUtil;
 
 public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtocolBase
@@ -170,7 +173,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword,
-			int personMatchRequestId, int myNonce, Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException
+			int personMatchRequestId, DiffieHellmanKeyExchange dhke,
+			Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException
 	{
 		RemotePersonService remotePersonService = Context.getRemotePersonService();
 		BloomFilterParameterAdvice bfpa = null;
@@ -188,12 +192,13 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				}
 			}
 		}
+		int sharedSecret = dhke.computeSharedSecret(bfpa.getDhPublicKey());
 		handleBloomFilterParameterAdvice(blockingServiceName, matchingServiceName,
 				keyServerUserName, keyServerPassword,
 				dataIntegratorUserName, dataIntegratorPassword, dataset,
 				bfpa.getLeftDataset(), bfpa.getRightDataset(), bfpa.getColumnMatchInformation(),
-				bfpa.getMatchPairStatHalves(), personPseudoIdsReverseLookup, myNonce, bfpa.getNonce(),
-				bfpa.isLeftOrRightSide(), matchName);		
+				bfpa.getMatchPairStatHalves(), personPseudoIdsReverseLookup, sharedSecret,
+				bfpa.isLeftOrRightSide(), matchName);
 	}
 
 	public void testPMLinkRecords(int leftDatasetId, int rightDatasetId, String blockingServiceName,
@@ -203,13 +208,17 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		PersonManagerService personManagerService = Context.getPersonManagerService();
 		Dataset leftDataset = personManagerService.getDatasetById(leftDatasetId);
 		int leftNonce = rnd.nextInt();
-		PersonMatchRequest leftPersonMatchRequest = createPersonMatchRequest(leftDataset, leftNonce,
+		DiffieHellmanKeyExchange dhkeLeft = new DiffieHellmanKeyExchange(leftNonce);
+		BigInteger dhPublicKeyLeft = dhkeLeft.computePublicKey();
+		PersonMatchRequest leftPersonMatchRequest = createPersonMatchRequest(leftDataset, dhPublicKeyLeft.toByteArray(),
 				Constants.LOCALHOST_IP_ADDRESS, blockingServiceName, matchingServiceName);
 		leftPersonMatchRequest = personMatchRequestDao.addPersonMatchRequest(leftPersonMatchRequest);
 
 		Dataset rightDataset = personManagerService.getDatasetById(rightDatasetId);
 		int rightNonce = rnd.nextInt();
-		PersonMatchRequest rightPersonMatchRequest = createPersonMatchRequest(rightDataset, rightNonce,
+		DiffieHellmanKeyExchange dhkeRight = new DiffieHellmanKeyExchange(rightNonce);
+		BigInteger dhPublicKeyRight = dhkeRight.computePublicKey();
+		PersonMatchRequest rightPersonMatchRequest = createPersonMatchRequest(rightDataset, dhPublicKeyRight.toByteArray(),
 				Constants.LOCALHOST_IP_ADDRESS, blockingServiceName, matchingServiceName);
 		rightPersonMatchRequest = personMatchRequestDao.addPersonMatchRequest(rightPersonMatchRequest);
 
@@ -221,26 +230,39 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		PersonMatchRequest leftPersonMatchRequest = personMatchRequestDao.getPersonMatchRequest(leftPersonMatchRequestId);
 		PersonMatchRequest rightPersonMatchRequest = personMatchRequestDao.getPersonMatchRequest(rightPersonMatchRequestId);
 
+		int leftDhSecret = leftPersonMatchRequest.getDhSecret();
+		DiffieHellmanKeyExchange dhkeLeft = new DiffieHellmanKeyExchange(leftDhSecret);
+		BigInteger dhPublicKeyLeft = dhkeLeft.computePublicKey();
+		byte[] dhPublicKeyEncLeft = dhPublicKeyLeft.toByteArray();
+		Assert.assertArrayEquals(dhPublicKeyEncLeft, leftPersonMatchRequest.getDhPublicKey());
+
+		int rightDhSecret = rightPersonMatchRequest.getDhSecret();
+		DiffieHellmanKeyExchange dhkeRight = new DiffieHellmanKeyExchange(rightDhSecret);
+		BigInteger dhPublicKeyRight = dhkeRight.computePublicKey();
+		byte[] dhPublicKeyEncRight = dhPublicKeyRight.toByteArray();
+		Assert.assertArrayEquals(dhPublicKeyEncRight, rightPersonMatchRequest.getDhPublicKey());
+
+		int sharedSecretLeft = dhkeLeft.computeSharedSecret(dhPublicKeyEncRight);
+		int sharedSecretRight = dhkeRight.computeSharedSecret(dhPublicKeyEncLeft);
+		Assert.assertEquals(sharedSecretLeft, sharedSecretRight);
+
 		BloomFilterParameterAdvice leftBfpa = getBloomFilterParameterAdviceForRightSide(leftPersonMatchRequest, rightPersonMatchRequest);
-		handleBloomFilterParameterAdvice(leftPersonMatchRequest.getBlockingServiceName(),
-				leftPersonMatchRequest.getMatchingServiceName(),
+		handleBloomFilterParameterAdvice(
+				leftPersonMatchRequest.getBlockingServiceName(), leftPersonMatchRequest.getMatchingServiceName(),
 				Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD,
 				Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD,
 				leftPersonMatchRequest.getDataset(), leftPersonMatchRequest.getDataset(), rightPersonMatchRequest.getDataset(),
 				leftBfpa.getColumnMatchInformation(), leftBfpa.getMatchPairStatHalves(),
-				null, leftPersonMatchRequest.getNonce(), rightPersonMatchRequest.getNonce(),
-				true, Constants.LOCALHOST_IP_ADDRESS);
+				null, sharedSecretLeft, true, Constants.LOCALHOST_IP_ADDRESS);
 
 		BloomFilterParameterAdvice rightBfpa = getBloomFilterParameterAdviceForRightSide(rightPersonMatchRequest, leftPersonMatchRequest);
-		handleBloomFilterParameterAdvice(rightPersonMatchRequest.getBlockingServiceName(),
-				leftPersonMatchRequest.getMatchingServiceName(),
+		handleBloomFilterParameterAdvice(
+				rightPersonMatchRequest.getBlockingServiceName(), rightPersonMatchRequest.getMatchingServiceName(),
 				Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD,
 				Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD,
 				rightPersonMatchRequest.getDataset(), rightPersonMatchRequest.getDataset(), leftPersonMatchRequest.getDataset(),
 				rightBfpa.getColumnMatchInformation(), rightBfpa.getMatchPairStatHalves(),
-				null, rightPersonMatchRequest.getNonce(), leftPersonMatchRequest.getNonce(),
-				false, Constants.LOCALHOST_IP_ADDRESS);
-
+				null, sharedSecretRight, false, Constants.LOCALHOST_IP_ADDRESS);
 	}
 
 	public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException

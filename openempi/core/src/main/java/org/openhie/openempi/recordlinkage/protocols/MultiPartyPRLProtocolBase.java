@@ -70,6 +70,7 @@ import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.service.RemotePersonService;
 import org.openhie.openempi.transformation.TransformationService;
 import org.openhie.openempi.util.BitArray;
+import org.openhie.openempi.util.DiffieHellmanKeyExchange;
 import org.openhie.openempi.util.ParallelIteratorUtil;
 import org.openhie.openempi.util.ParallelMatchPairHalfStatListIterator;
 import org.openhie.openempi.util.ValidationUtil;
@@ -95,7 +96,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String thirdPartyAddress, String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword,
-			int personMatchRequestId, int myNonce, Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException;
+			int personMatchRequestId, DiffieHellmanKeyExchange dhke, Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException;
 	protected abstract int getNonce();
 
 	protected void addNoMatchColumnInformationToSend(List<ColumnInformation> noMatchColumnInformation,
@@ -160,14 +161,16 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 			// 2. Send MatchRequest right after
 			// Preliminary steps
-			int myNonce = getNonce();
+			int myDhSecret = getNonce();
+			DiffieHellmanKeyExchange dhke = new DiffieHellmanKeyExchange(myDhSecret);
+			byte[] myDhPublicKey = dhke.computePublicKey().toByteArray();
 
 			String blockingServiceName1 = getMatchingServiceTypeName(ComponentType.PARAMETER_MANAGER_MODE);
 			String matchingServiceName1 = getMatchingServiceTypeName(ComponentType.PARAMETER_MANAGER_MODE);
-			personMatchRequest = createPersonMatchRequest(dataset, myNonce, matchName, blockingServiceName1, matchingServiceName1);
+			personMatchRequest = createPersonMatchRequest(dataset, myDhPublicKey, matchName, blockingServiceName1, matchingServiceName1);
 			personMatchRequest = personMatchRequestDao.addPersonMatchRequest(personMatchRequest);
 			int personMatchRequestId = remotePersonService.addPersonMatchRequest(getName(), remoteTableName, matchName,
-					myNonce, getMatchPairStatHalfTableName(remoteTableName));
+					myDhPublicKey, getMatchPairStatHalfTableName(remoteTableName));
 			remotePersonService.close();	// Need to close the context, so the PersonMatchRequest and other data
 											// waiting in the Hibernate 2nd level cache will be flushed after the EJB call returns
 
@@ -185,7 +188,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 					thirdPartyAddress, keyServerUserName, keyServerPassword,
 					dataIntegratorUserName, dataIntegratorPassword,
 					parameterManagerUserName, parameterManagerPassword,
-					personMatchRequestId, myNonce, personPseudoIdsReverseLookup);
+					personMatchRequestId, dhke, personPseudoIdsReverseLookup);
 		} catch (NamingException e) {
 			log.error("Couldn't connect to third party " + thirdPartyAddress + " to send PersonMatchRequest");
 			e.printStackTrace();
@@ -339,13 +342,13 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 	protected abstract String sendNewDataset(String newBFTableName, Dataset newBFDataset, String remoteTableName, List<ColumnMatchInformation> columnMatchInformation,
 			String keyServerUserName, String keyServerPassword, String dataIntegratorUserName, String dataIntegratorPassword,
-			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
+			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int sharedSecret, boolean leftOrRightSide,
 			List<ColumnInformation> bfColumnInformation) throws NamingException, ApplicationException;
 
 	protected String sendFBFDataset(String newBFTableName, Dataset newBFDataset, String remoteTableName, List<ColumnMatchInformation> columnMatchInformation,
 			String keyServerUserName, String keyServerPassword, String dataIntegratorUserName, String dataIntegratorPassword,
-			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
-			List<ColumnInformation> bfColumnInformation) throws NamingException, ApplicationException
+			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int sharedSecret,
+			boolean leftOrRightSide, List<ColumnInformation> bfColumnInformation) throws NamingException, ApplicationException
 	{
 		PersonQueryService personQueryService = Context.getPersonQueryService();
 		RemotePersonService remotePersonService = Context.getRemotePersonService();
@@ -377,7 +380,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 	}
 
 	protected Person generateCBFWithOverSamplingAndPermutation(Person person,
-			int cbfLength, Random rnd, long seed, Map<String, int[][]> bitPermutation,
+			int cbfLength, Random rnd, int seed, Map<String, int[][]> bitPermutation,
 			List<ColumnMatchInformation> columnMatchInformation, boolean leftOrRightSide) throws ApplicationException {
 		Person cbfPerson = new Person();
 		cbfPerson.setPersonId(person.getPersonId());
@@ -406,7 +409,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 	protected String sendCBFDataset(String newBFTableName, Dataset newBFDataset, String remoteTableName, List<ColumnMatchInformation> columnMatchInformation,
 			String keyServerUserName, String keyServerPassword, String dataIntegratorUserName, String dataIntegratorPassword,
-			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
+			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int sharedSecret, boolean leftOrRightSide,
 			List<ColumnInformation> bfColumnInformation) throws NamingException, ApplicationException
 	{
 		int cbfLength = 0;
@@ -418,10 +421,9 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			}
 		}
 
-		long seed = nonce * myNonce;
 		// It's important to use pseudo random generator, so both left and right side will deduct
 		// the same bit permutation from the seed.
-		Random rnd = new Random(seed);
+		Random rnd = new Random(sharedSecret);
 		Map<String, int[][]> bitPermutation = generateBitPermutation(rnd, cbfLength, columnMatchInformation, leftOrRightSide);
 
 		PersonQueryService personQueryService = Context.getPersonQueryService();
@@ -478,7 +480,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 				if (morePatients) {
 					cbfPersons.clear();
 					for (Person person : persons) {
-						Person cbfPerson = generateCBFWithOverSamplingAndPermutation(person, cbfLength, rnd, seed,
+						Person cbfPerson = generateCBFWithOverSamplingAndPermutation(person, cbfLength, rnd, sharedSecret,
 								bitPermutation, columnMatchInformation, leftOrRightSide);
 						cbfPerson.setPersonId(personId++);
 						// Add piggy backing no-match columns
@@ -544,7 +546,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			Dataset leftLocalDataset, Dataset leftRemoteDataset,
 			Dataset rightRemoteDataset, List<ColumnMatchInformation> columnMatchInformation, List<MatchPairStatHalf> matchPairStatHalves,
-			Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
+			Map<Long,Long> personPseudoIdsReverseLookup, int sharedSecret, boolean leftOrRightSide,
 			String matchName) throws ApplicationException {
 		String remoteTableName = leftRemoteDataset.getTableName();
 
@@ -565,7 +567,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 		try {
 			String sentTableName = sendNewDataset(newBFTableName, newBFDataset, remoteTableName, columnMatchInformation,
 					keyServerUserName, keyServerPassword, dataIntegratorUserName, dataIntegratorPassword,
-					matchPairStatHalves, personPseudoIdsReverseLookup, myNonce, nonce, leftOrRightSide, bfColumnInformation);
+					matchPairStatHalves, personPseudoIdsReverseLookup, sharedSecret, leftOrRightSide, bfColumnInformation);
 
 			RemotePersonService remotePersonService = Context.getRemotePersonService();
 
@@ -887,7 +889,7 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			leftBFPA.setColumnMatchInformation(columnMatchInformation);
 			if (matchPairStatHalfLeft != null)
 				leftBFPA.setMatchPairStatHalves(matchPairStatHalfLeft);
-			leftBFPA.setNonce(rightPersonMatchRequest.getNonce());
+			leftBFPA.setDhPublicKey(rightPersonMatchRequest.getDhPublicKey());
 			leftBFPA.setLeftOrRightSide(true);
 
 			leftPersonMatchRequest.setCompleted(true);

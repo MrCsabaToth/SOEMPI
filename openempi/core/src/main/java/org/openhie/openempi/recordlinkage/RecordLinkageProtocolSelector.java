@@ -61,7 +61,7 @@ public interface RecordLinkageProtocolSelector
 
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public Integer handlePersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException;
+			byte[] dhPublicKey, String matchPairStatHalfTableName) throws ApplicationException;
 
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public BloomFilterParameterAdvice acquireMatchRequests(String protocolTypeName, int personMatchRequestId, ComponentType componentType);

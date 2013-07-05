@@ -60,7 +60,7 @@ public interface RemotePersonService
 	public void addIndexesAndConstraintsToMatchPairStatHalfTable(String protocolTypeName, String statTableName, long seqStart, String datasetTableName) throws NamingException, ApplicationException;
 
 	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			Integer nonce, String matchPairStatHalfTableName) throws NamingException, ApplicationException;
+			byte[] dhPublicKey, String matchPairStatHalfTableName) throws NamingException, ApplicationException;
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String protocolTypeName, int personMatchRequestId,
 			ComponentType componentType) throws NamingException, ApplicationException;

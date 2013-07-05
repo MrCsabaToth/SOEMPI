@@ -131,7 +131,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 	}
 
 	public Integer handlePersonMatchRequest(String tableName, String matchName,
-			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
+			byte[] dhPublicKey, String matchPairStatHalfTableName) throws ApplicationException
 	{
 		throw new ApplicationException("handleBloomFilterParameterAdvice doesn't make sense during simple send");
 	}

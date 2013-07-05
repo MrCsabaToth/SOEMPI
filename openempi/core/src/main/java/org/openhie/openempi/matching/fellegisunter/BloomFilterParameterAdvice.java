@@ -37,7 +37,7 @@ public class BloomFilterParameterAdvice extends BaseObject
 	private Dataset rightDataset;
 	private List<ColumnMatchInformation> columnMatchInformation;
 	private List<MatchPairStatHalf> matchPairStatHalves;
-	private Integer nonce;
+	private byte[] dhPublicKey;
 	private Boolean leftOrRightSide;
 
 	public BloomFilterParameterAdvice() {
@@ -83,12 +83,12 @@ public class BloomFilterParameterAdvice extends BaseObject
 		this.matchPairStatHalves = matchPairStatHalves;
 	}
 
-	public Integer getNonce() {
-		return nonce;
+	public byte[] getDhPublicKey() {
+		return dhPublicKey;
 	}
 
-	public void setNonce(Integer nonce) {
-		this.nonce = nonce;
+	public void setDhPublicKey(byte[] dhPublicKey) {
+		this.dhPublicKey = dhPublicKey;
 	}
 
 	public Boolean isLeftOrRightSide() {
@@ -110,7 +110,7 @@ public class BloomFilterParameterAdvice extends BaseObject
 				.append(rightDataset, castOther.rightDataset)
 				.append(columnMatchInformation, castOther.columnMatchInformation)
 				.append(matchPairStatHalves, castOther.matchPairStatHalves)
-				.append(nonce, castOther.nonce)
+				.append(dhPublicKey, castOther.dhPublicKey)
 				.append(leftOrRightSide, castOther.leftOrRightSide)
 				.isEquals();
 	}
@@ -123,7 +123,7 @@ public class BloomFilterParameterAdvice extends BaseObject
 				.append(rightDataset)
 				.append(columnMatchInformation)
 				.append(matchPairStatHalves)
-				.append(nonce)
+				.append(dhPublicKey)
 				.append(leftOrRightSide)
 				.toHashCode();
 	}
@@ -136,7 +136,7 @@ public class BloomFilterParameterAdvice extends BaseObject
 				.append("rightDataset", rightDataset)
 				.append("columnMatchInformation", columnMatchInformation)
 				.append("matchPairStatHalves", matchPairStatHalves)
-				.append("nonce", nonce)
+				.append("dhPublicKey", dhPublicKey)
 				.append("leftOrRightSide", leftOrRightSide)
 				.toString();
 	}

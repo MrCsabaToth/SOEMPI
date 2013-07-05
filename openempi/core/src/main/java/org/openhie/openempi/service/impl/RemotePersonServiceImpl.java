@@ -177,7 +177,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 	}
 
 	public int addPersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			Integer nonce, String matchPairStatHalfTableName) throws NamingException, ApplicationException
+			byte[] myDhPublicKey, String matchPairStatHalfTableName) throws NamingException, ApplicationException
 	{
 		if (!isAuthenticated) {
 			log.warn("Session is not authenticated while trying to load person paged from remote host.");
@@ -187,7 +187,7 @@ public class RemotePersonServiceImpl extends BaseServiceImpl implements RemotePe
 		RemotePersonServiceLocator remotePersonServiceLocator = Context.getRemotePersonServiceLocator();
 		RecordLinkageProtocol recordLinkageProtocol = remotePersonServiceLocator.getRecordLinkageProtocol();
 		return recordLinkageProtocol.addPersonMatchRequest(sessionKey, protocolTypeName, tableName, matchName,
-				nonce, matchPairStatHalfTableName);
+				myDhPublicKey, matchPairStatHalfTableName);
 	}
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String protocolTypeName, int personMatchRequestId, ComponentType componentType)

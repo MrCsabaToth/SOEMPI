@@ -39,6 +39,7 @@ import org.openhie.openempi.recordlinkage.configuration.ComponentSettings;
 import org.openhie.openempi.recordlinkage.configuration.PrivacySettings;
 import org.openhie.openempi.service.PersonQueryService;
 import org.openhie.openempi.service.RemotePersonService;
+import org.openhie.openempi.util.DiffieHellmanKeyExchange;
 
 public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocolBase
 {
@@ -107,7 +108,8 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword,
-			int personMatchRequestId, int myNonce, Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException
+			int personMatchRequestId, DiffieHellmanKeyExchange dhke,
+			Map<Long,Long> personPseudoIdsReverseLookup) throws NamingException, ApplicationException
 	{
 		// In case of 2 3rd party DI does the linkage, we don't have to wait for returned data or advice
 	}

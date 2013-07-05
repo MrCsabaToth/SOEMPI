@@ -76,7 +76,7 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 	}
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName,
-			String matchName, Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
+			String matchName, byte[] dhPublicKey, String matchPairStatHalfTableName) throws ApplicationException
 	{
 		log.trace("In addPersonMatchRequest method.");
 		Context.authenticate(sessionKey);
@@ -85,7 +85,7 @@ public class RecordLinkageProtocolBean extends BaseSpringInjectableBean implemen
 		org.openhie.openempi.recordlinkage.RecordLinkageProtocolType recordLinkageProtocolType =
 				recordLinkageProtocolSelector.getRecordLinkageProtocolType(protocolTypeName);
 		return recordLinkageProtocolType.getRecordLinkageProtocol().handlePersonMatchRequest(tableName, matchName,
-				nonce, matchPairStatHalfTableName);
+				dhPublicKey, matchPairStatHalfTableName);
 	}
 	
 	public BloomFilterParameterAdvice acquireMatchRequests(String sessionKey, String protocolTypeName,

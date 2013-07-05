@@ -263,7 +263,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return columnInformation;
 	}
 
-	protected PersonMatchRequest createPersonMatchRequest(Dataset dataset, int nonce, String matchName,
+	protected PersonMatchRequest createPersonMatchRequest(Dataset dataset, byte[] myDhPublicKey, String matchName,
 			String blockingServiceName, String matchingServiceName) {
 		User currentUser = Context.getPersonManagerService().getCurrentUser(dataset.getOwner());
 		log.debug("Current user is " + currentUser);
@@ -274,7 +274,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		personMatchRequest.setMatchName(matchName);
 		personMatchRequest.setBlockingServiceName(blockingServiceName);
 		personMatchRequest.setMatchingServiceName(matchingServiceName);
-		personMatchRequest.setNonce(nonce);
+		personMatchRequest.setDhPublicKey(myDhPublicKey);
 		personMatchRequest.setCompleted(false);
 		personMatchRequest.setDateCreated(now);
 		personMatchRequest.setUserCreatedBy(currentUser);
@@ -345,13 +345,14 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		return bitPermutation;
 	}
 
-	abstract public void handleBloomFilterParameterAdvice(String blockingServiceName, String matchingServiceName,
+	abstract public void handleBloomFilterParameterAdvice(
+			String blockingServiceName, String matchingServiceName,
 			String keyServerUserName, String keyServerPassword,
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			Dataset leftLocalDataset, Dataset leftRemoteDataset,
-			Dataset rightRemoteDataset, List<ColumnMatchInformation> columnMatchInformation, List<MatchPairStatHalf> matchPairStatHalves,
-			Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
-			String matchName) throws ApplicationException;
+			Dataset rightRemoteDataset, List<ColumnMatchInformation> columnMatchInformation,
+			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup,
+			int sharedSecret, boolean leftOrRightSide, String matchName) throws ApplicationException;
 
 	protected List<MatchPairStatHalf> retrieveMatchPairStatHalves(String matchPairStatHalfTableName) {
 		if (matchPairStatHalfTableName == null)
@@ -397,7 +398,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 
 	abstract protected String getBlockingServiceTypeName(ComponentType componentType, List<MatchPairStat> matchPairStats) throws ApplicationException;
 
-	public Integer handlePersonMatchRequest(String tableName, String matchName, Integer nonce,
+	public Integer handlePersonMatchRequest(String tableName, String matchName, byte[] dhPublicKey,
 			String matchPairStatHalfTableName) throws ApplicationException {
 		Dataset localDataset = Context.getPersonManagerService().getDatasetByTableName(tableName);
 		if (localDataset == null)
@@ -406,7 +407,8 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 		ComponentType componentType = Context.getConfiguration().getAdminConfiguration().getComponentMode();;
 		String blockingServiceName = getBlockingServiceTypeName(componentType, null);
 		String matchingServiceName = getMatchingServiceTypeName(componentType);
-		PersonMatchRequest personMatchRequest = createPersonMatchRequest(localDataset, nonce, matchName, blockingServiceName, matchingServiceName);
+		PersonMatchRequest personMatchRequest =
+				createPersonMatchRequest(localDataset, dhPublicKey, matchName, blockingServiceName, matchingServiceName);
 		if (matchPairStatHalfTableName != null && matchPairStatHalfTableName.length() > 0)
 			personMatchRequest.setMatchPairStatHalfTableName(matchPairStatHalfTableName);
 		personMatchRequest = personMatchRequestDao.addPersonMatchRequest(personMatchRequest);
@@ -490,8 +492,8 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 				rightBFPA.setMatchPairStatHalves(matchPairStatHalfRight);
 			}
 		}
-		rightBFPA.setNonce(rightPersonMatchRequest.getNonce());
-		rightBFPA.setLeftOrRightSide(true);
+		rightBFPA.setDhPublicKey(leftPersonMatchRequest.getDhPublicKey());
+		rightBFPA.setLeftOrRightSide(false);
 		return rightBFPA;
 	}
 

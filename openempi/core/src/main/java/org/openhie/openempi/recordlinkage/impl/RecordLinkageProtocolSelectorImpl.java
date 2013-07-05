@@ -111,11 +111,11 @@ public class RecordLinkageProtocolSelectorImpl extends BaseServiceImpl implement
 	}
 
 	public Integer handlePersonMatchRequest(String protocolTypeName, String tableName, String matchName,
-			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException
+			byte[] dhPublicKey, String matchPairStatHalfTableName) throws ApplicationException
 	{
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
 		return recordLinkageProtocol.handlePersonMatchRequest(tableName, matchName,
-				nonce, matchPairStatHalfTableName);
+				dhPublicKey, matchPairStatHalfTableName);
 	}
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String protocolTypeName, int personMatchRequestId, ComponentType componentType)

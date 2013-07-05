@@ -42,17 +42,17 @@ public class ThreeThirdPartyFBFProtocol extends ThreeThirdPartyPRLProtocolBase
 	}
 	
 	protected int getNonce() {
-		return 0;	// No bit permutations
+		return 0;	// No bit permutations, so no DH key exchange is needed
 	}
 
 	protected String sendNewDataset(String newBFTableName, Dataset newBFDataset, String remoteTableName, List<ColumnMatchInformation> columnMatchInformation,
 			String keyServerUserName, String keyServerPassword, String dataIntegratorUserName, String dataIntegratorPassword,
-			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int myNonce, int nonce, boolean leftOrRightSide,
+			List<MatchPairStatHalf> matchPairStatHalves, Map<Long,Long> personPseudoIdsReverseLookup, int sharedSecret, boolean leftOrRightSide,
 			List<ColumnInformation> bfColumnInformation) throws NamingException, ApplicationException
 	{
 		return sendFBFDataset(newBFTableName, newBFDataset, remoteTableName, columnMatchInformation,
 				keyServerUserName, keyServerPassword, dataIntegratorUserName, dataIntegratorPassword,
-				matchPairStatHalves, personPseudoIdsReverseLookup, myNonce, nonce, leftOrRightSide,
+				matchPairStatHalves, personPseudoIdsReverseLookup, sharedSecret, leftOrRightSide,
 				bfColumnInformation);
 	}
 

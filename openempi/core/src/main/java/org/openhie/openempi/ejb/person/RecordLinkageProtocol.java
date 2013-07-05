@@ -39,7 +39,7 @@ public interface RecordLinkageProtocol
 			String datasetTableName) throws ApplicationException;
 	
 	public int addPersonMatchRequest(String sessionKey, String protocolTypeName, String tableName, String address,
-			Integer nonce, String matchPairStatHalfTableName) throws ApplicationException;
+			byte[] myDhPublicKey, String matchPairStatHalfTableName) throws ApplicationException;
 
 	public BloomFilterParameterAdvice acquireMatchRequests(String sessionKey, String protocolTypeName,
 			int personMatchRequestId, ComponentType componentType) throws ApplicationException;

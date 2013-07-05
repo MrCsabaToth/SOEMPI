@@ -51,7 +51,8 @@ public class PersonMatchRequest extends BaseObject implements java.io.Serializab
 	private String matchName;
 	private String blockingServiceName;
 	private String matchingServiceName;
-	private Integer nonce;
+	private Integer dhSecret;
+	private byte[] dhPublicKey;
 	private String matchPairStatHalfTableName;
 	private Integer personMatchId;	// TODO: replace with PersonMatch instead of id?
 	private Boolean completed;
@@ -64,14 +65,14 @@ public class PersonMatchRequest extends BaseObject implements java.io.Serializab
 
 	/** full constructor */
 	public PersonMatchRequest(Integer personMatchRequestId, Dataset dataset, String matchName,
-			String blockingServiceName, String matchingServiceName, Integer nonce, String matchPairStatHalfTableName,
+			String blockingServiceName, String matchingServiceName, byte[] dhPublicKey, String matchPairStatHalfTableName,
 			Integer personMatchId, Boolean completed, User userCreatedBy, Date dateCreated) {
 		this.personMatchRequestId = personMatchRequestId;
 		this.dataset = dataset;
 		this.matchName = matchName;
 		this.blockingServiceName = blockingServiceName;
 		this.matchingServiceName = matchingServiceName;
-		this.nonce = nonce;
+		this.dhPublicKey = dhPublicKey;
 		this.matchPairStatHalfTableName = matchPairStatHalfTableName;
 		this.personMatchId = personMatchId;
 		this.completed = completed;
@@ -128,13 +129,22 @@ public class PersonMatchRequest extends BaseObject implements java.io.Serializab
 		this.matchingServiceName = matchingServiceName;
 	}
 
-	@Column(name = "nonce")
-	public Integer getNonce() {
-		return nonce;
+	@Column(name = "dh_secret")
+	public Integer getDhSecret() {
+		return dhSecret;
 	}
 
-	public void setNonce(Integer nonce) {
-		this.nonce = nonce;
+	public void setDhSecret(Integer dhSecret) {
+		this.dhSecret = dhSecret;
+	}
+
+	@Column(name = "dh_public_key")
+	public byte[] getDhPublicKey() {
+		return dhPublicKey;
+	}
+
+	public void setDhPublicKey(byte[] dhPublicKey) {
+		this.dhPublicKey = dhPublicKey;
 	}
 
 	@Column(name = "match_pair_stat_half_table_name")
@@ -193,14 +203,13 @@ public class PersonMatchRequest extends BaseObject implements java.io.Serializab
 		if (!(other instanceof PersonMatchRequest))
 			return false;
 		PersonMatchRequest castOther = (PersonMatchRequest) other;
-		return new EqualsBuilder().append(personMatchRequestId, castOther.personMatchRequestId).
-				append(nonce, castOther.nonce).isEquals();
+		return new EqualsBuilder().append(personMatchRequestId, castOther.personMatchRequestId).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(personMatchRequestId).append(dataset.getDatasetId()).
-				append(nonce).toHashCode();
+		return new HashCodeBuilder().append(personMatchRequestId).append(dataset.getDatasetId()).append(dhSecret)
+				.toHashCode();
 	}
 
 	@Override
@@ -213,7 +222,8 @@ public class PersonMatchRequest extends BaseObject implements java.io.Serializab
 			append("matchingServiceName", matchingServiceName).
 			append("personMatchId", personMatchId).
 			append("matchPairStatHalfTableName", matchPairStatHalfTableName).
-			append("nonce", nonce).
+			append("dhSecret", dhSecret).
+			append("dhPublicKey", dhPublicKey).
 			append("completed", completed).
 			append("creatorId", userCreatedBy).
 			append("dateCreated", dateCreated).
