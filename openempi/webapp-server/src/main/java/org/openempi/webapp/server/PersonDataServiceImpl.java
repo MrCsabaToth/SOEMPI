@@ -329,7 +329,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
 				recordLinkageProtocol.testPMLinkRecords(dataset.getDatasetId(), datasetFound.getDatasetId(), Constants.BLOCKING_BYPASS_SERVICE_NAME, Constants.CBF_SCORING_SERVICE_NAME);
-			} else {
+			} else if (testType == 3) {
 				// BF Recode test
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
@@ -339,6 +339,14 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				int leftPersonMatchRequestId = 618;
 				int rightPersonMatchRequestId = 619;
 				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
+			} else {
+				// Measure Keyserver authenticate + get 50 salts
+				log.warn("KS Authenticate start");	// This is warning in order to get through into the log even if we deal with a non-debug version
+				KeyServerService ks = Context.getKeyServerService();
+				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
+				log.warn("KS Authenticate end");	// This is warning in order to get through into the log even if we deal with a non-debug version
+				ks.getSalts(50);
+				log.warn("KS get salts end");	// This is warning in order to get through into the log even if we deal with a non-debug version
 			}
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
