@@ -1,4 +1,4 @@
-------------------------------------------
+﻿------------------------------------------
 --Host     : localhost
 --Database : openempi
 
@@ -73,7 +73,7 @@ CREATE TABLE person_link (
     binary_vector varchar(65535),
     continous_vector varchar(65535),
     weight double precision NOT NULL,
-    link_state integer NOT NULL,
+    link_state integer NOT NULL
 ) WITHOUT OIDS;
 
 -- Structure for table person_match:
