@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.openhie.openempi.Constants;
 import org.openhie.openempi.loader.AbstractLoaderBase;
 import org.openhie.openempi.loader.DataLoaderService;
@@ -71,15 +72,19 @@ public abstract class AbstractFileLoader extends AbstractLoaderBase implements D
 					done = true;
 					continue;
 				}
-				Person person = processLine(line, lineIndex++);
-				if (person != null) {
-					loadedLines++;
-					person.setPersonId(loadedLines);
-					persons.add(person);
-					contributePersonToStatistics(person);
-					if (persons.size() >= pageSize) {
-						loadPersons(tableName, persons, applyFieldTransformations);
-						persons.clear();
+				if (StringUtils.isNotEmpty(line))
+				{
+					Person person = processLine(line, lineIndex);
+					lineIndex++;
+					if (person != null) {
+						loadedLines++;
+						person.setPersonId(loadedLines);
+						persons.add(person);
+						contributePersonToStatistics(person);
+						if (persons.size() >= pageSize) {
+							loadPersons(tableName, persons, applyFieldTransformations);
+							persons.clear();
+						}
 					}
 				}
 			}

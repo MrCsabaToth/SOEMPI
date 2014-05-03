@@ -56,16 +56,15 @@ public class ConfigurableFileLoader extends AbstractFileLoader
 		}
 		log.debug("Needs to parse the line " + line);
 		try {
-			Person person = new Person();
-			if (getPerson(line, person)) {
+			Person person = getPerson(line);
+			if (person != null) {
 				log.debug("Person is:\n" + person);
 			} else {
 				log.error("Getting person form line: " + line);
-				return null;
 			}
 			return person;
 		} catch (ParseException e) {
-			log.warn("Failed to parse file line: " + line + " due to " + e);
+			log.error("Failed to parse file line: " + line + " due to " + e);
 			return null;
 		}
 	}
@@ -74,22 +73,30 @@ public class ConfigurableFileLoader extends AbstractFileLoader
 	 * Column indexes and field names are configured in the mpi-config.xml
 	 * @return 
 	 */
-	private boolean getPerson(String line, Person person) throws ParseException {
+	private Person getPerson(String line) throws ParseException {
 		Map<String,List<LoaderFieldComposition>> fieldCompositions = new HashMap<String,List<LoaderFieldComposition>>();
 		String[] fields = pattern.split(line);
+		if (fields.length <= 0)
+			return null;
 		List<LoaderDataField> loaderDataFields = loaderConfiguration.getDataFields();
+		if (loaderDataFields.size() > 1) {
+			if (!pattern.matcher(line).find())
+				return null;
+		}
+		Person person = new Person();
 		for (LoaderDataField loaderDataField : loaderDataFields) {
 			int sourceColumnIndex = loaderDataField.getSourceColumnIndex();
 			if (sourceColumnIndex < 0) {
 				log.error("Source column index (" + sourceColumnIndex + ") is smaller than 0");
-				return false;
+				return null;
 			}
 			if (sourceColumnIndex < fields.length) {	// Just the fact that sourceColumnIndex >= fields.length could mean that the last fields are empty
 				if (!processLoaderDataField(loaderDataField, fields[sourceColumnIndex], person, fieldCompositions))
-					return false;
+					return null;
 			}
 		}
-		return processFieldCompositions(fieldCompositions, person);
+		processFieldCompositions(fieldCompositions, person);
+		return person;
 	}
 
 	private boolean processFieldCompositions(Map<String,List<LoaderFieldComposition>> fieldCompositions,
