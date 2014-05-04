@@ -160,10 +160,10 @@ public class BlockingConfigurationView extends View
 		container = new LayoutContainer();
 		container.setLayout(new CenterLayout());
 		
-		ColumnConfig blockingRound = new ColumnConfig(BlockingFieldBaseWeb.BLOCKING_ROUND, "Blocking Round", 60);
-		ColumnConfig fieldIndex = new ColumnConfig(BlockingFieldBaseWeb.FIELD_INDEX, "Field Index", 60);
-		ColumnConfig leftFieldName = new ColumnConfig(BlockingFieldBaseWeb.LEFT_FIELD_NAME, "Left Field Name", 100);
-		ColumnConfig rightFieldName = new ColumnConfig(BlockingFieldBaseWeb.RIGHT_FIELD_NAME, "Right Field Name", 100);
+		ColumnConfig blockingRound = new ColumnConfig(BlockingFieldBaseWeb.BLOCKING_ROUND, "Blocking Round", 100);
+		ColumnConfig fieldIndex = new ColumnConfig(BlockingFieldBaseWeb.FIELD_INDEX, "Field Index", 100);
+		ColumnConfig leftFieldName = new ColumnConfig(BlockingFieldBaseWeb.LEFT_FIELD_NAME, "Left Field Name", 160);
+		ColumnConfig rightFieldName = new ColumnConfig(BlockingFieldBaseWeb.RIGHT_FIELD_NAME, "Right Field Name", 160);
 		List<ColumnConfig> config = new ArrayList<ColumnConfig>();
 		config.add(blockingRound);
 		config.add(fieldIndex);
@@ -188,7 +188,7 @@ public class BlockingConfigurationView extends View
 		grid.setBorders(true);
 		grid.setStripeRows(true);
 		grid.setAutoWidth(true);
-		grid.setHeight(230);
+		grid.setHeight(400);
 
 		ContentPanel cp = new ContentPanel();
 		cp.setHeading("Blocking Configuration");
@@ -198,7 +198,7 @@ public class BlockingConfigurationView extends View
 		formLayout.setLabelWidth(150);
 		formLayout.setDefaultWidth(280);
 		cp.setLayout(formLayout);
-		cp.setSize(500, 400);
+		cp.setSize(700, 520);
 
 		LayoutContainer buttonContainer = new LayoutContainer();
 		buttonContainer.setHeight(24);
@@ -301,8 +301,8 @@ public class BlockingConfigurationView extends View
 		addBlockingRoundDialog.setBodyBorder(false);
 		addBlockingRoundDialog.setIcon(IconHelper.create("images/folder_go.png"));
 		addBlockingRoundDialog.setHeading("Add Blocking Round");
-		addBlockingRoundDialog.setWidth(370);
-		addBlockingRoundDialog.setHeight(300);
+		addBlockingRoundDialog.setWidth(650);
+		addBlockingRoundDialog.setHeight(500);
 		addBlockingRoundDialog.setButtons(Dialog.OKCANCEL);
 		addBlockingRoundDialog.setHideOnButtonClick(true);
 		addBlockingRoundDialog.setModal(true);
@@ -332,7 +332,7 @@ public class BlockingConfigurationView extends View
 		cp.setFrame(true);
 		cp.setIcon(IconHelper.create("images/folder.png"));
 		cp.setLayout(new FillLayout());
-		cp.setSize(370, 300);
+		cp.setSize(620, 430);
 		
 		ToolBar toolBar = new ToolBar();
 		
