@@ -643,7 +643,8 @@ public class MatchFieldConfigurationView extends View
 						functionFieldWeb.setFunctionParameters(null);								
 					}
 				} else {
-					functionFieldWeb.setFunctionParameters(editedField.getComparatorFunction().cloneParameters());
+					if (!addOrEditFieldMode && editedField != null)
+						functionFieldWeb.setFunctionParameters(editedField.getComparatorFunction().cloneParameters());
 				}
 				matchFieldWeb.setComparatorFunction(functionFieldWeb);
 				matchFieldWeb.setMatchThreshold(matchThresholdEdit.getValue().doubleValue());
