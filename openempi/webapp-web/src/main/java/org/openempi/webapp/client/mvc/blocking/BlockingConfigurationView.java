@@ -90,6 +90,7 @@ public class BlockingConfigurationView extends View
 		if (event.getType() == AppEvents.BlockingConfigurationView) {
 			initUI();
 		} else if (event.getType() == AppEvents.BlockingConfigurationReceived) {
+			Info.display("Information", "Blocking config received");
 			store.removeAll();
 			BlockingSettingsWeb settings = (BlockingSettingsWeb) event.getData();
 			numberOfRecordsToSampleEdit.setValue(settings.getNumberOfRecordsToSample());
@@ -139,14 +140,6 @@ public class BlockingConfigurationView extends View
 					rightFieldCombo.select(new ModelPropertyWeb(fieldName));
 			}
 		}
-	}
-
-	protected void saveConfiguration()
-	{
-		BlockingSettingsWeb settings = new BlockingSettingsWeb();
-		settings.setNumberOfRecordsToSample(numberOfRecordsToSampleEdit.getValue().intValue());
-		settings.setBlockingFields(grid.getStore().getModels());
-		controller.handleEvent(new AppEvent(AppEvents.BlockingConfigurationSave, settings));
 	}
 
 	private void initUI() {
@@ -219,7 +212,7 @@ public class BlockingConfigurationView extends View
 				public void componentSelected(ButtonEvent ce) {
 					BlockingFieldBaseWeb removeField = grid.getSelectionModel().getSelectedItem();
 					if (removeField == null) {
-						Info.display("Information","You must first select a field in the round to be deleted before pressing the \"Remove Round\" button.");
+						Info.display("Information", "You must first select a field in the round to be deleted before pressing the \"Remove Round\" button.");
 						return;
 					}
 					for (BlockingFieldBaseWeb field : grid.getStore().getModels()) {
@@ -246,20 +239,23 @@ public class BlockingConfigurationView extends View
 		HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
 
 		Integer wizardMode = (Integer)Registry.get(Constants.WIZARD_MODE);
-		boolean inWizardMode = (wizardMode == Constants.RECORD_LINKAGE_WIZARD_MODE);
+		Boolean inWizardMode = (wizardMode == Constants.RECORD_LINKAGE_WIZARD_MODE);
 		Button saveButton =
 			new Button(inWizardMode ? Constants.NEXT_PAGE_WIZARD_BUTTON_TEXT : Constants.SAVE_BUTTON_TEXT, IconHelper.create("images/folder_go.png"), new SelectionListener<ButtonEvent>() {
 				@Override
 				public void componentSelected(ButtonEvent ce) {
 					Button sourceButton = ce.getButton();
-					BlockingConfigurationView blockingConfigurationView = (BlockingConfigurationView)sourceButton.getData("this");
-					blockingConfigurationView.saveConfiguration();
+
+					BlockingSettingsWeb settings = new BlockingSettingsWeb();
+					settings.setNumberOfRecordsToSample(numberOfRecordsToSampleEdit.getValue().intValue());
+					settings.setBlockingFields(grid.getStore().getModels());
+					controller.handleEvent(new AppEvent(AppEvents.BlockingConfigurationSave, settings));
+
 					Boolean inWizard = (Boolean)sourceButton.getData("inWizardMode");
 					if (inWizard)
 						Dispatcher.get().dispatch(AppEvents.MatchFieldConfigurationView);
 				}
 			});
-		saveButton.setData("this", this);
 		saveButton.setData("inWizardMode", inWizardMode);
 		c.add(saveButton, layoutData);
 
