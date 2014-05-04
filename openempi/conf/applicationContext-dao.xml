@@ -62,39 +62,39 @@
     <bean id="roleDao" class="org.openhie.openempi.dao.hibernate.RoleDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="personDao" class="org.openhie.openempi.dao.hibernate.PersonDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="fieldDao" class="org.openhie.openempi.dao.hibernate.FieldDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="personLinkDao" class="org.openhie.openempi.dao.hibernate.PersonLinkDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="personMatchDao" class="org.openhie.openempi.dao.hibernate.PersonMatchDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="personMatchRequestDao" class="org.openhie.openempi.dao.hibernate.PersonMatchRequestDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="datasetDao" class="org.openhie.openempi.dao.hibernate.DatasetDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="matchPairStatDao" class="org.openhie.openempi.dao.hibernate.MatchPairStatDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="matchPairStatHalfDao" class="org.openhie.openempi.dao.hibernate.MatchPairStatHalfDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="keyDao" class="org.openhie.openempi.dao.hibernate.KeyDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
@@ -106,22 +106,22 @@
     <bean id="userSessionDao" class="org.openhie.openempi.dao.hibernate.UserSessionDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <bean id="auditEventDao" class="org.openhie.openempi.dao.hibernate.AuditEventDaoHibernate">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     <!-- If you want to be able to do simple CRUD for new domain objects without 
         having to cast, you don't have create a Dao interface and implementation 
         for that domain object, you simply have to do the following.  
-        
+
         eg... 'fooDao'
-    
+
     <bean id="fooDao" class="org.openhie.openempi.dao.hibernate.GenericDaoHibernate">
         <constructor-arg value="org.openhie.openempi.model.Foo"/>
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    
+
     You will need to create a Dao interface and implementation for that 
         domain object if you need more than simple CRUD to occur.  
         (finders, bulk update/delete, etc.)

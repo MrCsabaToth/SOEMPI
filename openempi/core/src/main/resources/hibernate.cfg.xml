@@ -21,9 +21,9 @@
     "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
-    <session-factory>        
+    <session-factory>
         <property name="hibernate.show_sql">true</property>
-        
+
         <mapping class="org.openhie.openempi.model.AuditEventType"/>
         <mapping class="org.openhie.openempi.model.AuditEvent"/>
         <mapping class="org.openhie.openempi.model.Person"/>
@@ -38,8 +38,8 @@
         <mapping class="org.openhie.openempi.model.Role"/>
         <mapping class="org.openhie.openempi.model.User"/>
         <mapping class="org.openhie.openempi.model.Dataset"/>
-    	<mapping class="org.openhie.openempi.model.FieldType"/>
-    	<mapping class="org.openhie.openempi.model.FieldMeaning"/>
+        <mapping class="org.openhie.openempi.model.FieldType"/>
+        <mapping class="org.openhie.openempi.model.FieldMeaning"/>
         <mapping class="org.openhie.openempi.model.ColumnInformation"/>
         <mapping class="org.openhie.openempi.model.UserSession"/>
     </session-factory>
