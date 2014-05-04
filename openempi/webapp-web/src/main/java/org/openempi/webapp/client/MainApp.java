@@ -62,7 +62,7 @@ public class MainApp implements EntryPoint
 		BlockingDataServiceAsync blockingDataService = (BlockingDataServiceAsync) GWT.create(BlockingDataService.class);
 		endpoint = (ServiceDefTarget) blockingDataService;
 		moduleRelativeURL = Constants.BLOCKING_DATA_SERVICE;
-		endpoint.setServiceEntryPoint(moduleRelativeURL);
+		endpoint.setServiceEntryPoint(GWT.getModuleBaseURL() + moduleRelativeURL);
 		Registry.register(Constants.BLOCKING_DATA_SERVICE, blockingDataService);
 		
 		FileLoaderDataServiceAsync fileLoaderDataService = (FileLoaderDataServiceAsync) GWT.create(FileLoaderDataService.class);
