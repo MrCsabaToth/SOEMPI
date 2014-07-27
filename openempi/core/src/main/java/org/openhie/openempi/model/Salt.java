@@ -103,7 +103,7 @@ public class Salt extends BaseObject implements java.io.Serializable
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "creator_id", nullable = false)
+	@JoinColumn(name = "creator_id"/*, nullable = false*/)
 	public User getUserCreatedBy() {
 		return this.userCreatedBy;
 	}

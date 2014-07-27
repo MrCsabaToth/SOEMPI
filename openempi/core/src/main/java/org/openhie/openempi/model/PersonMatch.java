@@ -118,7 +118,7 @@ public class PersonMatch extends BaseObject implements java.io.Serializable
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "right_dataset_id", nullable = false)
+	@JoinColumn(name = "right_dataset_id"/*, nullable = false*/)
 	public Dataset getRightDataset() {
 		return this.rightDataset;
 	}

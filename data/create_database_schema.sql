@@ -88,7 +88,7 @@ CREATE TABLE person_match (
     total_records bigint NOT NULL,
     bf_k_parameter integer,
     bf_fill_factor double precision,
-    creator_id bigint NOT NULL,
+    creator_id bigint, --NOT NULL,
     date_created timestamp without time zone NOT NULL
 ) WITHOUT OIDS;
 

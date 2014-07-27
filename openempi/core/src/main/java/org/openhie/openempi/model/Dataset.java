@@ -85,7 +85,7 @@ public class Dataset extends BaseObject implements Serializable
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id"/*, nullable = false*/)
 	public User getOwner() {
 		return owner;
 	}

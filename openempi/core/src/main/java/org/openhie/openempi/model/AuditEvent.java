@@ -152,7 +152,7 @@ public class AuditEvent extends BaseObject implements Serializable
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "creator_id", nullable = false)
+	@JoinColumn(name = "creator_id"/*, nullable = false*/)
 	public User getUserCreatedBy() {
 		return userCreatedBy;
 	}
