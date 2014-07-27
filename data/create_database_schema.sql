@@ -62,7 +62,7 @@ CREATE TABLE person (
     original_id varchar(64),
 
     date_created timestamp without time zone NOT NULL,
-    creator_id bigint NOT NULL
+    creator_id bigint --NOT NULL
 ) WITHOUT OIDS;
 
 -- Structure for table person_link (OID = 34531):
@@ -104,7 +104,7 @@ CREATE TABLE person_match_request (
     match_pair_stat_half_table_name varchar(255),
     person_match_id integer,
     completed boolean NOT NULL,
-    creator_id bigint NOT NULL,
+    creator_id bigint, --NOT NULL,
     date_created timestamp without time zone NOT NULL
 ) WITHOUT OIDS;
 
@@ -286,7 +286,7 @@ CREATE TABLE key (
     privatekeypart2 bytea,
     privatekeypart3 bytea,
     date_created timestamp without time zone NOT NULL,
-    creator_id bigint NOT NULL,
+    creator_id bigint, --NOT NULL,
     date_voided timestamp without time zone,
     voided_by_id bigint
 ) WITHOUT OIDS;
@@ -296,7 +296,7 @@ CREATE TABLE salt (
     id BIGINT NOT NULL,
     salt bytea,
     date_created timestamp without time zone NOT NULL,
-    creator_id bigint NOT NULL,
+    creator_id bigint, --NOT NULL,
     date_voided timestamp without time zone,
     voided_by_id bigint
 ) WITHOUT OIDS;
@@ -319,7 +319,7 @@ CREATE TABLE audit_event (
     alt_ref_person_id BIGINT,
     ref_key_id BIGINT,
     ref_salt_id BIGINT,
-    creator_id integer NOT NULL
+    creator_id integer --NOT NULL
 ) WITHOUT OIDS;
 
 -- Structure for table audit_event_type (OID = 59461):
