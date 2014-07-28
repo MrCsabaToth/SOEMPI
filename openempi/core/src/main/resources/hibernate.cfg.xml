@@ -22,7 +22,7 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
 
         <mapping class="org.openhie.openempi.model.AuditEventType"/>
         <mapping class="org.openhie.openempi.model.AuditEvent"/>
