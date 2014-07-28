@@ -78,13 +78,15 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			String dataIntegratorUserName, String dataIntegratorPassword,
 			String parameterManagerUserName, String parameterManagerPassword)
 	{
-		log.warn("Send preparation Start");
+		long startTime1 = System.nanoTime();
+		log.warn("Send preparation Start: " + startTime1);
 		PrivacySettings privacySettings =
 				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
 		DataIntegratorSettings dataIntegratorSettings =
 				privacySettings.getComponentSettings().getDataIntegratorSettings();
 		String serverAddress4DI = dataIntegratorSettings.getServerAddress();
 
+		long startTime2 = 0;
 		try {
 			RemotePersonService remotePersonService = Context.getRemotePersonService();
 	
@@ -92,8 +94,10 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			remotePersonService.authenticate(serverAddress4DI, dataIntegratorUserName, dataIntegratorPassword,
 					keyServerUserName, keyServerPassword);
 
-			log.warn("Send preparation End");
-			log.warn("Send Start");
+			long endTime1 = System.nanoTime();
+			log.warn("Send preparation End: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
+			startTime2 = System.nanoTime();
+			log.warn("Send Start: " + startTime2);
 			// Send all columns here, it's not PRL
 			// Maybe we could do some intelligent cherry picking analyzing the match configuration?
 			List<ColumnInformation> columnInformation = dataset.getColumnInformation();
@@ -125,7 +129,8 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 			log.error("Error occured during creation, generation or loading of BF or CBF data");
 			e.printStackTrace();
 		}
-		log.warn("Send End");
+		long endTime2 = System.nanoTime();
+		log.warn("Send End: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
 
 		return null;
 	}

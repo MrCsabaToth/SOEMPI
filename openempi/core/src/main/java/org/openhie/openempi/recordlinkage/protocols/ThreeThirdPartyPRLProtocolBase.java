@@ -117,10 +117,12 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		int numRecordsToSend = Math.min(numRecordsToSend1, ((Long)totalRecords).intValue());
 		// Do not break down random sampling by PAGE_SIZE, because that could cause id collision
 		PersonQueryService personQueryService = Context.getPersonQueryService();
-		log.warn("Random sampling for HMAC encode begin");
+		long startTime1 = System.nanoTime();
+		log.warn("Random sampling for HMAC encode begin: " + startTime1);
 		List<Person> persons = personQueryService.getRandomNotNullPersons(dataset.getTableName(),
 				fillNoMatchColumnNames(noMatchColumnInformation, columnNames), numRecordsToSend);
-		log.warn("Random sampling for HMAC encode end");
+		long endTime1 = System.nanoTime();
+		log.warn("Random sampling for HMAC encode end: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
 		// HMAC transform the needed fields
 		if (isThereClearField) {
 			TransformationService transformationService = Context.getTransformationService();
@@ -129,7 +131,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 			byte[] signingKey = ks.getSalts(1).get(0);
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, signingKey);
-			log.warn("HMAC encode begin");
+			long startTime2 = System.nanoTime();
+			log.warn("HMAC encode begin: " + startTime2);
 			for (Person person : persons) {
 				for (ColumnInformation ci : matchColumnInformation) {
 					if (isClearTextField(ci)) {
@@ -144,7 +147,8 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 					}
 				}
 			}
-			log.warn("HMAC encode end");
+			long endTime2 = System.nanoTime();
+			log.warn("HMAC encode end: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
 		}
 		return persons;
 	}

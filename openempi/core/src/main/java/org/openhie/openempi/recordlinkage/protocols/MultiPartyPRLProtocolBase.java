@@ -550,15 +550,18 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String matchName) throws ApplicationException {
 		String remoteTableName = leftRemoteDataset.getTableName();
 
-		log.warn("Reencode Start");
+		long startTime1 = System.nanoTime();
+		log.warn("Reencode Start: " + startTime1);
 		String newBFTableName = remoteTableName + UniversalDaoHibernate.BF_TABLE_NAME_POSTFIX + "_" + getNowString();	// include time into name to avoid collision
 		// Reencode from original cleartext file or from DB?
 		List<ColumnInformation> bfColumnInformation = new ArrayList<ColumnInformation>();
 		Dataset newBFDataset = bfReencodeDataset(leftLocalDataset, newBFTableName, columnMatchInformation,
 				keyServerUserName, keyServerPassword, leftOrRightSide, personPseudoIdsReverseLookup, bfColumnInformation);
-		log.warn("Reencode End");
+		long endTime1 = System.nanoTime();
+		log.warn("Reencode End: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
 
-		log.warn("RBF Send Start");
+		long startTime2 = System.nanoTime();
+		log.warn("RBF Send Start: " + startTime2);
 		PrivacySettings privacySettings =
 				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
 		DataIntegratorSettings dataIntegratorSettings =
@@ -592,7 +595,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			log.error("Error occured during creation, generation or loading of BF or CBF data");
 			e.printStackTrace();
 		}
-		log.warn("RBF Send End");
+		long endTime2 = System.nanoTime();
+		log.warn("RBF Send End: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
 	}
 
 	public void testPRLLinkRecords(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException {
@@ -718,7 +722,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 	protected BloomFilterParameterAdvice linkCBFRecords(PersonMatchRequest leftPersonMatchRequest,
 			PersonMatchRequest rightPersonMatchRequest, ComponentType componentType) throws ApplicationException {
-		log.warn("CBF match preparation Start");
+		long startTime = System.nanoTime();
+		log.warn("CBF match preparation Start: " + startTime);
 		// Generate and score pairs from the current pages
 		List<MatchPairStatHalf> leftMatchPairStatHalves = retrieveMatchPairStatHalvesByRequest(leftPersonMatchRequest);
 		List<MatchPairStatHalf> rightMatchPairStatHalves = retrieveMatchPairStatHalvesByRequest(rightPersonMatchRequest);
@@ -795,7 +800,8 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 		String blockingServiceTypeName = getBlockingServiceTypeName(componentType, matchPairStats);
 		if (componentType == ComponentType.DATA_INTEGRATOR_MODE) {
-			log.warn("CBF match preparation End");
+			long endTime = System.nanoTime();
+			log.warn("CBF match preparation End: " + endTime);
 			matchingService.linkRecords(
 					blockingServiceTypeName, matchPairStats, matchingServiceTypeName,
 					null, linkTableName, leftTableName, rightTableName,

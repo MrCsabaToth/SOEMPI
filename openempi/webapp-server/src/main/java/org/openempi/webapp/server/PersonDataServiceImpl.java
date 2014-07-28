@@ -227,7 +227,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			String dataIntegratorUserName, String dataIntegratorPassword)
 	{
 		try {
-			log.warn("Send preparation Start");
+			long startTime1 = System.nanoTime();
+			log.warn("Send preparation Start: " + startTime1);
 			RemotePersonService remotePersonService = Context.getRemotePersonService();
 			PrivacySettings privacySettings =
 					(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
@@ -237,8 +238,10 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			PersonQueryService personQueryService = Context.getPersonQueryService();
 			String localTableName = dataset.getTableName();
 			List<ColumnInformation> columnInformation = personQueryService.getDatasetColumnInformation(localTableName);
-			log.warn("Send preparation End");
-			log.warn("Send Start");
+			long endTime1 = System.nanoTime();
+			log.warn("Send preparation End: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
+			long startTime2 = System.nanoTime();
+			log.warn("Send Start: " + startTime2);
 			remotePersonService.createDatasetTable(remoteTableName, columnInformation, dataset.getTotalRecords(), false);
 			int pageSize = Constants.PAGE_SIZE;
 			long firstResult = 0L;
@@ -252,7 +255,8 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			} while (morePatients);
 			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName, firstResult + 1);
 			remotePersonService.close();
-			log.warn("Send End");
+			long endTime2 = System.nanoTime();
+			log.warn("Send End: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Failed to send to Data Integrator due to " + e.getMessage());
@@ -294,11 +298,13 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			ks.authenticate(keyServerUserName, keyServerPassword);
 		}
 
-		log.warn("Import start");	// This is warning in order to get through into the log even if we deal with a non-debug version
+		long startTime = System.nanoTime();
+		log.warn("Import start: " + startTime);	// This is warning in order to get through into the log even if we deal with a non-debug version
 		DataLoaderServiceSelector dataLoaderServiceSelector = Context.getDataLoaderServiceSelector();
 		DataLoaderService dataLoaderService = dataLoaderServiceSelector.getDataLoaderServiceType(ConfigurableFileLoader.LOADER_ALIAS).getDataServiceService();
 		dataLoaderService.loadFile(dataset.getFileName(), tableName, loaderConfiguration, applyFieldTransformations);
-		log.warn("Import end");	// This is warning in order to get through into the log even if we deal with a non-debug version
+		long endTime = System.nanoTime();
+		log.warn("Import end: " + endTime + ", elapsed: " + (endTime - startTime));	// This is warning in order to get through into the log even if we deal with a non-debug version
 		PersonManagerService personService = Context.getPersonManagerService();
 		org.openhie.openempi.model.Dataset datasetFound = personService.getDatasetByTableName(dataset.getTableName());
 		datasetFound.setImported("Y");
@@ -308,12 +314,12 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 	public void saveDatasetToFile(DatasetWeb dataset, String tableName) {
 		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
-			int testType = 0;
-			if (testType == 0) {
+			String testType = System.getProperty("measurement");
+			if (testType == null || testType.equals("0")) {
 				PersonManagerService personManagerService = Context.getPersonManagerService();
 				org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
 				personManagerService.saveDatasetToFile(datasetFound, tableName);
-			} if (testType == 1) {
+			} if (testType.equals("1")) {
 				// For HMAC Encode Test
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
@@ -321,7 +327,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
 				recordLinkageProtocol.testHMACEncoding(dataset.getDatasetId(), tableName);
-			} else if (testType == 2) {
+			} else if (testType.equals("2")) {
 				// EM link test
 				PersonManagerService personManagerService = Context.getPersonManagerService();
 				org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(tableName);
@@ -329,7 +335,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
 				recordLinkageProtocol.testPMLinkRecords(dataset.getDatasetId(), datasetFound.getDatasetId(), Constants.BLOCKING_BYPASS_SERVICE_NAME, Constants.CBF_SCORING_SERVICE_NAME);
-			} else if (testType == 3) {
+			} else if (testType.equals("3")) {
 				// BF Recode test
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
@@ -341,12 +347,15 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
 			} else {
 				// Measure Keyserver authenticate + get 50 salts
-				log.warn("KS Authenticate start");	// This is warning in order to get through into the log even if we deal with a non-debug version
+				long startTime1 = System.nanoTime();
+				log.warn("KS Authenticate start: " + startTime1);	// This is warning in order to get through into the log even if we deal with a non-debug version
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
-				log.warn("KS Authenticate end");	// This is warning in order to get through into the log even if we deal with a non-debug version
+				long endTime1 = System.nanoTime();
+				log.warn("KS Authenticate end: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));	// This is warning in order to get through into the log even if we deal with a non-debug version
 				ks.getSalts(50);
-				log.warn("KS get salts end");	// This is warning in order to get through into the log even if we deal with a non-debug version
+				long endTime2 = System.nanoTime();
+				log.warn("KS get salts end: " + endTime2 + ", elapsed: " + (endTime2 - endTime1));	// This is warning in order to get through into the log even if we deal with a non-debug version
 			}
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);
