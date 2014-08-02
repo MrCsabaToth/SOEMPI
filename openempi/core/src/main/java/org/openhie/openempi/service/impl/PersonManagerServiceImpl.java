@@ -479,7 +479,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 				}
 
 				PersonQueryService personQueryService = Context.getPersonQueryService();
-				String lastFn = fieldNames.get(fieldNames.size() - 1);;
+				String lastFn = fieldNames.get(fieldNames.size() - 1);
 				int pageSize = Constants.PAGE_SIZE;
 				long pageStart = 0L;
 				int numPersons = 0;
@@ -493,7 +493,7 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 								if (value != null)
 									writer.append(value);
 								if (!fn.equals(lastFn))
-									writer.append(",");
+									writer.append(currentLoaderConfiguration.getDelimiterRegex());
 								else
 									writer.newLine();
 							}
