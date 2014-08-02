@@ -334,7 +334,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				PersonManagerService personManagerService = Context.getPersonManagerService();
 				org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
 				personManagerService.saveDatasetToFile(datasetFound, tableName);
-			} if (testType.equals("1")) {
+			} else if (testType.equals("1")) {
 				// For HMAC Encode Test
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
@@ -360,7 +360,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				int leftPersonMatchRequestId = 618;
 				int rightPersonMatchRequestId = 619;
 				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
-			} else {
+			} else if (testType.equals("4")) {
 				// Measure Keyserver authenticate + get 50 salts
 				long startTime1 = System.currentTimeMillis();
 				log.warn("KS Authenticate start: " + startTime1);	// This is warning in order to get through into the log even if we deal with a non-debug version
