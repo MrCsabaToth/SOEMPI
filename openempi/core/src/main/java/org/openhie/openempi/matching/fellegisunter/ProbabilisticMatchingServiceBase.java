@@ -95,7 +95,10 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			boolean emOnly, boolean persistLinks) throws ApplicationException
 	{
 		log.warn("Link Start");
-		long startTime = System.nanoTime();
+		long startTime = System.currentTimeMillis();
+		long totalMem = Runtime.getRuntime().totalMemory();
+		long freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		MatchConfiguration matchConfig =
 			(MatchConfiguration)Context.getConfiguration().lookupConfigurationEntry(ProbabilisticMatchingConstants.PROBABILISTIC_MATCHING_CONFIGURATION_REGISTRY_KEY);
 		List<MatchField> matchFields = matchConfig.getMatchFields(FieldQuerySelector.MatchOnlyFields);
@@ -115,7 +118,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			calculateVectorFrequencies(pairs, fellegiSunterParams);
 		}
 		estimateMarginalProbabilities(fellegiSunterParams, matchConfig, pairs.size());
-		long blockNfsTime = System.nanoTime();
+		long blockNfsTime = System.currentTimeMillis();
 		long fileOutTime = 0L;
 		log.trace("Fellegi Sunter Parameters:\n" + fellegiSunterParams);
 		String fileRepoDir = Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
@@ -125,7 +128,7 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		if (!emOnly) {
 			calculateRecordPairWeights(pairs, fellegiSunterParams);
 			calculateMarginalProbabilities(pairs, fellegiSunterParams, false, fileRepoDir + "/" + linkTableName);
-			fileOutTime = System.nanoTime();
+			fileOutTime = System.currentTimeMillis();
 			if (!cbfMatch) {
 				orderRecordPairsByWeight(pairs, false, fileRepoDir + "/" + linkTableName);
 				calculateLowerBound(pairs, fellegiSunterParams);
@@ -260,7 +263,10 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		personMatch = personManagerService.addPersonMatch(personMatch);
 
 		log.warn("Link End, Link persist Start");
-		long linkPersistStartTime = System.nanoTime();
+		long linkPersistStartTime = System.currentTimeMillis();
+		totalMem = Runtime.getRuntime().totalMemory();
+		freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		if (!emOnly) {
 			personManagerService.createLinkTable(linkTableName, leftTableName, rightTableName, false);
 
@@ -304,7 +310,10 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			}
 			personManagerService.addIndexesAndConstraintsToLinkTable(linkTableName, beginIndex + 1, leftTableName, rightTableName);
 		}
-		long linkPersistEndTime = System.nanoTime();
+		long linkPersistEndTime = System.currentTimeMillis();
+		totalMem = Runtime.getRuntime().totalMemory();
+		freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		log.trace("ns of blocking + EM / FS: " + (blockNfsTime - startTime));
 		log.trace("ns of file out + blocking + EM / FS: " + (fileOutTime - startTime));
 		log.trace("ns from start to link persist: " + (linkPersistStartTime - startTime));

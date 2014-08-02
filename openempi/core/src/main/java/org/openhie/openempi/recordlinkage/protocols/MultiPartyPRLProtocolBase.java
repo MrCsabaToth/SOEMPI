@@ -550,17 +550,23 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			String matchName) throws ApplicationException {
 		String remoteTableName = leftRemoteDataset.getTableName();
 
-		long startTime1 = System.nanoTime();
+		long startTime1 = System.currentTimeMillis();
 		log.warn("Reencode Start: " + startTime1);
+		long totalMem = Runtime.getRuntime().totalMemory();
+		long freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		String newBFTableName = remoteTableName + UniversalDaoHibernate.BF_TABLE_NAME_POSTFIX + "_" + getNowString();	// include time into name to avoid collision
 		// Reencode from original cleartext file or from DB?
 		List<ColumnInformation> bfColumnInformation = new ArrayList<ColumnInformation>();
 		Dataset newBFDataset = bfReencodeDataset(leftLocalDataset, newBFTableName, columnMatchInformation,
 				keyServerUserName, keyServerPassword, leftOrRightSide, personPseudoIdsReverseLookup, bfColumnInformation);
-		long endTime1 = System.nanoTime();
+		long endTime1 = System.currentTimeMillis();
 		log.warn("Reencode End: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
+		totalMem = Runtime.getRuntime().totalMemory();
+		freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 
-		long startTime2 = System.nanoTime();
+		long startTime2 = System.currentTimeMillis();
 		log.warn("RBF Send Start: " + startTime2);
 		PrivacySettings privacySettings =
 				(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
@@ -595,8 +601,11 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 			log.error("Error occured during creation, generation or loading of BF or CBF data");
 			e.printStackTrace();
 		}
-		long endTime2 = System.nanoTime();
+		long endTime2 = System.currentTimeMillis();
 		log.warn("RBF Send End: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
+		totalMem = Runtime.getRuntime().totalMemory();
+		freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 	}
 
 	public void testPRLLinkRecords(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException {
@@ -722,8 +731,11 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 	protected BloomFilterParameterAdvice linkCBFRecords(PersonMatchRequest leftPersonMatchRequest,
 			PersonMatchRequest rightPersonMatchRequest, ComponentType componentType) throws ApplicationException {
-		long startTime = System.nanoTime();
+		long startTime = System.currentTimeMillis();
 		log.warn("CBF match preparation Start: " + startTime);
+		long totalMem = Runtime.getRuntime().totalMemory();
+		long freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		// Generate and score pairs from the current pages
 		List<MatchPairStatHalf> leftMatchPairStatHalves = retrieveMatchPairStatHalvesByRequest(leftPersonMatchRequest);
 		List<MatchPairStatHalf> rightMatchPairStatHalves = retrieveMatchPairStatHalvesByRequest(rightPersonMatchRequest);
@@ -800,8 +812,11 @@ public abstract class MultiPartyPRLProtocolBase extends AbstractRecordLinkagePro
 
 		String blockingServiceTypeName = getBlockingServiceTypeName(componentType, matchPairStats);
 		if (componentType == ComponentType.DATA_INTEGRATOR_MODE) {
-			long endTime = System.nanoTime();
+			long endTime = System.currentTimeMillis();
 			log.warn("CBF match preparation End: " + endTime);
+			long totalMem = Runtime.getRuntime().totalMemory();
+			long freeMem = Runtime.getRuntime().freeMemory();
+			log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 			matchingService.linkRecords(
 					blockingServiceTypeName, matchPairStats, matchingServiceTypeName,
 					null, linkTableName, leftTableName, rightTableName,

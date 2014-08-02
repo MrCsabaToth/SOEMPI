@@ -227,8 +227,11 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			String dataIntegratorUserName, String dataIntegratorPassword)
 	{
 		try {
-			long startTime1 = System.nanoTime();
+			long startTime1 = System.currentTimeMillis();
 			log.warn("Send preparation Start: " + startTime1);
+			long totalMem = Runtime.getRuntime().totalMemory();
+			long freeMem = Runtime.getRuntime().freeMemory();
+			log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 			RemotePersonService remotePersonService = Context.getRemotePersonService();
 			PrivacySettings privacySettings =
 					(PrivacySettings)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.RECORD_LINKAGE_PROTOCOL_SETTINGS);
@@ -238,9 +241,12 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			PersonQueryService personQueryService = Context.getPersonQueryService();
 			String localTableName = dataset.getTableName();
 			List<ColumnInformation> columnInformation = personQueryService.getDatasetColumnInformation(localTableName);
-			long endTime1 = System.nanoTime();
+			long endTime1 = System.currentTimeMillis();
 			log.warn("Send preparation End: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
-			long startTime2 = System.nanoTime();
+			totalMem = Runtime.getRuntime().totalMemory();
+			freeMem = Runtime.getRuntime().freeMemory();
+			log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
+			long startTime2 = System.currentTimeMillis();
 			log.warn("Send Start: " + startTime2);
 			remotePersonService.createDatasetTable(remoteTableName, columnInformation, dataset.getTotalRecords(), false);
 			int pageSize = Constants.PAGE_SIZE;
@@ -255,8 +261,11 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			} while (morePatients);
 			remotePersonService.addIndexesAndConstraintsToDatasetTable(remoteTableName, firstResult + 1);
 			remotePersonService.close();
-			long endTime2 = System.nanoTime();
+			long endTime2 = System.currentTimeMillis();
 			log.warn("Send End: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
+			totalMem = Runtime.getRuntime().totalMemory();
+			freeMem = Runtime.getRuntime().freeMemory();
+			log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Failed to send to Data Integrator due to " + e.getMessage());
@@ -298,13 +307,19 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 			ks.authenticate(keyServerUserName, keyServerPassword);
 		}
 
-		long startTime = System.nanoTime();
+		long startTime = System.currentTimeMillis();
 		log.warn("Import start: " + startTime);	// This is warning in order to get through into the log even if we deal with a non-debug version
+		long totalMem = Runtime.getRuntime().totalMemory();
+		long freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		DataLoaderServiceSelector dataLoaderServiceSelector = Context.getDataLoaderServiceSelector();
 		DataLoaderService dataLoaderService = dataLoaderServiceSelector.getDataLoaderServiceType(ConfigurableFileLoader.LOADER_ALIAS).getDataServiceService();
 		dataLoaderService.loadFile(dataset.getFileName(), tableName, loaderConfiguration, applyFieldTransformations);
-		long endTime = System.nanoTime();
+		long endTime = System.currentTimeMillis();
 		log.warn("Import end: " + endTime + ", elapsed: " + (endTime - startTime));	// This is warning in order to get through into the log even if we deal with a non-debug version
+		totalMem = Runtime.getRuntime().totalMemory();
+		freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		PersonManagerService personService = Context.getPersonManagerService();
 		org.openhie.openempi.model.Dataset datasetFound = personService.getDatasetByTableName(dataset.getTableName());
 		datasetFound.setImported("Y");
@@ -347,15 +362,24 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
 			} else {
 				// Measure Keyserver authenticate + get 50 salts
-				long startTime1 = System.nanoTime();
+				long startTime1 = System.currentTimeMillis();
 				log.warn("KS Authenticate start: " + startTime1);	// This is warning in order to get through into the log even if we deal with a non-debug version
+				long totalMem = Runtime.getRuntime().totalMemory();
+				long freeMem = Runtime.getRuntime().freeMemory();
+				log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 				KeyServerService ks = Context.getKeyServerService();
 				ks.authenticate(Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD);
-				long endTime1 = System.nanoTime();
+				long endTime1 = System.currentTimeMillis();
 				log.warn("KS Authenticate end: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));	// This is warning in order to get through into the log even if we deal with a non-debug version
+				totalMem = Runtime.getRuntime().totalMemory();
+				freeMem = Runtime.getRuntime().freeMemory();
+				log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 				ks.getSalts(50);
-				long endTime2 = System.nanoTime();
+				long endTime2 = System.currentTimeMillis();
 				log.warn("KS get salts end: " + endTime2 + ", elapsed: " + (endTime2 - endTime1));	// This is warning in order to get through into the log even if we deal with a non-debug version
+				totalMem = Runtime.getRuntime().totalMemory();
+				freeMem = Runtime.getRuntime().freeMemory();
+				log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 			}
 		} catch (Throwable t) {
 			log.error("Failed to execute: " + t.getMessage(), t);

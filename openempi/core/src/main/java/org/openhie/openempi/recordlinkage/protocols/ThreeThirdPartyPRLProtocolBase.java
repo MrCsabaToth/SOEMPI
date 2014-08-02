@@ -117,12 +117,18 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		int numRecordsToSend = Math.min(numRecordsToSend1, ((Long)totalRecords).intValue());
 		// Do not break down random sampling by PAGE_SIZE, because that could cause id collision
 		PersonQueryService personQueryService = Context.getPersonQueryService();
-		long startTime1 = System.nanoTime();
+		long startTime1 = System.currentTimeMillis();
 		log.warn("Random sampling for HMAC encode begin: " + startTime1);
+		long totalMem = Runtime.getRuntime().totalMemory();
+		long freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		List<Person> persons = personQueryService.getRandomNotNullPersons(dataset.getTableName(),
 				fillNoMatchColumnNames(noMatchColumnInformation, columnNames), numRecordsToSend);
-		long endTime1 = System.nanoTime();
+		long endTime1 = System.currentTimeMillis();
 		log.warn("Random sampling for HMAC encode end: " + endTime1 + ", elapsed: " + (endTime1 - startTime1));
+		totalMem = Runtime.getRuntime().totalMemory();
+		freeMem = Runtime.getRuntime().freeMemory();
+		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		// HMAC transform the needed fields
 		if (isThereClearField) {
 			TransformationService transformationService = Context.getTransformationService();
@@ -131,7 +137,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 			byte[] signingKey = ks.getSalts(1).get(0);
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put(Constants.SIGNING_KEY_HMAC_PARAMETER_NAME, signingKey);
-			long startTime2 = System.nanoTime();
+			long startTime2 = System.currentTimeMillis();
 			log.warn("HMAC encode begin: " + startTime2);
 			for (Person person : persons) {
 				for (ColumnInformation ci : matchColumnInformation) {
@@ -147,8 +153,11 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 					}
 				}
 			}
-			long endTime2 = System.nanoTime();
+			long endTime2 = System.currentTimeMillis();
 			log.warn("HMAC encode end: " + endTime2 + ", elapsed: " + (endTime2 - startTime2));
+			totalMem = Runtime.getRuntime().totalMemory();
+			freeMem = Runtime.getRuntime().freeMemory();
+			log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
 		}
 		return persons;
 	}
