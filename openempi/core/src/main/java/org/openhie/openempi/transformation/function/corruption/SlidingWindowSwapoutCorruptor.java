@@ -21,8 +21,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openhie.openempi.transformation.function.AbstractStringTransformationFunction;
-
 public class SlidingWindowSwapoutCorruptor extends StringCorruptor
 {
 	public static final String SWAPOUT_PROBABILITY_TAG = "swapout_probability";
