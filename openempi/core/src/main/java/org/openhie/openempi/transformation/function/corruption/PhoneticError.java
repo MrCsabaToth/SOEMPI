@@ -476,7 +476,7 @@ public class PhoneticError
 				}
 				break;
 				case PRECEEDED_BY_VAN_VON_OR_SCH: {
-					if (index > 2) {
+					if (index > 5) {
 						String preStr = inputUpperCase.substring(index - 2 - 3, index - 2);
 						preConstrMet = (preStr.equals("VAN") || preStr.equals("VON") || preStr.equals("SCH"));
 					}
@@ -489,13 +489,16 @@ public class PhoneticError
 				}
 				break;
 				case PRECEEDED_BY_2_SPACES_AND_BHD: {
-					preConstrMet = (index > 1 && (inputUpperCase.charAt(index - 1) != ' ' || inputUpperCase.charAt(index - 2) != 'B' ||
-							inputUpperCase.charAt(index - 2) != 'H' || inputUpperCase.charAt(index - 2) != 'D'));
+					preConstrMet = ((index > 1 && inputUpperCase.charAt(index - 1) != ' ') ||
+							(index > 2 && (inputUpperCase.charAt(index - 2) != 'B' || inputUpperCase.charAt(index - 2) != 'H' ||
+							inputUpperCase.charAt(index - 2) != 'D')));
 				}
 				break;
 				case PRECEEDED_BY_A_OR_I: {
-					char preChar = inputUpperCase.charAt(index - 1);
-					preConstrMet = (index > 0 && (preChar == 'A' || preChar == 'I'));
+					if (index > 0) {
+						char preChar = inputUpperCase.charAt(index - 1);
+						preConstrMet = (preChar == 'A' || preChar == 'I');
+					}
 				}
 				break;
 				case NOT_PRECEEDED_BY_E_OR_I: {
