@@ -455,17 +455,11 @@ public class PersonManagerServiceImpl extends PersonServiceBaseImpl implements P
 		if (datasetEntry == null) {
 			return;
 		}
-		String fileName = datasetEntry.getFileName();
-		if (fileName != null && fileName.length() > 0 && !fileName.equals(Constants.NOT_AVAILABLE)) {
-			StringBuilder newFileNameBuilder = new StringBuilder(fileName);
-			int fileExtensionDotIndex = newFileNameBuilder.lastIndexOf("/");
-			if (fileExtensionDotIndex > 0)
-				newFileNameBuilder.insert(fileExtensionDotIndex, tableName + ".csv");
-			else
-				newFileNameBuilder.append(tableName + ".csv");
+		if (tableName != null && tableName.length() > 0) {
 			BufferedWriter writer = null;
 			try {
-				File newFile = new File(newFileNameBuilder.toString());
+				String fileRepoDir = Context.getConfiguration().getAdminConfiguration().getFileRepositoryDirectory();
+				File newFile = new File(fileRepoDir + "/" + tableName + ".csv");
 				LoaderConfig currentLoaderConfiguration =
 					(LoaderConfig)Context.getConfiguration().lookupConfigurationEntry(ConfigurationRegistry.DATA_LOADER_CONFIGURATION);
 				log.debug("Saving physical upload file, stored at: " + newFile.getAbsolutePath());
