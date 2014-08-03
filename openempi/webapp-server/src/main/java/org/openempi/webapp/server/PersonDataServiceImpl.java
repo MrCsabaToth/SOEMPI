@@ -330,6 +330,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 		log.debug("Received request to save dataset entry " + dataset.getDatasetId());
 		try {
 			String testType = System.getProperty("measurement");
+			log.warn("Test type: " + testType);
 			if (testType == null || testType.equals("0")) {
 				PersonManagerService personManagerService = Context.getPersonManagerService();
 				org.openhie.openempi.model.Dataset datasetFound = personManagerService.getDatasetByTableName(dataset.getTableName());
