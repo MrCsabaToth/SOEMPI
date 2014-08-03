@@ -855,4 +855,15 @@
 		<property name="fieldDao" ref="fieldDao" />
 	</bean>
 
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.lang.Enum">
+					<bean class="org.openhie.openempi.util.EnumPropertyEditor">
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
 </beans>
