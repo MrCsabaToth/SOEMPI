@@ -358,9 +358,12 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				RecordLinkageProtocolSelector recordLinkageProtocolSelector = Context.getRecordLinkageProtocolSelector();
 				RecordLinkageProtocolType recordLinkageProtocolType = recordLinkageProtocolSelector.getRecordLinkageProtocolType(Constants.THREE_THIRD_PARTY_CBF_W_RND_BLOCKING_PROTOCOL_NAME);
 				RecordLinkageProtocol recordLinkageProtocol = recordLinkageProtocolType.getRecordLinkageProtocol();
-				int leftPersonMatchRequestId = 618;
-				int rightPersonMatchRequestId = 619;
-				recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
+				String[] reqIds = tableName.split("_");
+				if (reqIds.length == 2) {
+					int leftReqId = Integer.parseInt(reqIds[0]);	// leftPersonMatchRequestId
+					int rightReqId = Integer.parseInt(reqIds[1]);	// rightPersonMatchRequestId
+					recordLinkageProtocol.testBFReencoding(leftReqId, rightReqId);
+				}
 			} else if (testType.equals("4")) {
 				// Measure Keyserver authenticate + get 50 salts
 				long startTime1 = System.currentTimeMillis();
