@@ -253,7 +253,7 @@ CREATE TABLE column_match_information (
 -- Structure for table dataset:
 CREATE TABLE dataset (
   dataset_id     integer NOT NULL,
-  user_id        integer NOT NULL,
+  user_id        integer, --NOT NULL,
   table_name     varchar(255) NOT NULL,
   file_name      varchar(255) NOT NULL,
   total_records  bigint NOT NULL,
