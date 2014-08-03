@@ -137,10 +137,10 @@ public class RecordLinkageProtocolSelectorImpl extends BaseServiceImpl implement
 		recordLinkageProtocol.testPRLLinkRecords(leftPersonMatchRequestId, rightPersonMatchRequestId);
 	}
 
-	public void testBFReencoding(String protocolTypeName, int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException
+	public void testBFReencoding(String protocolTypeName, int leftPersonMatchRequestId, int rightPersonMatchRequestId, boolean measurement) throws ApplicationException
 	{
 		RecordLinkageProtocol recordLinkageProtocol = getRecordLinkageProtocol(protocolTypeName);
-		recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
+		recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId, measurement);
 	}
 
 	public void testHMACEncoding(String protocolTypeName, int dataSetId,String tableName) throws ApplicationException

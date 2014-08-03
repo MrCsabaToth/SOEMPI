@@ -241,7 +241,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		log.warn("PAM EM calculation End: " + endTime + ", elapsed: " + (endTime - startTime));
 	}
 
-	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException {
+	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId, boolean measurement) throws ApplicationException {
 		PersonMatchRequest leftPersonMatchRequest = personMatchRequestDao.getPersonMatchRequest(leftPersonMatchRequestId);
 		PersonMatchRequest rightPersonMatchRequest = personMatchRequestDao.getPersonMatchRequest(rightPersonMatchRequestId);
 
@@ -249,17 +249,20 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 		DiffieHellmanKeyExchange dhkeLeft = new DiffieHellmanKeyExchange(leftDhSecret);
 		BigInteger dhPublicKeyLeft = dhkeLeft.computePublicKey();
 		byte[] dhPublicKeyEncLeft = dhPublicKeyLeft.toByteArray();
-		Assert.assertArrayEquals(dhPublicKeyEncLeft, leftPersonMatchRequest.getDhPublicKey());
+		if (!measurement)
+			Assert.assertArrayEquals(dhPublicKeyEncLeft, leftPersonMatchRequest.getDhPublicKey());
 
 		int rightDhSecret = rightPersonMatchRequest.getDhSecret();
 		DiffieHellmanKeyExchange dhkeRight = new DiffieHellmanKeyExchange(rightDhSecret);
 		BigInteger dhPublicKeyRight = dhkeRight.computePublicKey();
 		byte[] dhPublicKeyEncRight = dhPublicKeyRight.toByteArray();
-		Assert.assertArrayEquals(dhPublicKeyEncRight, rightPersonMatchRequest.getDhPublicKey());
+		if (!measurement)
+			Assert.assertArrayEquals(dhPublicKeyEncRight, rightPersonMatchRequest.getDhPublicKey());
 
 		int sharedSecretLeft = dhkeLeft.computeSharedSecret(dhPublicKeyEncRight);
 		int sharedSecretRight = dhkeRight.computeSharedSecret(dhPublicKeyEncLeft);
-		Assert.assertEquals(sharedSecretLeft, sharedSecretRight);
+		if (!measurement)
+			Assert.assertEquals(sharedSecretLeft, sharedSecretRight);
 
 		BloomFilterParameterAdvice leftBfpa = getBloomFilterParameterAdviceForRightSide(leftPersonMatchRequest, rightPersonMatchRequest);
 		handleBloomFilterParameterAdvice(
@@ -277,7 +280,7 @@ public abstract class ThreeThirdPartyPRLProtocolBase extends MultiPartyPRLProtoc
 				Constants.DEFAULT_ADMIN_USERNAME, Constants.DEFAULT_ADMIN_PASSWORD,
 				rightPersonMatchRequest.getDataset(), rightPersonMatchRequest.getDataset(), leftPersonMatchRequest.getDataset(),
 				rightBfpa.getColumnMatchInformation(), rightBfpa.getMatchPairStatHalves(),
-				null, sharedSecretRight, false, Constants.LOCALHOST_IP_ADDRESS);
+				null, measurement ? sharedSecretLeft : sharedSecretRight, false, Constants.LOCALHOST_IP_ADDRESS);
 	}
 
 	public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException

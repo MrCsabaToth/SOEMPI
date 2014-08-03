@@ -30,7 +30,7 @@ public class BFReencodingTest extends BaseServiceTestCase
 
 			RecordLinkageProtocol recordLinkageProtocol = (RecordLinkageProtocol)
 					getApplicationContext().getBean(Constants.THREE_THIRD_PARTY_FBF_PROTOCOL_NAME);
-			recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId);
+			recordLinkageProtocol.testBFReencoding(leftPersonMatchRequestId, rightPersonMatchRequestId, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

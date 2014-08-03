@@ -469,7 +469,7 @@ public abstract class AbstractRecordLinkageProtocol extends BaseServiceImpl impl
 
 	abstract public void testPRLLinkRecords(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
 
-	abstract public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
+	abstract public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId, boolean measurement) throws ApplicationException;
 
 	abstract public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException;
 

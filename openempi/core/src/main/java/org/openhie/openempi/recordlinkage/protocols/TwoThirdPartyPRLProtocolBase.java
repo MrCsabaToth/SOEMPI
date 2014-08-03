@@ -119,7 +119,7 @@ public abstract class TwoThirdPartyPRLProtocolBase extends MultiPartyPRLProtocol
 		throw new ApplicationException("Nothing to test: there's no Parameter Manager link phase during two 3rd party protocols");
 	}
 
-	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException {
+	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId, boolean measurement) throws ApplicationException {
 		throw new ApplicationException("Nothing to test: there's no BF reencoding during two 3rd party protocols");
 	}
 

@@ -362,7 +362,7 @@ public class PersonDataServiceImpl extends RemoteServiceServlet implements Perso
 				if (reqIds.length == 2) {
 					int leftReqId = Integer.parseInt(reqIds[0]);	// leftPersonMatchRequestId
 					int rightReqId = Integer.parseInt(reqIds[1]);	// rightPersonMatchRequestId
-					recordLinkageProtocol.testBFReencoding(leftReqId, rightReqId);
+					recordLinkageProtocol.testBFReencoding(leftReqId, rightReqId, true);
 				}
 			} else if (testType.equals("4")) {
 				// Measure Keyserver authenticate + get 50 salts

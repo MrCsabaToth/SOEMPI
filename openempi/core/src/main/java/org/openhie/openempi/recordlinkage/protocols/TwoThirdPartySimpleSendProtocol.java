@@ -166,7 +166,7 @@ public class TwoThirdPartySimpleSendProtocol extends BaseServiceImpl implements 
 		throw new ApplicationException("Nothing to test: there's no PRL link records phase during simple send");
 	}
 
-	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException
+	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId, boolean measurement) throws ApplicationException
 	{
 		throw new ApplicationException("Nothing to test: there's no BF reencoding during simple send");
 	}

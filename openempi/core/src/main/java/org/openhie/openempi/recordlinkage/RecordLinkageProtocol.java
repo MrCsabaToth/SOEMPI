@@ -53,7 +53,7 @@ public interface RecordLinkageProtocol
 	// For test only
 	public void testPMLinkRecords(int leftDatasetId, int rightDatasetId, String blockingServiceName, String matchingServiceName) throws ApplicationException;
 	public void testPRLLinkRecords(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
-	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId) throws ApplicationException;
+	public void testBFReencoding(int leftPersonMatchRequestId, int rightPersonMatchRequestId, boolean measurement) throws ApplicationException;
 	public void testHMACEncoding(int dataSetId, String tableName) throws ApplicationException;
 
 	public String getName();
