@@ -748,10 +748,10 @@
 		<property name="name" value="NumberCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultInsertionProbability" value="0.015"/>
-		<property name="defaultDeletionProbability" value="0.015"/>
+		<property name="defaultInsertionProbability" value="0.15"/>
+		<property name="defaultDeletionProbability" value="0.15"/>
 		<property name="defaultSubstitutionProbability" value="0.035"/>
-		<property name="defaultTranspositionProbability" value="0.005"/>
+		<property name="defaultTranspositionProbability" value="0.05"/>
 	</bean>
 	<bean id="StringCorruptor"
 		class="org.openhie.openempi.transformation.function.corruption.StringCorruptor"
@@ -759,8 +759,8 @@
 		<property name="name" value="StringrCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultPhoneticErrorProbability" value="0.003"/>
-		<property name="defaultOcrErrorProbability" value="0.001"/>
+		<property name="defaultPhoneticErrorProbability" value="0.03"/>
+		<property name="defaultOcrErrorProbability" value="0.01"/>
 	</bean>
 	<bean id="NicknameCorruptor"
 		class="org.openhie.openempi.transformation.function.corruption.NicknameCorruptor"
@@ -768,7 +768,7 @@
 		<property name="name" value="NicknameCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultReplaceProbability" value="0.015"/>
+		<property name="defaultReplaceProbability" value="0.15"/>
 	</bean>
 	<bean id="LastnameCorruptor"
 		class="org.openhie.openempi.transformation.function.corruption.LastnameCorruptor"
@@ -776,9 +776,9 @@
 		<property name="name" value="LastnameCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultHyphenateProbability" value="0.001"/>
-		<property name="defaultFemaleReplaceProbability" value="0.01"/>
-		<property name="defaultMaleReplaceProbability" value="0.001"/>
+		<property name="defaultHyphenateProbability" value="0.01"/>
+		<property name="defaultFemaleReplaceProbability" value="0.1"/>
+		<property name="defaultMaleReplaceProbability" value="0.01"/>
 	</bean>
 	<bean id="SlidingWindowSwapoutCorruptor"
 		class="org.openhie.openempi.transformation.function.corruption.SlidingWindowSwapoutCorruptor"
@@ -786,7 +786,7 @@
 		<property name="name" value="SlidingWindowSwapoutCorruptor"/>
 		<property name="inputType" value="Any"/>
 		<property name="outputType" value="String"/>
-		<property name="defaultSwapoutProbability" value="0.01"/>
+		<property name="defaultSwapoutProbability" value="0.1"/>
 		<property name="defaultSlidingWindowSize" value="1000"/>
 	</bean>
 
