@@ -94,8 +94,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 			String leftTableName, String rightTableName, List<LeanRecordPair> pairsParam, ComponentType componentType,
 			boolean emOnly, boolean persistLinks) throws ApplicationException
 	{
-		log.warn("Link Start");
 		long startTime = System.currentTimeMillis();
+		log.warn("Link Start: " + startTime);
 		long totalMem = Runtime.getRuntime().totalMemory();
 		long freeMem = Runtime.getRuntime().freeMemory();
 		log.warn("Used memory = " + (totalMem - freeMem) + " total (" + totalMem + ") - free (" + freeMem + ")");
@@ -262,7 +262,8 @@ public abstract class ProbabilisticMatchingServiceBase extends AbstractMatchingS
 		personMatch.setUserCreatedBy(currentUser);
 		personMatch = personManagerService.addPersonMatch(personMatch);
 
-		log.warn("Link End, Link persist Start");
+		long endTime = System.currentTimeMillis();
+		log.warn("Link End, Link persist Start: " + endTime + ", elapsed: " + (endTime - startTime));
 		long linkPersistStartTime = System.currentTimeMillis();
 		totalMem = Runtime.getRuntime().totalMemory();
 		freeMem = Runtime.getRuntime().freeMemory();
