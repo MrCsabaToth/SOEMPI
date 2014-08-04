@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -179,6 +180,7 @@ public class PersonMatch extends BaseObject implements java.io.Serializable
 	}
 
 	@OneToMany(mappedBy="personMatch", cascade=CascadeType.ALL)
+	@OrderBy("columnMatchInformationId")
 	public List<ColumnMatchInformation> getColumnMatchInformation() {
 		return columnMatchInformation;
 	}
